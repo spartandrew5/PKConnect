@@ -15,5 +15,6 @@
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <ProjectReference Include="..\PKVault.Core\PKVault.Core.csproj" />
+    <ProjectReference Include="..\PKConnect.Core\PKConnect.Core.csproj" />
   </ItemGroup>
 </Project>

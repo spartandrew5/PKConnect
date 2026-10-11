@@ -1,6 +1,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Microsoft.Extensions.Primitives;
 using PKHeX.Core;
 
@@ -67,4 +68,28 @@ public partial class RouteJsonContext : JsonSerializerContext
             TypeInfoResolver = RouteJsonContext.Default
         }
     );
+
+    private static readonly List<IJsonTypeInfoResolver> ExtraResolvers = [];
+    private static JsonSerializerOptions? options;
+
+    /// <summary>
+    /// Makes the types of another assembly's own context serializable by the routes. To call
+    /// before <see cref="Options"/> is first used.
+    /// </summary>
+    public static void AddResolver(IJsonTypeInfoResolver resolver)
+    {
+        if (ExtraResolvers.Contains(resolver))
+            return;
+        if (options is not null)
+            throw new InvalidOperationException("Json resolvers must be added before the first request is served");
+        ExtraResolvers.Add(resolver);
+    }
+
+    /// <summary>What the routes read and write JSON with: this context's types, then any added by <see cref="AddResolver"/>.</summary>
+    public static JsonSerializerOptions Options => options ??= new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        TypeInfoResolver = JsonTypeInfoResolver.Combine([RouteJsonContext.Default, .. ExtraResolvers]),
+    };
 }

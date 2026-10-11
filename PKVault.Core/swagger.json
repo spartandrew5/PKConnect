@@ -153,6 +153,26 @@
         }
       }
     },
+    "/api/connect": {
+      "get": {
+        "tags": [
+          "Connect"
+        ],
+        "operationId": "Connect_GetStatus",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dex": {
       "get": {
         "tags": [
@@ -4233,6 +4253,22 @@
         "enum": [
           1
         ]
+      },
+      "ConnectStatusDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "pkVaultVersion"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "pkVaultVersion": {
+            "type": "string"
+          }
+        }
       },
       "StaticEvolvesRichData": {
         "type": "object",

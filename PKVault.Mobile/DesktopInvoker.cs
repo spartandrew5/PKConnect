@@ -52,7 +52,7 @@ public class DesktopInvoker(IServiceProvider ServiceProvider, Task SetupTask) : 
         {
             if (jsonResponse.Data is not null)
             {
-                var typeInfo = RouteJsonContext.DefaultWithOptions.GetTypeInfo(jsonResponse.Data.GetType())
+                var typeInfo = RouteJsonContext.Options.GetTypeInfo(jsonResponse.Data.GetType())
                     ?? throw new InvalidOperationException($"Missing TypeInfo for type {jsonResponse.Data.GetType()}");
 
                 response = response with

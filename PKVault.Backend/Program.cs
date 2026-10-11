@@ -108,7 +108,7 @@ public class Program
                 res.ContentType = jsonResponse.ContentType ?? MediaTypeNames.Application.Json;
                 if (jsonResponse.Data is not null)
                 {
-                    var typeInfo = RouteJsonContext.DefaultWithOptions.GetTypeInfo(jsonResponse.Data.GetType())
+                    var typeInfo = RouteJsonContext.Options.GetTypeInfo(jsonResponse.Data.GetType())
                         ?? throw new InvalidOperationException($"Missing TypeInfo for type {jsonResponse.Data.GetType()}");
 
                     await JsonSerializer.SerializeAsync(
@@ -178,6 +178,7 @@ public class Program
             options.Level = CompressionLevel.Optimal;
         });
 
+        PKConnect.Core.ConnectModule.Register(services);
         Core.Program.ConfigureServices(services);
 
         services.AddSerilog(Log.Logger);

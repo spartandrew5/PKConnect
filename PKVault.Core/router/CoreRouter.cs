@@ -26,7 +26,7 @@ namespace PKVault.Core;
 
 public partial class CoreRouter
 {
-    private static readonly Type[] ControllersTypes = [
+    private static readonly List<Type> ControllersTypes = [
         typeof(BackupController),
         typeof(SaveInfosController),
         typeof(StorageController),
@@ -35,6 +35,17 @@ public partial class CoreRouter
         typeof(WarningsController),
         typeof(StaticDataController),
     ];
+
+    /// <summary>
+    /// Adds controllers defined outside this assembly. To call before the router is created
+    /// (its routes are read once); a controller added twice counts once.
+    /// </summary>
+    public static void AddControllers(params Type[] controllers)
+    {
+        foreach (var controller in controllers)
+            if (!ControllersTypes.Contains(controller))
+                ControllersTypes.Add(controller);
+    }
 
     // "GET", "api/static-data/spritesheet/{sheetName}", MethodInfo, (ParameterInfo, Kind)[], "StaticData", "GetSpritesheetImg"
     public record CoreRoute(
@@ -287,7 +298,7 @@ public partial class CoreRouter
             using var reader = new StreamReader(bodyStream);
             var jsonText = await reader.ReadToEndAsync();
             var body = JsonNode.Parse(jsonText)?.AsObject() ?? [];
-            return body?.Deserialize(p.ParameterType, RouteJsonContext.DefaultWithOptions);
+            return body?.Deserialize(p.ParameterType, RouteJsonContext.Options);
         }
 
         throw new ArgumentException($"A {kind} parameter is missing: {p.Name} of type {p.ParameterType} {queries[p.Name!]?.GetType()}");

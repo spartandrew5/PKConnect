@@ -55,7 +55,7 @@ public class OpenApiGenerator
             {
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                TypeInfoResolver = RouteJsonContext.Default
+                TypeInfoResolver = RouteJsonContext.Options.TypeInfoResolver
             }
         };
         var schemaResolver = new OpenApiSchemaResolver(document, settings);
