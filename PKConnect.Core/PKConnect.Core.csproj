@@ -12,4 +12,12 @@
     <!-- Read from disk at run time (connect-data, beside the program): base patches, team pools. -->
     <Content Include="connect-data/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- Tables the extended Pokémon formats are built from, read out of the assembly. -->
+    <EmbeddedResource Include="formats/data/expansion_species.json" LogicalName="PKConnect.Core.formats.data.expansion_species.json" />
+    <EmbeddedResource Include="formats/data/expansion_items.json" LogicalName="PKConnect.Core.formats.data.expansion_items.json" />
+    <EmbeddedResource Include="formats/data/platinum_added_species.bin" LogicalName="PKConnect.Core.formats.data.platinum_added_species.bin" />
+    <None Include="formats/data/extract-expansion-species.js" />
+  </ItemGroup>
 </Project>
