@@ -270,6 +270,26 @@
         }
       }
     },
+    "/api/connect/catalog": {
+      "get": {
+        "tags": [
+          "Connect"
+        ],
+        "operationId": "Connect_GetCatalog",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dex": {
       "get": {
         "tags": [
@@ -410,6 +430,174 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DexMoveDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey": {
+      "get": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_GetTrainers",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JourneyDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey/appearance/{profileId}": {
+      "put": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_SetAppearance",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "appearance",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainerAppearanceDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JourneyDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey/journal/{profileId}": {
+      "get": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_GetJournal",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JournalEntryDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey/league": {
+      "get": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_GetLeague",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeagueDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey/travel": {
+      "get": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_GetTravelPreview",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TravelPreviewDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/journey/travel/{gameId}": {
+      "post": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_Board",
+        "parameters": [
+          {
+            "name": "gameId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardingResultDTO"
                 }
               }
             }
@@ -4930,6 +5118,15 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "pastHolders": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -5074,6 +5271,100 @@
             "type": "string"
           },
           "pkVaultVersion": {
+            "type": "string"
+          }
+        }
+      },
+      "CatalogDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "regions",
+          "games"
+        ],
+        "properties": {
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionDTO"
+            }
+          },
+          "games": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameDTO"
+            }
+          }
+        }
+      },
+      "RegionDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "badges"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "badges": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GameDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "region",
+          "regions",
+          "generation",
+          "maxSpecies",
+          "maxMove",
+          "playable"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "generation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSpecies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxMove": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playable": {
+            "type": "boolean"
+          },
+          "note": {
             "type": "string"
           }
         }
@@ -5483,6 +5774,415 @@
             "items": {
               "type": "integer"
             }
+          }
+        }
+      },
+      "JourneyDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "trainers"
+        ],
+        "properties": {
+          "activeTrainerId": {
+            "type": "string"
+          },
+          "trainers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainerSummaryDTO"
+            }
+          }
+        }
+      },
+      "TrainerSummaryDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "isActive",
+          "trainerName",
+          "hoursPlayed",
+          "party",
+          "passport",
+          "saves"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "trainerName": {
+            "type": "string"
+          },
+          "trainerId": {
+            "type": "integer"
+          },
+          "homeRegion": {
+            "type": "string"
+          },
+          "currentGameId": {
+            "type": "string"
+          },
+          "currentRegion": {
+            "type": "string"
+          },
+          "currentSaveId": {
+            "type": "integer"
+          },
+          "hoursPlayed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "party": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainerPartyMonDTO"
+            }
+          },
+          "passport": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PassportRegionDTO"
+            }
+          },
+          "saves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainerSaveDTO"
+            }
+          },
+          "appearance": {
+            "$ref": "#/components/schemas/TrainerAppearanceDTO"
+          }
+        }
+      },
+      "TrainerPartyMonDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "species",
+          "nickname",
+          "level",
+          "isShiny",
+          "isEgg"
+        ],
+        "properties": {
+          "species": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isShiny": {
+            "type": "boolean"
+          },
+          "isEgg": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PassportRegionDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region",
+          "visited",
+          "badges",
+          "badgeCount",
+          "holdsTitle",
+          "conquered"
+        ],
+        "properties": {
+          "region": {
+            "type": "string"
+          },
+          "visited": {
+            "type": "boolean"
+          },
+          "badges": {
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          "badgeCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "holdsTitle": {
+            "type": "boolean"
+          },
+          "conquered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TrainerSaveDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveId",
+          "playedSeconds",
+          "fileName"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "gameId": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "playedSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      },
+      "TrainerAppearanceDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "character": {
+            "type": "string"
+          },
+          "styles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "JournalEntryDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "type",
+          "text"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "LeagueDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "regions"
+        ],
+        "properties": {
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeagueRegionDTO"
+            }
+          }
+        }
+      },
+      "LeagueRegionDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region",
+          "champion",
+          "isOriginal",
+          "pastHolders"
+        ],
+        "properties": {
+          "region": {
+            "type": "string"
+          },
+          "champion": {
+            "$ref": "#/components/schemas/ChampionTeamDTO"
+          },
+          "isOriginal": {
+            "type": "boolean"
+          },
+          "holderTrainerId": {
+            "type": "string"
+          },
+          "pastHolders": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TravelPreviewDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "destinations"
+        ],
+        "properties": {
+          "fromGameId": {
+            "type": "string"
+          },
+          "fromRegion": {
+            "type": "string"
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelDestinationDTO"
+            }
+          }
+        }
+      },
+      "TravelDestinationDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "game",
+          "hasSave",
+          "conquered",
+          "party"
+        ],
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameDTO"
+          },
+          "hasSave": {
+            "type": "boolean"
+          },
+          "conquered": {
+            "type": "boolean"
+          },
+          "party": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelMonDTO"
+            }
+          }
+        }
+      },
+      "TravelMonDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "species",
+          "nickname",
+          "level",
+          "canTravel",
+          "movesLost"
+        ],
+        "properties": {
+          "species": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "canTravel": {
+            "type": "boolean"
+          },
+          "movesLost": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "BoardingResultDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveId",
+          "gameId",
+          "region",
+          "newSave",
+          "travelled",
+          "stayed"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "gameId": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "newSave": {
+            "type": "boolean"
+          },
+          "travelled": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainerPartyMonDTO"
+            }
+          },
+          "stayed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StayedBehindDTO"
+            }
+          }
+        }
+      },
+      "StayedBehindDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "species",
+          "nickname",
+          "level",
+          "reason"
+        ],
+        "properties": {
+          "species": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reason": {
+            "type": "string"
           }
         }
       },
@@ -6057,6 +6757,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "appearance": {
+            "$ref": "#/components/schemas/TrainerAppearanceDTO"
           }
         }
       },

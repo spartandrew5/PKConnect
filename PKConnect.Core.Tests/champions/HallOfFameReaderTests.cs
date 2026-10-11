@@ -1,3 +1,4 @@
+using PKConnect.Core.formats;
 using PKConnect.Core.champions;
 using PKHeX.Core;
 
@@ -71,7 +72,7 @@ public class HallOfFameExtractionTest
         var folder = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves");
         foreach (var path in Directory.EnumerateFiles(folder))
         {
-            Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path), path);
+            Assert.True(SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path), path);
             Assert.True(save!.ChecksumsValid, $"{Path.GetFileName(path)}: checksums");
             Assert.True(HallOfFameReader.Read(save).Count == 0, $"{Path.GetFileName(path)} has Hall of Fame teams");
         }

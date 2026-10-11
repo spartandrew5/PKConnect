@@ -1,3 +1,4 @@
+using PKConnect.Core.formats;
 using PKConnect.Core.profiles;
 using PKHeX.Core;
 
@@ -10,14 +11,14 @@ public class ConnectSaveStateTests
     {
         var folder = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves");
         var path = Directory.EnumerateFiles(folder, $"{game}.*").Single();
-        Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path), $"{game}.sav is not a save PKHeX reads");
+        Assert.True(SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path), $"{game}.sav is not a save PKHeX reads");
         return save!;
     }
 
     // Under its own name: an expansion FireRed/LeafGreen save is only told from Emerald's by it.
     private static SaveFile Reload(SaveFile save)
     {
-        Assert.True(SaveUtil.TryGetSaveFile(save.Write().ToArray(), out var again, save.Metadata.FilePath));
+        Assert.True(SaveFiles.TryLoad(save.Write().ToArray(), out var again, save.Metadata.FilePath));
         return again!;
     }
 

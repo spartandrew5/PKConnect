@@ -57,7 +57,10 @@ public record ChampionsDTO(
     // Merely switching to a trainer whose save has long had an induction
     // matches its snapshot and never steals the title.
     // Only ever written by the mutable store; the bundled defaults have none.
-    Dictionary<string, string>? SaveSnapshots = null
+    Dictionary<string, string>? SaveSnapshots = null,
+    // region slug -> the names of those who held the title before the current champion, oldest
+    // first. The bundled champion a trainer took it from is the first of them.
+    Dictionary<string, List<string>>? PastHolders = null
 );
 
 // PUT /api/champions/{region} body. SaveId + HallOfFameFingerprint are recorded

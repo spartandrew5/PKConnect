@@ -40,7 +40,7 @@ public class StorageHooksTests : IAsyncLifetime
 
     private static SaveWrapper Load(string path)
     {
-        Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path), $"{path} is not a save PKHeX reads");
+        Assert.True(SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path), $"{path} is not a save PKHeX reads");
         return new SaveWrapper(save!);
     }
 

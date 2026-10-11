@@ -197,7 +197,7 @@ public class Gen4AddedSpeciesTests
     [Fact]
     public void PlayedSave_StatsMatchTheGames()
     {
-        if (!File.Exists(PlayedSave) || !SaveUtil.TryGetSaveFile(File.ReadAllBytes(PlayedSave), out var save, PlayedSave) || save is not SAV4Pt)
+        if (!File.Exists(PlayedSave) || !SaveFiles.TryLoad(File.ReadAllBytes(PlayedSave), out var save, PlayedSave) || save is not SAV4Pt)
         {
             return; // local-only fixture
         }

@@ -31,8 +31,17 @@ public record TrainerProfileDTO(
     // VAR_CONNECT_REGIONS_CLEARED count a Connect base patch reads for gym
     // dialogue. All flag/var-offset knowledge lives in the frontend; the
     // backend just stores/returns this list. Null on legacy profiles.
-    List<string>? ConqueredRegions = null
+    List<string>? ConqueredRegions = null,
+    // How the trainer looks in the games. Null = each game's own protagonist.
+    TrainerAppearanceDTO? Appearance = null
 );
+
+/// <summary>
+/// A trainer's look. Cosmetic only.
+/// </summary>
+/// <param name="Character">The character they appear as in every game (a sprite set's id, e.g. "hilda").</param>
+/// <param name="Styles">A different sprite set for one generation: "gen3" -> "brendan".</param>
+public record TrainerAppearanceDTO(string? Character, Dictionary<string, string>? Styles = null);
 
 public record RegionBadgesDTO(
     Dictionary<string, bool[]> Regions,

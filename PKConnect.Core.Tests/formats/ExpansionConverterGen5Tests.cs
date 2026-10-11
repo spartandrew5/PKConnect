@@ -15,7 +15,7 @@ public class ExpansionConverterGen5Tests
     private static List<PK5> LoadGen5(string file)
     {
         var path = Path.Combine(BaseSaves, file);
-        if (!File.Exists(path) || !SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path))
+        if (!File.Exists(path) || !SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path))
         {
             return [];
         }

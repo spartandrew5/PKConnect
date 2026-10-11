@@ -1,3 +1,4 @@
+using PKConnect.Core.formats;
 using PKConnect.Core.champions;
 using PKHeX.Core;
 
@@ -11,7 +12,7 @@ public class ChampionCrowningTests
     private static SaveFile Played(string file)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "assets", "saves", file);
-        Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path));
+        Assert.True(SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path));
         return save!;
     }
 
@@ -19,7 +20,7 @@ public class ChampionCrowningTests
     {
         var folder = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves");
         var path = Directory.EnumerateFiles(folder, $"{game}.*").Single();
-        Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path));
+        Assert.True(SaveFiles.TryLoad(File.ReadAllBytes(path), out var save, path));
         return save!;
     }
 

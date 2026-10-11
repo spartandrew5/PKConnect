@@ -73,6 +73,16 @@ public class ChampionsService(PKVault.Core.IFileIOService fileIOService) : ICham
         try
         {
             var store = ReadStore();
+
+            // Whoever held the title until now goes into its history - unless the same trainer
+            // is only replacing their own team.
+            if (Merge(ReadDefaults(), store).Regions.TryGetValue(key, out var previous)
+                && (previous.Source != champion.Source || previous.ChampionName != champion.ChampionName))
+            {
+                if (!store.PastHolders!.TryGetValue(key, out var past))
+                    store.PastHolders[key] = past = [];
+                past.Add(previous.ChampionName);
+            }
             store.Regions[key] = champion;
 
             if (!string.IsNullOrWhiteSpace(saveId) && hallOfFameFingerprint is not null)
@@ -104,6 +114,7 @@ public class ChampionsService(PKVault.Core.IFileIOService fileIOService) : ICham
         {
             Regions = stored.Regions ?? [],
             SaveSnapshots = stored.SaveSnapshots ?? [],
+            PastHolders = stored.PastHolders ?? [],
         };
     }
 
@@ -142,6 +153,6 @@ public class ChampionsService(PKVault.Core.IFileIOService fileIOService) : ICham
         }
 
         // Snapshots only ever live in the mutable store.
-        return new ChampionsDTO(merged, overrides.SaveSnapshots ?? []);
+        return new ChampionsDTO(merged, overrides.SaveSnapshots ?? [], overrides.PastHolders ?? []);
     }
 }

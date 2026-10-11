@@ -1,4 +1,7 @@
+using PKConnect.Core.formats;
 using PKConnect.Core.champions;
+using PKConnect.Core.journey;
+using PKConnect.Core.regions;
 using PKHeX.Core;
 using PKVault.Core;
 
@@ -47,6 +50,7 @@ public class SaveSyncService(
     ISavesLoadersService savesLoadersService,
     ISessionService sessionService,
     IFileIOService fileIOService,
+    IJournalService journalService,
     TimeProvider timeProvider
 ) : ISaveSyncService
 {
@@ -60,7 +64,7 @@ public class SaveSyncService(
             ?? throw new InvalidOperationException($"Save {saveId} has no file");
         var canWrite = sessionService.HasEmptyActionList();
 
-        if (!SaveUtil.TryGetSaveFile(await fileIOService.ReadBytes(path), out var save, path) || save is null)
+        if (!SaveFiles.TryLoad(await fileIOService.ReadBytes(path), out var save, path) || save is null)
             throw new InvalidOperationException($"Not a save file: {path}");
 
         var saveKey = saveId.ToString();
@@ -71,6 +75,7 @@ public class SaveSyncService(
         badges.Snapshots?.TryGetValue(saveKey, out snapshot);
         var reconciled = RegionBadges.Reconcile(save, badges.Regions, snapshot);
         var badgesChanged = reconciled.SaveChanged;
+        await JournalNewBadges(profile.Id, badges.Regions, reconciled.Ledger);
         // Without the right to write the save, what was decided for it isn't recorded as done.
         if (reconciled.Ledger.Count > 0 || (canWrite && reconciled.Snapshot.Count > 0))
         {
@@ -86,6 +91,8 @@ public class SaveSyncService(
             crownedRegion = await TryCrown(save, saveKey, profile);
             if (crownedRegion is not null)
             {
+                await journalService.Add(profile.Id, JournalService.Title, crownedRegion,
+                    $"Entered the Hall of Fame and became {ConnectCatalog.RegionName(crownedRegion)} Champion");
                 store = await profilesService.AddConqueredRegions(profile.Id, [crownedRegion]);
                 profile = store.Profiles.Find(p => p.Id == profile.Id) ?? profile;
             }
@@ -105,6 +112,24 @@ public class SaveSyncService(
             await savesLoadersService.Setup(new DataUpdateFlags());
 
         return new(written, badgesChanged, stateChanged, crownedRegion, badges.Regions);
+    }
+
+    // A region the trainer had no badges recorded for is being read for the first time (a save
+    // brought in, say): what it holds was earned before the journal began.
+    private async Task JournalNewBadges(string profileId, Dictionary<string, bool[]> before, Dictionary<string, bool[]> after)
+    {
+        foreach (var (region, slots) in after)
+        {
+            if (!before.TryGetValue(region, out var known))
+                continue;
+            var names = ConnectCatalog.Regions.FirstOrDefault(r => r.Id == region)?.Badges;
+            for (var i = 0; i < slots.Length; i++)
+            {
+                if (slots[i] && !(i < known.Length && known[i]))
+                    await journalService.Add(profileId, JournalService.Badge, region,
+                        $"Earned the {(names is not null && i < names.Length ? names[i] : $"{i + 1}th")} Badge");
+            }
+        }
     }
 
     private async Task<string?> TryCrown(SaveFile save, string saveKey, TrainerProfileDTO profile)

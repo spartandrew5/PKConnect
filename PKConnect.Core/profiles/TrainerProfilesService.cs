@@ -1,3 +1,5 @@
+using PKConnect.Core.formats;
+using PKConnect.Core.journey;
 using System.Text.RegularExpressions;
 using PKConnect.Core.regions;
 using PKHeX.Core;
@@ -14,6 +16,7 @@ public interface ITrainerProfilesService
     Task<DataUpdateFlags> SwitchProfile(string profileId);
     Task<TrainerProfilesDTO> UpdateProfileSaveGlobs(string profileId, string[] saveGlobs, DataUpdateFlags flags);
     Task<TrainerProfilesDTO> SetActiveSave(string profileId, uint? saveId);
+    Task<TrainerProfilesDTO> SetAppearance(string profileId, TrainerAppearanceDTO? appearance);
     Task<TrainerProfilesDTO> ImportProfileSave(string profileId, string fileName, byte[] fileContent);
     Task<TrainerProfilesDTO> ActivateBaseSave(string profileId, string gameVersion);
     Task<RegionBadgesDTO> GetRegionBadges(string profileId);
@@ -37,7 +40,8 @@ public class TrainerProfilesService(
     ISettingsService settingsService,
     ISessionService sessionService,
     ISavesLoadersService savesLoadersService,
-    TimeProvider timeProvider
+    TimeProvider timeProvider,
+    IJournalService journalService
 ) : ITrainerProfilesService
 {
     private static readonly string FilePath = MatcherUtil.NormalizePath(Path.Combine(SettingsService.AppDirectory, "./config/trainer-profiles.json"));
@@ -107,6 +111,9 @@ public class TrainerProfilesService(
             store.Profiles.Add(profile);
             await WriteStore(store);
 
+            if (profile.HomeRegion is { } home)
+                await journalService.Add(profile.Id, JournalService.Travel, home, $"Set out as a trainer from {ConnectCatalog.RegionName(home)}");
+
             return store with { CreatedProfileId = profile.Id };
         }
         finally
@@ -148,7 +155,7 @@ public class TrainerProfilesService(
             // Import mode never picks a region up front, so the imported save's own
             // game decides the home region.
             var homeRegion = target.HomeRegion
-                ?? (SaveUtil.TryGetSaveFile(fileContent, out var importedSave, safeFileName) && importedSave is not null
+                ?? (SaveFiles.TryLoad(fileContent, out var importedSave, safeFileName) && importedSave is not null
                     ? ConnectRegions.ForSave(importedSave, safeFileName)
                     : null);
 
@@ -241,6 +248,7 @@ public class TrainerProfilesService(
             }
 
             await WriteStore(store);
+
             return store;
         }
         finally
@@ -426,6 +434,30 @@ public class TrainerProfilesService(
                 await settingsService.UpdateSettings(updatedMutable, restartSession, scanSaves, flags);
             }
 
+            await WriteStore(store);
+            return store;
+        }
+        finally
+        {
+            Semaphore.Release();
+        }
+    }
+
+    public async Task<TrainerProfilesDTO> SetAppearance(string profileId, TrainerAppearanceDTO? appearance)
+    {
+        await Semaphore.WaitAsync();
+        try
+        {
+            var store = ReadStore();
+            store = EnsureDefaultProfile(store);
+
+            var targetIndex = store.Profiles.FindIndex(p => p.Id == profileId);
+            if (targetIndex < 0)
+            {
+                throw new KeyNotFoundException($"Profile not found: {profileId}");
+            }
+
+            store.Profiles[targetIndex] = store.Profiles[targetIndex] with { Appearance = appearance };
             await WriteStore(store);
             return store;
         }
@@ -652,7 +684,7 @@ public class TrainerProfilesService(
         {
             try
             {
-                if (SaveUtil.TryGetSaveFile(File.ReadAllBytes(file.FullName), out var save, file.FullName)
+                if (SaveFiles.TryLoad(File.ReadAllBytes(file.FullName), out var save, file.FullName)
                     && save is not null
                     && ConnectRegions.ForSave(save, file.FullName) is { } region)
                 {
@@ -722,7 +754,7 @@ public class TrainerProfilesService(
         var referenceSave = referenceSaveWrapper.GetSave();
 
         var destinationBytes = await fileIOService.ReadBytes(destinationAbsoluteSavePath);
-        if (!SaveUtil.TryGetSaveFile(destinationBytes, out var destinationSave, destinationAbsoluteSavePath))
+        if (!SaveFiles.TryLoad(destinationBytes, out var destinationSave, destinationAbsoluteSavePath))
         {
             return;
         }
@@ -849,7 +881,7 @@ public class TrainerProfilesService(
     private async Task WriteConnectState(string absoluteSavePath, TrainerProfileDTO profile)
     {
         var bytes = await fileIOService.ReadBytes(absoluteSavePath);
-        if (!SaveUtil.TryGetSaveFile(bytes, out var save, absoluteSavePath) || save is null)
+        if (!SaveFiles.TryLoad(bytes, out var save, absoluteSavePath) || save is null)
         {
             return;
         }

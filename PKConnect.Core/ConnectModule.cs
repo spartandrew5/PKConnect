@@ -1,3 +1,4 @@
+using PKConnect.Core.journey;
 using Microsoft.Extensions.DependencyInjection;
 using PKConnect.Core.champions;
 using PKConnect.Core.formats;
@@ -30,6 +31,12 @@ public static class ConnectModule
         services.AddScoped<ConnectController>();
         services.AddScoped<PatchController>();
         services.AddScoped<ChampionsController>();
+
+        services.AddSingleton<IJournalService, JournalService>();
+        services.AddSingleton<IJourneyService, JourneyService>();
+        services.AddSingleton<ITravelService, TravelService>();
+        CoreRouter.AddControllers(typeof(JourneyController));
+        services.AddScoped<JourneyController>();
 
         services.AddSingleton<ITrainerProfilesService, TrainerProfilesService>();
         services.AddSingleton<ISaveSyncService, SaveSyncService>();
