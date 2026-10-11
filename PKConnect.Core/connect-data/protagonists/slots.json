@@ -1,0 +1,113 @@
+{
+  "//": "Standard sprite filenames per generation and sprite kind, mapped to the slot keys the backend writers read (UPR-FVX info.ini names). Read by scripts/generate-trainer-manifest.mjs, scripts/migrate-trainer-packs.mjs and the backend resolver - the single source of truth for filenames.",
+  "gens": {
+    "gen1": {
+      "romTypes": ["Gen1"],
+      "defaultFormat": "Gen1",
+      "front": { "front.png": "FrontImage" },
+      "back": { "back.png": "BackImage" },
+      "overworld": {
+        "walk.png": "WalkSprite",
+        "bike.png": "BikeSprite",
+        "fish.png": "FishSprite",
+        "fish_front.png": "FishFrontSprite",
+        "fish_back.png": "FishBackSprite",
+        "fish_side.png": "FishSideSprite"
+      }
+    },
+    "gen2": {
+      "romTypes": ["Gen2"],
+      "defaultFormat": "Gen2",
+      "front": { "front.png": "FrontImage" },
+      "back": { "back.png": "BackImage" },
+      "overworld": {
+        "walk.png": "WalkSprite",
+        "bike.png": "BikeSprite",
+        "fish.png": "FishSprite",
+        "fish_front.png": "FishFrontSprite",
+        "fish_back.png": "FishBackSprite",
+        "fish_side.png": "FishSideSprite"
+      }
+    },
+    "gen3": {
+      "romTypes": ["RSE", "FRLG"],
+      "defaultFormat": "RSE",
+      "front": { "front.png": "FrontImage", "oak_speech.png": "OakSpeechImage" },
+      "back": { "back.png": "BackImage" },
+      "overworld": {
+        "walk.png": "WalkSprite",
+        "run.png": "RunSprite",
+        "bike.png": "BikeSprite",
+        "fish.png": "FishSprite",
+        "surf.png": "SurfingSprite",
+        "field_move.png": "FieldMoveSprite",
+        "map_icon.png": "MapIcon",
+        "palette.pal": "SpriteNormalPalette",
+        "reflection.pal": "SpriteReflectionPalette",
+        "acro_bike.png": "AcroBikeSprite",
+        "underwater.png": "UnderwaterSprite",
+        "watering.png": "WateringCanSprite",
+        "decorate.png": "DecorateSprite",
+        "sit.png": "SitSprite",
+        "sit_jump.png": "SitJumpSprite",
+        "item.png": "ItemSprite",
+        "item_bike.png": "ItemBikeSprite",
+        "fly_bird.png": "BirdSprite"
+      }
+    },
+    "gen4": {
+      "romTypes": ["HGSS", "DP", "PT"],
+      "defaultFormat": "HGSS",
+      "front": { "front.png": "FrontImage" },
+      "back": { "back.png": "BackImage" },
+      "overworld": {
+        "walk.png": "WalkSprite",
+        "bike.png": "BikeSprite",
+        "fish.png": "FishSprite",
+        "surf.png": "SurfSprite",
+        "pokeball.png": "PokeballSprite",
+        "hm_use.png": "HmUseSprite",
+        "save.png": "SaveSprite",
+        "heal.png": "HealSprite",
+        "ladder.png": "LadderSprite",
+        "uniform.png": "TrUniformSprite",
+        "uniform_heal.png": "TrUniformHealSprite",
+        "contest_uniform.png": "ContestUniformSprite",
+        "shake_apricorn.png": "ShakeApricornSprite",
+        "statue.png": "StatueSprite",
+        "water_flower.png": "WaterFlowerSprite",
+        "outfit.png": "OutfitSprite",
+        "aerobics.png": "AerobicsSprite",
+        "use_poketch.png": "UsePoketchSprite",
+        "vs_seeker.png": "VsSeekerSprite"
+      }
+    },
+    "gen5": {
+      "romTypes": ["BW", "B2W2"],
+      "defaultFormat": "BW",
+      "front": { "front.png": "FrontImage", "front_sheet.png": "FrontSheetImage", "front.layout": "FrontLayout" },
+      "back": {
+        "back.png": "BackImage",
+        "back.layout": "BackLayout",
+        "back_alt.png": "BackAltImage",
+        "back_alt.layout": "BackAltLayout"
+      },
+      "overworld": {
+        "walk.png": "WalkSprite",
+        "bike.png": "BikeSprite",
+        "surf.png": "SurfSprite",
+        "fish.png": "FishSprite",
+        "item.png": "ItemSprite",
+        "save.png": "SaveSprite",
+        "heal.png": "HealSprite",
+        "hm_use.png": "HmUseSprite",
+        "balance.png": "BalanceSprite",
+        "search.png": "SearchSprite"
+      }
+    }
+  },
+  "metaKeys": {
+    "credits": ["Title", "Description", "From", "Creator", "Adapter", "Category"],
+    "overworld": ["Format", "SpritePalette", "WalkPreviewFrame"]
+  }
+}
