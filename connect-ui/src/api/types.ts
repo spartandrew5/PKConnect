@@ -73,6 +73,86 @@ export interface Trainer {
   appearance?: Appearance;
 }
 
+/** English names by id: species[25] is "Pikachu". */
+export interface Names {
+  species: string[];
+  moves: string[];
+}
+
+export interface JournalEntry {
+  at: string;
+  type: 'travel' | 'badge' | 'title';
+  region?: RegionId;
+  text: string;
+}
+
+export interface ChampionMon {
+  species: number;
+  level: number;
+  nickname?: string;
+  moves?: string[];
+  heldItem?: string;
+}
+
+export interface Champion {
+  championName: string;
+  team: ChampionMon[];
+  source: string;
+  beatenAt?: string;
+  gameVersion?: string;
+}
+
+export interface LeagueRegion {
+  region: RegionId;
+  champion: Champion;
+  isOriginal: boolean;
+  /** The trainer of this player who holds the title, if one does. */
+  holderTrainerId?: string;
+  pastHolders: string[];
+}
+
+export interface League {
+  regions: LeagueRegion[];
+}
+
+export interface TravelMon {
+  species: number;
+  nickname: string;
+  level: number;
+  canTravel: boolean;
+  /** Ids of the moves it knows that don't exist in the destination. */
+  movesLost: number[];
+}
+
+export interface TravelDestination {
+  game: Game;
+  hasSave: boolean;
+  conquered: boolean;
+  party: TravelMon[];
+}
+
+export interface TravelPreview {
+  fromGameId?: string;
+  fromRegion?: RegionId;
+  destinations: TravelDestination[];
+}
+
+export interface StayedBehind {
+  species: number;
+  nickname: string;
+  level: number;
+  reason: string;
+}
+
+export interface BoardingResult {
+  saveId: number;
+  gameId: string;
+  region: RegionId;
+  newSave: boolean;
+  travelled: PartyMon[];
+  stayed: StayedBehind[];
+}
+
 export interface Journey {
   activeTrainerId?: string;
   trainers: Trainer[];

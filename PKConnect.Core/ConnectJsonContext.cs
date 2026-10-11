@@ -18,6 +18,7 @@ namespace PKConnect.Core;
 [JsonSerializable(typeof(RegionBadgesDTO))]
 [JsonSerializable(typeof(SaveSyncResultDTO))]
 [JsonSerializable(typeof(CatalogDTO))]
+[JsonSerializable(typeof(NamesDTO))]
 [JsonSerializable(typeof(JourneyDTO))]
 [JsonSerializable(typeof(LeagueDTO))]
 [JsonSerializable(typeof(TravelPreviewDTO))]

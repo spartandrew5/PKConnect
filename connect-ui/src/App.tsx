@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from './api/client';
-import type { Catalog, Journey, Trainer } from './api/types';
+import type { BoardingResult, Catalog, Journey, Names, Trainer } from './api/types';
+import { PORTS } from './components/region';
+import { Journal } from './screens/Journal';
+import { League } from './screens/League';
 import { Roster } from './screens/Roster';
 import { TrainerCard } from './screens/TrainerCard';
+import { Travel } from './screens/Travel';
+
+const BUILT: readonly string[] = ['card', 'travel', 'journal', 'league'];
 
 const TABS = [
   ['card', 'Trainer card'],
@@ -22,8 +28,24 @@ export function App() {
   const [catalog, setCatalog] = useState<Catalog>();
   const [journey, setJourney] = useState<Journey>();
   const [error, setError] = useState<string>();
-  const [tab, setTab] = useState<Tab>('card');
-  const [screen, setScreen] = useState<'main' | 'roster'>('main');
+  const [names, setNames] = useState<Names>();
+  const [toast, setToast] = useState<string>();
+  // The tab is kept in the address, so a screen can be linked to and survives a reload.
+  const [tab, setTabState] = useState<Tab>(() => {
+    const hash = location.hash.slice(1);
+    return TABS.some(([id]) => id === hash) ? (hash as Tab) : 'card';
+  });
+  const setTab = useCallback((next: Tab) => {
+    setTabState(next);
+    history.replaceState(null, '', `#${next}`);
+  }, []);
+  const [screen, setScreen] = useState<'main' | 'roster'>(() => (location.hash === '#roster' ? 'roster' : 'main'));
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(undefined), 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
   const [busy, setBusy] = useState(false);
 
   // A save the trainer is in is brought into step with them before they are shown: badges
@@ -40,7 +62,19 @@ export function App() {
 
   useEffect(() => {
     Promise.all([api.catalog().then(setCatalog), load()]).catch((e) => setError(messageOf(e)));
+    // Names only dress up what is shown; a screen works without them.
+    api.names().then(setNames, () => undefined);
   }, [load]);
+
+  const arrived = useCallback(
+    async (result: BoardingResult) => {
+      await load().catch((e) => setError(messageOf(e)));
+      setTab('card');
+      const stayed = result.stayed.length > 0 ? `, ${result.stayed.length} stayed behind` : '';
+      setToast(`Arrived in ${PORTS[result.region].port} with ${result.travelled.length} Pokémon${stayed}`);
+    },
+    [load, setTab],
+  );
 
   const pick = useCallback(
     async (trainer: Trainer) => {
@@ -57,7 +91,7 @@ export function App() {
         setBusy(false);
       }
     },
-    [load],
+    [load, setTab],
   );
 
   const trainer = journey?.trainers.find((t) => t.isActive);
@@ -107,14 +141,27 @@ export function App() {
 
         {catalog && trainer && screen === 'main' && tab === 'card' && <TrainerCard trainer={trainer} catalog={catalog} />}
 
-        {catalog && trainer && screen === 'main' && tab !== 'card' && (
+        {catalog && trainer && screen === 'main' && tab === 'journal' && <Journal trainer={trainer} catalog={catalog} />}
+        {catalog && journey && trainer && screen === 'main' && tab === 'league' && (
+          <League trainer={trainer} journey={journey} catalog={catalog} names={names} />
+        )}
+        {catalog && trainer && screen === 'main' && tab === 'travel' && (
+          <Travel trainer={trainer} catalog={catalog} names={names} onArrived={arrived} />
+        )}
+
+        {catalog && trainer && screen === 'main' && !BUILT.includes(tab) && (
           <section className="panel">
             <p className="eyebrow">{TABS.find(([id]) => id === tab)?.[1]}</p>
             <h2>Not built yet</h2>
-            <p className="muted">This screen comes in a later step. The trainer card and the roster are the first two.</p>
+            <p className="muted">This screen comes in a later step.</p>
           </section>
         )}
       </main>
+      {toast && (
+        <div className="toast" role="status">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

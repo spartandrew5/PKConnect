@@ -22,6 +22,9 @@ public record GameDTO(
 
 public record CatalogDTO(List<RegionDTO> Regions, List<GameDTO> Games);
 
+/// <summary>English names by id: <c>Species[25]</c> is "Pikachu", <c>Moves[85]</c> is "Thunderbolt".</summary>
+public record NamesDTO(string[] Species, string[] Moves);
+
 /// <summary>
 /// The regions and games Connect knows, in the order they are shown. The one place that says
 /// what a game is called, where it is set and what can live in it.
@@ -74,6 +77,12 @@ public static class ConnectCatalog
             && Directory.Exists(BaseSavesDirectory)
             && Directory.EnumerateFiles(BaseSavesDirectory, $"{game.Id}.*").Any(),
         game.Note);
+
+    public static NamesDTO Names()
+    {
+        var strings = GameInfo.GetStrings("en");
+        return new([.. strings.Species], [.. strings.Move]);
+    }
 
     public static CatalogDTO Get() => new([.. Regions], [.. Games.Select(ToDTO)]);
 

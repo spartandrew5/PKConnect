@@ -290,6 +290,26 @@
         }
       }
     },
+    "/api/connect/names": {
+      "get": {
+        "tags": [
+          "Connect"
+        ],
+        "operationId": "Connect_GetNames",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NamesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dex": {
       "get": {
         "tags": [
@@ -5366,6 +5386,28 @@
           },
           "note": {
             "type": "string"
+          }
+        }
+      },
+      "NamesDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "species",
+          "moves"
+        ],
+        "properties": {
+          "species": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

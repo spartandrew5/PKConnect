@@ -14,6 +14,13 @@ public class ConnectController
         return new(Version: version, PKVaultVersion: SettingsService.GetBuildInfo().Version);
     }
 
+    /// <summary>Species and move names by id, for showing what the other routes give as numbers.</summary>
+    [HttpGet("names")]
+    public NamesDTO GetNames()
+    {
+        return ConnectCatalog.Names();
+    }
+
     /// <summary>The regions and games Connect knows: names, badges, and what can live in each game.</summary>
     [HttpGet("catalog")]
     public CatalogDTO GetCatalog()

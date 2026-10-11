@@ -1,4 +1,4 @@
-import type { Catalog, Journey } from './types';
+import type { BoardingResult, Catalog, JournalEntry, Journey, League, Names, TravelPreview } from './types';
 
 /** A request the backend refused, with the reason it gave. */
 export class ApiError extends Error {
@@ -36,7 +36,13 @@ async function request<T>(method: string, path: string): Promise<T> {
 
 export const api = {
   catalog: () => request<Catalog>('GET', 'connect/catalog'),
+  names: () => request<Names>('GET', 'connect/names'),
   journey: () => request<Journey>('GET', 'journey'),
+  league: () => request<League>('GET', 'journey/league'),
+  journal: (trainerId: string) => request<JournalEntry[]>('GET', `journey/journal/${encodeURIComponent(trainerId)}`),
+  travelPreview: () => request<TravelPreview>('GET', 'journey/travel'),
+  /** Takes the active trainer and their party to another game. Writes saves. */
+  board: (gameId: string) => request<BoardingResult>('POST', `journey/travel/${encodeURIComponent(gameId)}`),
   /** Makes a trainer the one the app is about. */
   switchTrainer: (trainerId: string) => request<unknown>('PUT', `trainer-profiles/${encodeURIComponent(trainerId)}/switch`),
   /** Brings a save into step with its trainer: badges, conquered regions. */

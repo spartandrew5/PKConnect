@@ -53,7 +53,11 @@ export function Roster({
               </span>
               <span className="tmini-body">
                 <h3>{trainer.trainerName}</h3>
-                <span className="line">{home ? `From ${home.name}` : 'No home region yet'}</span>
+                {/* Two trainers can carry the same name in their saves; the profile's name tells them apart. */}
+                <span className="line">
+                  {trainer.name !== trainer.trainerName ? `${trainer.name} · ` : ''}
+                  {home ? `From ${home.name}` : 'No home region yet'}
+                </span>
                 <span className="line">
                   {region ? (
                     <>
