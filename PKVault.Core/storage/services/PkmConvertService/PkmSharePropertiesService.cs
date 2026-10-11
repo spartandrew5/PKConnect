@@ -55,9 +55,10 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, PKM
 
         if (sourcePkm is not GBPKM)
         {
+            // PID first: an added format may store its nature relative to it.
+            targetPkm.PID = resultPkm.PID;
             targetPkm.Nature = resultPkm.Nature;
             targetPkm.StatAlignment = resultPkm.StatAlignment;
-            targetPkm.PID = resultPkm.PID;
 
             if (targetPkm.Format >= 6 && (targetPkm.Gen3 || targetPkm.Gen4 || targetPkm.Gen5))
             {
@@ -370,9 +371,26 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, PKM
             targetPkm.OriginalTrainerFriendship = resultPkm.OriginalTrainerFriendship;
         }
 
+        // An added format's moves are copied as they are: the legality-based copy below knows
+        // neither its learnsets nor its move limit, and its converter already kept only what fits.
+        var hasAddedFormat = PkmFormatExtension.For(sourcePkm) is not null || PkmFormatExtension.For(targetPkm) is not null;
+        if (hasAddedFormat)
+        {
+            targetPkm.Move1 = resultPkm.Move1;
+            targetPkm.Move2 = resultPkm.Move2;
+            targetPkm.Move3 = resultPkm.Move3;
+            targetPkm.Move4 = resultPkm.Move4;
+            targetPkm.Move1_PPUps = resultPkm.Move1_PPUps;
+            targetPkm.Move2_PPUps = resultPkm.Move2_PPUps;
+            targetPkm.Move3_PPUps = resultPkm.Move3_PPUps;
+            targetPkm.Move4_PPUps = resultPkm.Move4_PPUps;
+            targetPkm.FixMoves();
+        }
+
         if (noConvertNeeded)
         {
-            utils.CopyMovesFrom(targetPkm, resultPkm);
+            if (!hasAddedFormat)
+                utils.CopyMovesFrom(targetPkm, resultPkm);
 
             if (sourcePkm is IScaledSizeReadOnly)
             {

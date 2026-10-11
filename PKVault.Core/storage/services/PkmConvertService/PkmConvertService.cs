@@ -7,6 +7,14 @@ public interface IPkmConvertService
 {
     public ImmutablePKM ConvertTo(ImmutablePKM sourcePkm, EntityContext context);
     public ImmutablePKM ConvertTo(ImmutablePKM sourcePkm, Type targetPkmType, ConvertContext? ctx);
+
+    /// <summary>
+    /// The Pokémon as main storage keeps it: itself, unless its format is an added one
+    /// (see <see cref="PkmFormatExtension"/>), which is stored as an official format.
+    /// </summary>
+    public ImmutablePKM ToStorageFormat(ImmutablePKM pkm) => PkmFormatExtension.For(pkm.GetMutablePkm()) is { } format
+        ? ConvertTo(pkm, format.StorageType(pkm.GetMutablePkm()), null)
+        : pkm;
 }
 
 public class PkmConvertService(ISettingsService settingsService, PKMConverterUtils pkmConverterUtils) : IPkmConvertService
@@ -42,7 +50,9 @@ public class PkmConvertService(ISettingsService settingsService, PKMConverterUti
         if (result.GetType() != targetPkmType)
             throw new InvalidOperationException($"Failed to convert to {targetPkmType.Name}");
 
-        pkmConverterUtils.FixCommonLegalityIssues(result, ctx);
+        // PKHeX's legality has no model for an added format.
+        if (PkmFormatExtension.For(result) is null)
+            pkmConverterUtils.FixCommonLegalityIssues(result, ctx);
 
         result.Heal();
         result.ResetPartyStats();
@@ -53,7 +63,7 @@ public class PkmConvertService(ISettingsService settingsService, PKMConverterUti
             throw new Exception($"Convert failed, Species=0");
         }
 
-        if (sourcePkm.Species > result.MaxSpeciesID)
+        if (!(PkmFormatExtension.For(result)?.HasSpecies(sourcePkm.Species) ?? sourcePkm.Species <= result.MaxSpeciesID))
         {
             throw new InvalidOperationException($"Species incompatible: {sourcePkm.Species} > {result.MaxSpeciesID}");
         }
@@ -71,6 +81,12 @@ public class PkmConvertService(ISettingsService settingsService, PKMConverterUti
 
         if (current.GetType() == targetType)
             return current;
+
+        // An added format goes through the official ones it names; the chain below does the rest.
+        if (PkmFormatExtension.For(current) is { } currentFormat)
+            return ConvertRecursive(currentFormat.ToOfficial(current, targetType), targetType, fallbackLang, ctx);
+        if (PkmFormatExtension.For(targetType) is { } targetFormat)
+            return targetFormat.FromOfficial(current, targetType, (pk, type) => ConvertRecursive(pk, type, fallbackLang, ctx));
 
         if (direction > 0)
         {
@@ -235,6 +251,7 @@ public class PkmConvertService(ISettingsService settingsService, PKMConverterUti
         "PK9" => 16,
         "PA9" => 17,
 
-        _ => throw new ArgumentException($"PKM type not handled: {pkmType}"),
+        _ => PkmFormatExtension.For(pkmType)?.TypeWeight(pkmType)
+            ?? throw new ArgumentException($"PKM type not handled: {pkmType}"),
     };
 }

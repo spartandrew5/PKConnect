@@ -11,6 +11,9 @@ namespace PKVault.Core;
  */
 public class SaveWrapper(SaveFile Save)
 {
+    /// <summary>What takes over parts of this save's reading and writing, if anything (see <see cref="SaveExtension"/>).</summary>
+    public SaveExtension? FormatExtension { get; private init; } = SaveExtension.For(Save);
+
     public uint Id
     {
         get
@@ -66,6 +69,7 @@ public class SaveWrapper(SaveFile Save)
 
     #region Stored PKM Limits
     public IPersonalTable Personal => Save.Personal;
+    public bool IsPresentInGame(ushort species, byte form) => FormatExtension?.IsPresentInGame(species, form) ?? Save.Personal.IsPresentInGame(species, form);
     public int MaxStringLengthTrainer => Save.MaxStringLengthTrainer;
     public int MaxStringLengthNickname => Save.MaxStringLengthNickname;
     public ushort MaxMoveID => Save.MaxMoveID;
@@ -112,8 +116,11 @@ public class SaveWrapper(SaveFile Save)
     public bool HasParty => Save.HasParty;
     // public IList<PKM> PartyData => Save.PartyData;
 
-    public void SetPartySlotAtIndex(ImmutablePKM pk, int index, EntityImportSettings settings = default) =>
-        Save.SetPartySlotAtIndex(pk.GetMutablePkm(), index, settings);
+    public void SetPartySlotAtIndex(ImmutablePKM pk, int index, EntityImportSettings settings = default)
+    {
+        if (FormatExtension?.SetPartySlot(pk.GetMutablePkm(), index, settings) != true)
+            Save.SetPartySlotAtIndex(pk.GetMutablePkm(), index, settings);
+    }
     #endregion
 
     #region Slot Storing
@@ -160,10 +167,10 @@ public class SaveWrapper(SaveFile Save)
     // public void SetSeen(ushort species, bool seen)
     // public bool GetCaught(ushort species)
     // public void SetCaught(ushort species, bool caught)
-    public int SeenCount => Save.SeenCount;
+    public int SeenCount => FormatExtension?.SeenCount ?? Save.SeenCount;
 
     /// <summary> Count of unique Species Caught (Owned) </summary>
-    public int CaughtCount => Save.CaughtCount;
+    public int CaughtCount => FormatExtension?.CaughtCount ?? Save.CaughtCount;
     public decimal PercentSeen => Save.PercentSeen;
     public decimal PercentCaught => Save.PercentCaught;
     #endregion
@@ -189,28 +196,46 @@ public class SaveWrapper(SaveFile Save)
     // public void GetBoxSlotFromIndex(int index, out int box, out int slot)
     // public ImmutablePKM GetBoxSlotAtIndex(int index)
     // public int GetBoxSlotOffset(int index)
-    public void SetBoxSlotAtIndex(ImmutablePKM pk, int box, int slot, EntityImportSettings settings = default) =>
-        Save.SetBoxSlotAtIndex(pk.GetMutablePkm(), box, slot, settings);
-    public void SetBoxSlotAtIndex(ImmutablePKM pk, int index, EntityImportSettings settings = default) =>
-        Save.SetBoxSlotAtIndex(pk.GetMutablePkm(), index, settings);
+    public void SetBoxSlotAtIndex(ImmutablePKM pk, int box, int slot, EntityImportSettings settings = default)
+    {
+        if (FormatExtension?.SetBoxSlot(pk.GetMutablePkm(), box, slot, settings) != true)
+            Save.SetBoxSlotAtIndex(pk.GetMutablePkm(), box, slot, settings);
+    }
+    public void SetBoxSlotAtIndex(ImmutablePKM pk, int index, EntityImportSettings settings = default)
+    {
+        if (FormatExtension?.SetBoxSlot(pk.GetMutablePkm(), index, settings) != true)
+            Save.SetBoxSlotAtIndex(pk.GetMutablePkm(), index, settings);
+    }
+    #endregion
+
+    #region Stored variants
+    /// <summary>Which of a stored Pokémon's variants goes into this save, if it has one that can.</summary>
+    public PkmVariantEntity? FindVariant(List<PkmVariantEntity> variants) => FormatExtension?.TryFindVariant(variants, out var variant) == true
+        ? variant
+        : variants.Find(variant => variant.Context == Context);
+
+    /// <summary>The context of the variant to create so a Pokémon of that species can enter this save.</summary>
+    public EntityContext ContextToCreate(ushort species) => FormatExtension?.ContextToCreate(species) ?? Context;
+
+    public bool CanEnter(EntityContext context, ushort species) => FormatExtension?.CanEnter(context, species) ?? context == Context;
     #endregion
 
     public List<SlotInfoMisc> GetExtraSlots(bool all = false) => Save.GetExtraSlots(all);
 
     public SaveFile GetSave() => Save;
 
-    public ImmutablePKM GetBlankPKM() => new(Save.BlankPKM);
+    public ImmutablePKM GetBlankPKM() => new(FormatExtension?.BlankPKM ?? Save.BlankPKM);
 
-    public List<ImmutablePKM> GetAllPKM() => [.. Save.GetAllPKM().Select(pkm => new ImmutablePKM(pkm))];
+    public List<ImmutablePKM> GetAllPKM() => [.. (FormatExtension?.GetAllPKM() ?? (IEnumerable<PKM>)Save.GetAllPKM()).Select(pkm => new ImmutablePKM(pkm))];
 
     public virtual byte[] GetSaveFileData()
     {
         return Save.Write().ToArray();
     }
 
-    public List<ImmutablePKM> GetPartyData() => [.. Save.PartyData.Select(pkm => new ImmutablePKM(pkm))];
+    public List<ImmutablePKM> GetPartyData() => [.. (FormatExtension?.GetPartyData() ?? (IEnumerable<PKM>)Save.PartyData).Select(pkm => new ImmutablePKM(pkm))];
 
-    public List<ImmutablePKM> GetBoxData(int box) => [.. Save.GetBoxData(box).Select(pkm => new ImmutablePKM(pkm))];
+    public List<ImmutablePKM> GetBoxData(int box) => [.. (FormatExtension?.GetBoxData(box) ?? (IEnumerable<PKM>)Save.GetBoxData(box)).Select(pkm => new ImmutablePKM(pkm))];
 
     public List<string> GetBoxNames() => [.. BoxUtil.GetBoxNames(Save)];
 
@@ -238,5 +263,9 @@ public class SaveWrapper(SaveFile Save)
      * Clone SaveFile and all its PKM.
      * May be slow.
      */
-    public SaveWrapper Clone() => new(Save.Clone());
+    public SaveWrapper Clone()
+    {
+        var clone = Save.Clone();
+        return new(clone) { FormatExtension = FormatExtension?.CloneFor(clone) };
+    }
 }

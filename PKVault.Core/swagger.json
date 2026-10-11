@@ -4363,6 +4363,7 @@
               "canMove",
               "canDelete",
               "canEdit",
+              "canEvolve",
               "canMoveToSave",
               "canMoveToMain",
               "canMoveAttachedToMain"
@@ -4395,6 +4396,9 @@
                 "type": "boolean"
               },
               "canEdit": {
+                "type": "boolean"
+              },
+              "canEvolve": {
                 "type": "boolean"
               },
               "canMoveToSave": {

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using PKHeX.Core;
 
 namespace PKVault.Core;
@@ -200,6 +201,8 @@ public class MovePkmBankAction(
         var pkmVariantEntity = await pkmVariantLoader.GetEntityBySave(savePkm.SaveId, savePkm.IdBase);
         var mainPkmAlreadyExists = pkmVariantEntity != null;
 
+        var pkmForMain = sp.GetRequiredService<IPkmConvertService>().ToStorageFormat(savePkm.Pkm);
+
         // create pkm-version
         var inputKey = $"{targetBox}.{targetBoxSlot}";
         input.CreatedVariantIds.TryGetValue(inputKey, out var createdVariantId);
@@ -211,9 +214,9 @@ public class MovePkmBankAction(
             IsExternal: false,
             AttachedSaveId: input.attached ? sourceSaveId : null,
             AttachedSavePkmIdBase: input.attached ? savePkm.IdBase : null,
-            Context: savePkm.Context,
-            Generation: savePkm.Generation,
-            Pkm: savePkm.Pkm
+            Context: pkmForMain.Context,
+            Generation: pkmForMain.Generation,
+            Pkm: pkmForMain
         ));
         input.CreatedVariantIds[inputKey] = pkmVariantEntity.Id;
 
@@ -236,6 +239,7 @@ public class MovePkmBankAction(
             saveLoaders.Pkms.DeleteDto(savePkm.Id);
         }
 
-        await new DexMainService(sp).EnablePKM(savePkm.Pkm, savePkm.Save);
+        // Stored in another format than its save's, it is that format's context the dex entry is for.
+        await new DexMainService(sp).EnablePKM(pkmForMain, ReferenceEquals(pkmForMain, savePkm.Pkm) ? savePkm.Save : null);
     }
 }

@@ -12,6 +12,9 @@ public class PkmUpdateService
 {
     public void ApplyNicknameToPkm(PKM pkm, string nickname, bool sourcePkmIsNicknamed)
     {
+        if (PkmFormatExtension.For(pkm)?.ApplyNickname(pkm, nickname, sourcePkmIsNicknamed) == true)
+            return;
+
         var language = GetPkmLanguage(pkm);
 
         if (!sourcePkmIsNicknamed)

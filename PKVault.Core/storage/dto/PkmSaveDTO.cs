@@ -29,9 +29,13 @@ public record PkmSaveDTO(
     public override bool CanMove => base.CanMove && !IsLocked && BoxLoader.CanIdReceivePkm(BoxId, Save.Version);
     public override bool CanDelete => base.CanDelete && !IsLocked && BoxLoader.CanIdReceivePkm(BoxId, Save.Version);
     public override bool CanEdit => base.CanEdit && !IsLocked && BoxLoader.CanIdReceivePkm(BoxId, Save.Version);
+    public override bool CanEvolve => base.CanEvolve && Format?.CanEvolveInSave(Pkm.GetMutablePkm()) != false;
     public override bool CanMoveToSave => base.CanMoveToSave && !IsLocked;
-    public bool CanMoveToMain => IsEnabled && Pkm.Version > 0 && Pkm.Generation > 0 && CanDelete && !IsShadow && !IsEgg && !IsLocked && Party == -1;
+    public bool CanMoveToMain => IsEnabled && Pkm.Version > 0 && Pkm.Generation > 0 && CanDelete && !IsShadow && !IsEgg && !IsLocked && Party == -1
+        && Format?.CanBeStored(Pkm.GetMutablePkm()) != false;
     public bool CanMoveAttachedToMain => CanMoveToMain && !IsDuplicate;
+
+    private PkmFormatExtension? Format => PkmFormatExtension.For(Pkm.GetMutablePkm());
 
     private StorageSlotSource BoxSlotFlags => Save.GetBoxSlotFlags(BoxId, BoxSlot);
 

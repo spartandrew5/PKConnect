@@ -178,7 +178,7 @@ public class SynchronizePkmAction(
 
             var variantPkm = await pkmVariantLoader.GetPKM(pkmVariantEntity);
 
-            var correctSpeciesForm = saveLoaders.Save.Personal.IsPresentInGame(variantPkm.Species, variantPkm.Form);
+            var correctSpeciesForm = saveLoaders.Save.IsPresentInGame(variantPkm.Species, variantPkm.Form);
             if (!correctSpeciesForm)
             {
                 return;

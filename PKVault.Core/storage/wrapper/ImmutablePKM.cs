@@ -198,7 +198,7 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
     public int MaxIV => Pkm.MaxIV;
     public int MaxEV => Pkm.MaxEV;
 
-    public int MaxStringLengthNickname => Pkm.MaxStringLengthNickname;
+    public int MaxStringLengthNickname => PkmFormatExtension.For(Pkm)?.MaxNicknameLength(Pkm) ?? Pkm.MaxStringLengthNickname;
 
     public bool IsShiny => Pkm.IsShiny;
 
@@ -237,9 +237,9 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
 
     public Nature Nature => GetNature();
 
-    public int Ability => Pkm.Ability == -1
+    public int Ability => PkmFormatExtension.For(Pkm)?.Ability(Pkm) ?? (Pkm.Ability == -1
         ? 0
-        : Pkm.Ability;
+        : Pkm.Ability);
 
     public List<ushort> Moves => [.. GetMoves()];
     public List<ushort>? RelearnMoves => GetRelearnMoves();
@@ -276,11 +276,16 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
     }
 
     // Data used here is considered to be mutable over pkm lifetime
-    public string DynamicChecksum => $"{Species}.{Form}.{GetComparableNickname(Pkm)}.{CurrentLevel}.{EXP}.{string.Join("-", EVs)}.{string.Join("-", Moves)}.{HeldItem}";
+    public string DynamicChecksum => $"{Species}.{Form}.{GetComparableNickname(Pkm)}.{CurrentLevel}.{EXP}.{string.Join("-", EVs)}.{string.Join("-", Moves)}.{ComparableHeldItem}";
+
+    // A save's pkm and its attached variant can be of different formats, so Gen 3's own item ids
+    // are brought to the current ones.
+    private int ComparableHeldItem => PkmFormatExtension.For(Pkm)?.ModernHeldItem(Pkm)
+        ?? (Pkm is G3PKM ? ItemConverter.GetItemFuture3((ushort)Pkm.HeldItem) : Pkm.HeldItem);
 
     public static string GetComparableNickname(PKM pkm)
     {
-        if (!pkm.IsNicknamed)
+        if (!(PkmFormatExtension.For(pkm)?.IsNicknamed(pkm) ?? pkm.IsNicknamed))
             return "";
 
         // some characters may change over generations
@@ -425,7 +430,8 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
             ];
     }
 
-    public Nature GetNature() => Pkm is GBPKM gbpkm ? Experience.GetNatureVC(gbpkm.EXP) : Pkm.Nature;
+    public Nature GetNature() => Pkm is GBPKM gbpkm ? Experience.GetNatureVC(gbpkm.EXP)
+        : PkmFormatExtension.For(Pkm)?.Nature(Pkm) ?? Pkm.Nature;
 
     public MarkingColorUniversal[]? GetMarkings()
     {

@@ -44,6 +44,11 @@ public class SavePkmLoader(
 
     public PkmSaveDTO CreateDTO(SaveWrapper save, ImmutablePKM pkm, int boxId, int boxSlot)
     {
+        // Up front, so the DTO's IdBase already matches what gets written.
+        var source = pkm;
+        if (save.FormatExtension?.Adopt(pkm.GetMutablePkm(), type => pkmConvertService.ConvertTo(source, type, new(null, save)).GetMutablePkm()) is { } adopted)
+            pkm = new(adopted);
+
         var dto = new PkmSaveDTO(
             Id: GetPKMId(pkm.GetPKMIdBase(evolves, boxId), boxId, boxSlot),
             Generation: save.Generation,
@@ -151,7 +156,7 @@ public class SavePkmLoader(
         // just update pkm for in-save legality concerns
         var pkm = pkmConvertService.ConvertTo(
             dto.Pkm,
-            save.GetBlankPKM().GetMutablePkm().GetType(),
+            save.FormatExtension?.TypeToWrite(dto.Pkm.GetMutablePkm()) ?? save.GetBlankPKM().GetMutablePkm().GetType(),
             new(
                 TargetPkm: dto.Pkm.GetMutablePkm(),
                 TargetSave: save
@@ -382,7 +387,7 @@ public class SavePkmLoader(
                 }
 
                 var slot = new SlotInfoMisc(saveDaycare.GetDaycareSlot(i), i) { Type = StorageSlotType.Daycare };
-                var pkm = new ImmutablePKM(slot.Read(save.GetSave()));
+                var pkm = new ImmutablePKM(save.FormatExtension?.GetDaycareSlot(i) ?? slot.Read(save.GetSave()));
                 if (pkm != default && pkm.IsSpeciesValid)
                 {
                     var boxSlot = i;
@@ -393,7 +398,7 @@ public class SavePkmLoader(
             }
         }
 
-        var extraSlots = save.GetExtraSlots(true);
+        var extraSlots = save.FormatExtension?.ReadsExtraSlots == false ? [] : save.GetExtraSlots(true);
         var extraPkms = extraSlots.Select(slot => (
             Pkm: new ImmutablePKM(slot.Read(save.GetSave())),
             Slot: slot

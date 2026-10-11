@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PKConnect.Core.champions;
+using PKConnect.Core.formats;
 using PKConnect.Core.launch;
 using PKConnect.Core.profiles;
 using PKConnect.Core.status;
@@ -19,6 +20,8 @@ public static class ConnectModule
     /// </summary>
     public static void Register(IServiceCollection services)
     {
+        RegisterFormats();
+
         RouteJsonContext.AddResolver(ConnectJsonContext.Default);
 
         services.AddSingleton<IChampionsService, ChampionsService>();
@@ -31,5 +34,26 @@ public static class ConnectModule
         services.AddSingleton<ITrainerProfilesService, TrainerProfilesService>();
         CoreRouter.AddControllers(typeof(TrainerProfilesController));
         services.AddScoped<TrainerProfilesController>();
+    }
+
+    private static readonly Lock formatsGate = new();
+    private static bool formatsRegistered;
+
+    /// <summary>
+    /// Teaches PKVault's save handling the saves Connect's builds write (see <see cref="SaveExtension"/>).
+    /// Safe to call more than once.
+    /// </summary>
+    public static void RegisterFormats()
+    {
+        lock (formatsGate)
+        {
+            if (formatsRegistered)
+                return;
+            formatsRegistered = true;
+            SaveExtension.Register(ExpansionSaveExtension.For);
+            SaveExtension.Register(AddedSpeciesSaveExtension.For);
+            PkmFormatExtension.Register(new ExpansionFormat());
+            PkmFormatExtension.Register(new AddedSpeciesFormat());
+        }
     }
 }

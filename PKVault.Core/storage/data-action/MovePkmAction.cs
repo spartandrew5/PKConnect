@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using PKHeX.Core;
 
 namespace PKVault.Core;
@@ -169,7 +170,7 @@ public class MovePkmAction(
             throw new ArgumentException($"Save Pkm not compatible with save for id={sourcePkmDto.Id}, context={sourcePkmDto.Context}, save.context={targetSaveLoaders.Save.Context}");
         }
 
-        if (!targetSaveLoaders.Save.Personal.IsPresentInGame(sourcePkmDto.Species, sourcePkmDto.Form))
+        if (!targetSaveLoaders.Save.IsPresentInGame(sourcePkmDto.Species, sourcePkmDto.Form))
         {
             throw new ArgumentException($"Save Pkm Species not compatible with save for id={sourcePkmDto.Id}, species={sourcePkmDto.Species}, save.maxSpecies={targetSaveLoaders.Save.MaxSpeciesID}");
         }
@@ -232,7 +233,7 @@ public class MovePkmAction(
 
         var pkmVariants = (await pkmVariantLoader.GetEntitiesByBox(pkmVariant.BoxId, pkmVariant.BoxSlot)).Values.ToList();
 
-        var pkmVariantForContext = pkmVariants.Find(version => version.Context == saveLoaders.Save.Context);
+        var pkmVariantForContext = saveLoaders.Save.FindVariant(pkmVariants);
 
         // if pkmVariant for context doesn't exist
         // create pkmVariant
@@ -243,7 +244,7 @@ public class MovePkmAction(
 
             await mainCreatePkmVariantAction.ExecuteWithPayload(new(
                 pkmVariantId: mainVariant.Id,
-                context: saveLoaders.Save.Context
+                context: saveLoaders.Save.ContextToCreate(pkm.Species)
             ), flags);
 
             // now pkmVariant for context is created
@@ -361,7 +362,7 @@ public class MovePkmAction(
             throw new ArgumentException($"Not-attached move from main to save requires a single version");
         }
 
-        var pkmVariant = relatedPkmVariants.Find(version => version.Context == saveLoaders.Save.Context);
+        var pkmVariant = saveLoaders.Save.FindVariant(relatedPkmVariants);
 
         if (pkmVariant == default)
         {
@@ -386,14 +387,14 @@ public class MovePkmAction(
             throw new ArgumentException($"PkmVariantEntity already in save, id={attachedPkmVariant.Id}, saveId={attachedPkmVariant.AttachedSaveId}");
         }
 
-        if (pkmVariant.Context != saveLoaders.Save.Context)
+        if (!saveLoaders.Save.CanEnter(pkmVariant.Context, pkmVariant.Species))
         {
             throw new ArgumentException($"PkmVariantEntity Context not compatible with save for id={pkmVariant.Id}, context={pkmVariant.Context}, save.context={saveLoaders.Save.Context}");
         }
 
         var pkm = await pkmVariantLoader.GetPKM(pkmVariant);
 
-        if (!saveLoaders.Save.Personal.IsPresentInGame(pkm.Species, pkm.Form))
+        if (!saveLoaders.Save.IsPresentInGame(pkm.Species, pkm.Form))
         {
             throw new ArgumentException($"PkmVariantEntity Species not compatible with save for id={pkmVariant.Id}, species={pkm.Species}, save.maxSpecies={saveLoaders.Save.MaxSpeciesID}");
         }
@@ -450,6 +451,8 @@ public class MovePkmAction(
         var pkmVariantEntity = await pkmVariantLoader.GetEntityBySave(savePkm.SaveId, savePkm.IdBase);
         var mainPkmAlreadyExists = pkmVariantEntity != null;
 
+        var pkmForMain = sp.GetRequiredService<IPkmConvertService>().ToStorageFormat(savePkm.Pkm);
+
         // create pkm-version
         var inputKey = $"{targetBox}.{targetBoxSlot}";
         input.CreatedVariantIds.TryGetValue(inputKey, out var createdVariantId);
@@ -461,9 +464,9 @@ public class MovePkmAction(
             IsExternal: false,
             AttachedSaveId: input.attached ? sourceSaveId : null,
             AttachedSavePkmIdBase: input.attached ? savePkm.IdBase : null,
-            Context: savePkm.Context,
-            Generation: savePkm.Generation,
-            Pkm: savePkm.Pkm
+            Context: pkmForMain.Context,
+            Generation: pkmForMain.Generation,
+            Pkm: pkmForMain
         ));
         input.CreatedVariantIds[inputKey] = pkmVariantEntity.Id;
 
@@ -486,11 +489,15 @@ public class MovePkmAction(
             saveLoaders.Pkms.DeleteDto(savePkm.Id);
         }
 
-        await new DexMainService(sp).EnablePKM(savePkm.Pkm, savePkm.Save);
+        // Stored in another format than its save's, it is that format's context the dex entry is for.
+        await new DexMainService(sp).EnablePKM(pkmForMain, ReferenceEquals(pkmForMain, savePkm.Pkm) ? savePkm.Save : null);
     }
 
     private async Task CheckG3NationalDex(SaveWrapper save, int species)
     {
+        if (save.FormatExtension?.HasVanillaPokedex == false)
+            return;
+
         // enable national-dex in G3 RSE if pkm outside of regional-dex
         if (save.GetSave() is SAV3 saveG3RSE && saveG3RSE.LargeBlock is ISaveBlock3LargeHoenn && !saveG3RSE.NationalDex)
         {
