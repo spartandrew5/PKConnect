@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from './api/client';
-import type { BoardingResult, Catalog, Journey, Names, Trainer } from './api/types';
+import type { BoardingResult, Catalog, Journey, Names, PlayStatus, Trainer } from './api/types';
 import { PORTS } from './components/region';
 import { Journal } from './screens/Journal';
 import { League } from './screens/League';
+import { NewTrainer } from './screens/NewTrainer';
 import { Roster } from './screens/Roster';
+import { Settings } from './screens/Settings';
 import { TrainerCard } from './screens/TrainerCard';
 import { Travel } from './screens/Travel';
 
@@ -39,7 +41,10 @@ export function App() {
     setTabState(next);
     history.replaceState(null, '', `#${next}`);
   }, []);
-  const [screen, setScreen] = useState<'main' | 'roster'>(() => (location.hash === '#roster' ? 'roster' : 'main'));
+  const [screen, setScreen] = useState<'main' | 'roster' | 'new' | 'settings'>(() =>
+    location.hash === '#roster' ? 'roster' : location.hash === '#new' ? 'new' : location.hash === '#settings' ? 'settings' : 'main',
+  );
+  const [play, setPlay] = useState<PlayStatus>();
 
   useEffect(() => {
     if (!toast) return;
@@ -94,6 +99,47 @@ export function App() {
     [load, setTab],
   );
 
+  // While a game runs the backend is asked now and then whether the player is back; when they
+  // are, everything shown is read again: the save has changed, and maybe a title with it.
+  const running = play?.state === 'running';
+  useEffect(() => {
+    api.playStatus().then(setPlay, () => undefined);
+  }, []);
+  useEffect(() => {
+    if (!running) return;
+    const timer = setInterval(async () => {
+      const next = await api.playStatus().catch(() => undefined);
+      if (!next || next.state === 'running') return;
+      setPlay(next);
+      await load().catch((e) => setError(messageOf(e)));
+      if (next.state === 'failed') setError(next.message);
+      else if (next.message) setToast(next.message);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [running, load]);
+
+  const startGame = useCallback(async () => {
+    setError(undefined);
+    try {
+      setPlay(await api.play());
+    } catch (e) {
+      setError(messageOf(e));
+    }
+  }, []);
+
+  const created = useCallback(
+    async (_trainerId: string, started: boolean, notStarted?: string) => {
+      setError(undefined);
+      await load().catch((e) => setError(messageOf(e)));
+      setScreen('main');
+      setTab('card');
+      if (notStarted) setError(`The trainer was created, but the game didn't start: ${notStarted}`);
+      else if (started) setPlay(await api.playStatus().catch(() => undefined));
+      else setToast('Trainer created');
+    },
+    [load, setTab],
+  );
+
   const trainer = journey?.trainers.find((t) => t.isActive);
   const tint = trainer?.currentRegion ?? trainer?.homeRegion ?? 'sinnoh';
 
@@ -115,6 +161,9 @@ export function App() {
             <span className="sub">{journey.trainers.length} trainers ▾</span>
           </button>
         )}
+        <button type="button" className="btn" onClick={() => setScreen(screen === 'settings' ? 'main' : 'settings')}>
+          Settings
+        </button>
       </div>
 
       {screen === 'main' && (
@@ -132,14 +181,34 @@ export function App() {
         {!error && (!catalog || !journey) && <div className="note">Loading…</div>}
 
         {catalog && journey && screen === 'roster' && (
-          <Roster trainers={journey.trainers} catalog={catalog} busy={busy} onPick={pick} onBack={() => setScreen('main')} />
+          <Roster
+            trainers={journey.trainers}
+            catalog={catalog}
+            busy={busy}
+            onPick={pick}
+            onBack={() => setScreen('main')}
+            onNew={() => setScreen('new')}
+          />
         )}
+
+        {catalog && screen === 'new' && <NewTrainer catalog={catalog} onCreated={created} onCancel={() => setScreen('roster')} />}
 
         {catalog && journey && screen === 'main' && !trainer && (
-          <Roster trainers={journey.trainers} catalog={catalog} busy={busy} onPick={pick} onBack={() => undefined} />
+          <Roster
+            trainers={journey.trainers}
+            catalog={catalog}
+            busy={busy}
+            onPick={pick}
+            onBack={() => undefined}
+            onNew={() => setScreen('new')}
+          />
         )}
 
-        {catalog && trainer && screen === 'main' && tab === 'card' && <TrainerCard trainer={trainer} catalog={catalog} />}
+        {catalog && screen === 'settings' && <Settings catalog={catalog} onDone={() => setScreen('main')} />}
+
+        {catalog && trainer && screen === 'main' && tab === 'card' && (
+          <TrainerCard trainer={trainer} catalog={catalog} playing={running && play?.trainerId === trainer.id} onPlay={startGame} />
+        )}
 
         {catalog && trainer && screen === 'main' && tab === 'journal' && <Journal trainer={trainer} catalog={catalog} />}
         {catalog && journey && trainer && screen === 'main' && tab === 'league' && (

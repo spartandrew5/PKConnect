@@ -20,7 +20,7 @@ public record GameDTO(
     string Id, string Name, string Region, string[] Regions, int Generation,
     int MaxSpecies, int MaxMove, bool Playable, string? Note = null);
 
-public record CatalogDTO(List<RegionDTO> Regions, List<GameDTO> Games);
+public record CatalogDTO(List<RegionDTO> Regions, List<GameDTO> Games, List<CharacterDTO> Characters);
 
 /// <summary>English names by id: <c>Species[25]</c> is "Pikachu", <c>Moves[85]</c> is "Thunderbolt".</summary>
 public record NamesDTO(string[] Species, string[] Moves);
@@ -84,7 +84,7 @@ public static class ConnectCatalog
         return new([.. strings.Species], [.. strings.Move]);
     }
 
-    public static CatalogDTO Get() => new([.. Regions], [.. Games.Select(ToDTO)]);
+    public static CatalogDTO Get() => new([.. Regions], [.. Games.Select(ToDTO)], ConnectCharacters.All());
 
     public static GameDTO? Game(string? gameId) =>
         Games.FirstOrDefault(game => string.Equals(game.Id, gameId?.Trim(), StringComparison.OrdinalIgnoreCase)) is { } found ? ToDTO(found) : null;

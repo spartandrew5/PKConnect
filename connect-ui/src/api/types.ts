@@ -21,9 +21,47 @@ export interface Game {
   note?: string;
 }
 
+/** A character a trainer can look like. */
+export interface Character {
+  id: string;
+  name: string;
+  order: number;
+  /** The generations it has sprites for; elsewhere the game's own protagonist is kept. */
+  generations: string[];
+}
+
 export interface Catalog {
   regions: Region[];
   games: Game[];
+  characters: Character[];
+}
+
+export interface Emulator {
+  path: string;
+  /** For a frontend like RetroArch: the core to load the game with. */
+  corePath?: string;
+}
+
+export interface PlaySettings {
+  /** By platform: "gba" plays the Game Boy and GBA games, "nds" the DS ones. */
+  emulators: Record<string, Emulator>;
+  /** The unmodified ROM of each game, by game id. */
+  romPaths: Record<string, string>;
+}
+
+export interface PlayStatus {
+  state: 'idle' | 'running' | 'finished' | 'failed';
+  trainerId?: string;
+  gameId?: string;
+  startedAt?: string;
+  message?: string;
+  crownedRegion?: RegionId;
+  newSave: boolean;
+}
+
+export interface TrainerProfiles {
+  activeProfileId?: string;
+  createdProfileId?: string;
 }
 
 export interface PartyMon {

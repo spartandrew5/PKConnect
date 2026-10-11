@@ -231,6 +231,10 @@ footer{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 16p
 footer button{border:0;background:none;color:var(--muted);text-decoration:underline;padding:0}
 
 /* Beyond the mockup: real badge art, and states a live app has. */
+span.sprite{background:transparent}
+img.sprite{width:44px;height:44px;object-fit:contain;image-rendering:pixelated;background:transparent}
+.portrait img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
+.opt:disabled{cursor:not-allowed;opacity:.6}
 .bdg img{width:36px;height:36px;object-fit:contain;display:block;filter:grayscale(1) opacity(.28)}
 .bdg.on img{filter:none}
 .btn:disabled{opacity:.55;cursor:not-allowed}

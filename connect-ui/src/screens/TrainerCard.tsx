@@ -1,5 +1,6 @@
 import type { Catalog, PassportRegion, Region, Trainer } from '../api/types';
 import { Mon } from '../components/Mon';
+import { Portrait } from '../components/Portrait';
 
 function badgeIcon(region: Region, badge: string): string {
   return `/badge-icons/${region.id}-${badge.toLowerCase()}.png`;
@@ -36,7 +37,20 @@ function PassportPage({ region, page, here }: { region: Region; page: PassportRe
   );
 }
 
-export function TrainerCard({ trainer, catalog, onLook }: { trainer: Trainer; catalog: Catalog; onLook?: () => void }) {
+export function TrainerCard({
+  trainer,
+  catalog,
+  playing,
+  onPlay,
+  onLook,
+}: {
+  trainer: Trainer;
+  catalog: Catalog;
+  /** The trainer's game is running right now. */
+  playing: boolean;
+  onPlay: () => void;
+  onLook?: () => void;
+}) {
   const game = catalog.games.find((g) => g.id === trainer.currentGameId);
   const region = catalog.regions.find((r) => r.id === trainer.currentRegion);
   const home = catalog.regions.find((r) => r.id === trainer.homeRegion);
@@ -54,13 +68,19 @@ export function TrainerCard({ trainer, catalog, onLook }: { trainer: Trainer; ca
         <div className="tcard-body">
           <div className="who">
             <button type="button" className="portrait" onClick={onLook} disabled={!onLook} aria-label="Change appearance">
-              {trainer.trainerName.slice(0, 1)}
+              {trainer.appearance?.character ? (
+                <Portrait character={trainer.appearance.character} />
+              ) : (
+                trainer.trainerName.slice(0, 1)
+              )}
             </button>
             <div className="who-text">
               <h1>{trainer.trainerName}</h1>
               <p className="muted">
                 {home ? `From ${home.name}` : 'No home region yet'}
-                {trainer.appearance?.character ? ` · appears as ${trainer.appearance.character}` : ''}
+                {trainer.appearance?.character
+                  ? ` · appears as ${catalog.characters.find((c) => c.id === trainer.appearance?.character)?.name ?? trainer.appearance.character}`
+                  : ''}
               </p>
               {region && (
                 <p className="here">
@@ -69,9 +89,8 @@ export function TrainerCard({ trainer, catalog, onLook }: { trainer: Trainer; ca
                 </p>
               )}
             </div>
-            {/* Starting the emulator isn't in the backend yet. */}
-            <button type="button" className="btn go" disabled title="Launching the game isn't wired up yet">
-              {game ? `Continue in ${game.name}` : 'No game yet'}
+            <button type="button" className="btn go" disabled={!game || playing} onClick={onPlay}>
+              {!game ? 'No game yet' : playing ? `Playing ${game.name}…` : trainer.saves.length === 0 ? `Start ${game.name}` : `Continue in ${game.name}`}
             </button>
           </div>
 
@@ -82,7 +101,10 @@ export function TrainerCard({ trainer, catalog, onLook }: { trainer: Trainer; ca
               ))}
             </div>
           ) : (
-            <div className="note">No Pokémon yet. {trainer.trainerName} picks a first partner when the game starts.</div>
+            <div className="note">
+              No Pokémon yet. {trainer.trainerName} picks a first partner when the game starts.
+              {trainer.saves.length === 0 && " Save in the game before closing it: that first save becomes this trainer."}
+            </div>
           )}
 
           <div className="facts">

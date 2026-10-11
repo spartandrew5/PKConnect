@@ -290,6 +290,38 @@
         }
       }
     },
+    "/api/connect/characters/{characterId}/portrait": {
+      "get": {
+        "tags": [
+          "Connect"
+        ],
+        "operationId": "Connect_GetCharacterPortrait",
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/connect/names": {
       "get": {
         "tags": [
@@ -677,6 +709,94 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PatchResultDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/play": {
+      "get": {
+        "tags": [
+          "Play"
+        ],
+        "operationId": "Play_GetStatus",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Play"
+        ],
+        "operationId": "Play_Start",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/play/settings": {
+      "get": {
+        "tags": [
+          "Play"
+        ],
+        "operationId": "Play_GetSettings",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaySettingsDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Play"
+        ],
+        "operationId": "Play_SetSettings",
+        "requestBody": {
+          "x-name": "settings",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaySettingsDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaySettingsDTO"
                 }
               }
             }
@@ -5300,7 +5420,8 @@
         "additionalProperties": false,
         "required": [
           "regions",
-          "games"
+          "games",
+          "characters"
         ],
         "properties": {
           "regions": {
@@ -5313,6 +5434,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GameDTO"
+            }
+          },
+          "characters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CharacterDTO"
             }
           }
         }
@@ -5386,6 +5513,34 @@
           },
           "note": {
             "type": "string"
+          }
+        }
+      },
+      "CharacterDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "order",
+          "generations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "generations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -6281,6 +6436,75 @@
           },
           "homeRegionLaunch": {
             "type": "boolean"
+          }
+        }
+      },
+      "PlayStatusDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "state",
+          "newSave"
+        ],
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "trainerId": {
+            "type": "string"
+          },
+          "gameId": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message": {
+            "type": "string"
+          },
+          "crownedRegion": {
+            "type": "string"
+          },
+          "newSave": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlaySettingsDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "emulators",
+          "romPaths"
+        ],
+        "properties": {
+          "emulators": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/EmulatorDTO"
+            }
+          },
+          "romPaths": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EmulatorDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "corePath": {
+            "type": "string"
           }
         }
       },

@@ -6,12 +6,14 @@ export function Roster({
   busy,
   onPick,
   onBack,
+  onNew,
 }: {
   trainers: Trainer[];
   catalog: Catalog;
   busy: boolean;
   onPick: (trainer: Trainer) => void;
   onBack: () => void;
+  onNew: () => void;
 }) {
   const active = trainers.find((trainer) => trainer.isActive);
 
@@ -86,6 +88,10 @@ export function Roster({
             </button>
           );
         })}
+        <button type="button" className="tmini new" onClick={onNew} disabled={busy}>
+          <span className="plus">+</span>
+          New trainer
+        </button>
       </div>
     </section>
   );

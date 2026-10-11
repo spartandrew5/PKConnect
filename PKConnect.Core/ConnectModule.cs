@@ -35,6 +35,9 @@ public static class ConnectModule
         services.AddSingleton<IJournalService, JournalService>();
         services.AddSingleton<IJourneyService, JourneyService>();
         services.AddSingleton<ITravelService, TravelService>();
+        services.AddSingleton<play.IPlayService, play.PlayService>();
+        CoreRouter.AddControllers(typeof(play.PlayController));
+        services.AddScoped<play.PlayController>();
         CoreRouter.AddControllers(typeof(JourneyController));
         services.AddScoped<JourneyController>();
 

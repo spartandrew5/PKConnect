@@ -128,6 +128,10 @@ public class TrainerProfilesService(
         {
             throw new ArgumentException("Uploaded save file is empty");
         }
+        if (!SaveFiles.TryLoad(fileContent, out _, fileName))
+        {
+            throw new ArgumentException("That file isn't a save file Connect can read");
+        }
 
         string relativeGlob;
 

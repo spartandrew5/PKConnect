@@ -14,6 +14,19 @@ public class ConnectController
         return new(Version: version, PKVaultVersion: SettingsService.GetBuildInfo().Version);
     }
 
+    /// <summary>The picture a character is known by, as a PNG.</summary>
+    [HttpGet("characters/{characterId}/portrait")]
+    public CoreFileResponse GetCharacterPortrait(string characterId)
+    {
+        var path = ConnectCharacters.PortraitPath(characterId)
+            ?? throw new KeyNotFoundException($"No such character: {characterId}");
+        return new(
+            StatusCode: 200,
+            ContentType: "image/png",
+            File: new(new MemoryStream(File.ReadAllBytes(path)), "image/png", $"{characterId}.png"),
+            Header: new() { ["Cache-Control"] = "max-age=3600" });
+    }
+
     /// <summary>Species and move names by id, for showing what the other routes give as numbers.</summary>
     [HttpGet("names")]
     public NamesDTO GetNames()
