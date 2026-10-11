@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PKConnect.Core.champions;
 using PKConnect.Core.launch;
 using PKConnect.Core.status;
 using PKVault.Core;
@@ -19,8 +20,11 @@ public static class ConnectModule
     {
         RouteJsonContext.AddResolver(ConnectJsonContext.Default);
 
-        CoreRouter.AddControllers(typeof(ConnectController), typeof(PatchController));
+        services.AddSingleton<IChampionsService, ChampionsService>();
+
+        CoreRouter.AddControllers(typeof(ConnectController), typeof(PatchController), typeof(ChampionsController));
         services.AddScoped<ConnectController>();
         services.AddScoped<PatchController>();
+        services.AddScoped<ChampionsController>();
     }
 }

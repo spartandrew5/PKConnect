@@ -153,6 +153,69 @@
         }
       }
     },
+    "/api/champions": {
+      "get": {
+        "tags": [
+          "Champions"
+        ],
+        "operationId": "Champions_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChampionsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/champions/{region}": {
+      "put": {
+        "tags": [
+          "Champions"
+        ],
+        "operationId": "Champions_SetChampion",
+        "parameters": [
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetChampionRequestDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChampionsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/connect": {
       "get": {
         "tags": [
@@ -4313,6 +4376,108 @@
           1
         ]
       },
+      "ChampionsDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "regions"
+        ],
+        "properties": {
+          "regions": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ChampionTeamDTO"
+            }
+          },
+          "saveSnapshots": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ChampionTeamDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "championName",
+          "team",
+          "source"
+        ],
+        "properties": {
+          "championName": {
+            "type": "string"
+          },
+          "team": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChampionMonDTO"
+            }
+          },
+          "source": {
+            "type": "string"
+          },
+          "beatenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "gameVersion": {
+            "type": "string"
+          },
+          "appearance": {
+            "type": "string"
+          }
+        }
+      },
+      "ChampionMonDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "species",
+          "level"
+        ],
+        "properties": {
+          "species": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "heldItem": {
+            "type": "string"
+          }
+        }
+      },
+      "SetChampionRequestDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "champion"
+        ],
+        "properties": {
+          "champion": {
+            "$ref": "#/components/schemas/ChampionTeamDTO"
+          },
+          "saveId": {
+            "type": "string"
+          },
+          "hallOfFameFingerprint": {
+            "type": "string"
+          }
+        }
+      },
       "ConnectStatusDTO": {
         "type": "object",
         "additionalProperties": false,
@@ -4747,6 +4912,8 @@
           "warnings",
           "teamsGenerated",
           "teamsSkipped",
+          "championApplied",
+          "championSkipped",
           "basePatchApplied",
           "homeRegionLaunch"
         ],
@@ -4772,6 +4939,14 @@
             "format": "int32"
           },
           "teamsSkipped": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "championApplied": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "championSkipped": {
             "type": "integer",
             "format": "int32"
           },

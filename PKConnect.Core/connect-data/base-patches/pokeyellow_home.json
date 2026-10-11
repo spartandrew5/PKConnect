@@ -1,0 +1,239 @@
+{
+  "format": 1,
+  "game": "yellow",
+  "patch": "home",
+  "rom": {
+    "size": 1048576,
+    "sha1": "501905daec8f2d1a5a8535c50690414caeb4d83e",
+    "baseSha1": "cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1",
+    "title": "POKEMON YELLOW"
+  },
+  "homeRegionChampionPlaceholder": {
+    "trainerId": 43,
+    "trainerConstant": "RIVAL3",
+    "newTrainerAllocated": false,
+    "trainerNumbers": [
+      1,
+      2,
+      3
+    ],
+    "trainerNumberSaveOffset": 10689,
+    "trainerPicFieldOffset": 0,
+    "parties": [
+      {
+        "partyNumber": 1,
+        "pointerOffset": 237093,
+        "partyOffset": 238869,
+        "zoneOffset": 238870,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "CLOYSTER"
+          },
+          {
+            "level": 63,
+            "species": "NINETALES"
+          },
+          {
+            "level": 65,
+            "species": "JOLTEON"
+          }
+        ],
+        "laterVariantsDependOnSize": true
+      },
+      {
+        "partyNumber": 2,
+        "pointerOffset": 237093,
+        "partyOffset": 238883,
+        "zoneOffset": 238884,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "MAGNETON"
+          },
+          {
+            "level": 63,
+            "species": "CLOYSTER"
+          },
+          {
+            "level": 65,
+            "species": "FLAREON"
+          }
+        ],
+        "laterVariantsDependOnSize": true
+      },
+      {
+        "partyNumber": 3,
+        "pointerOffset": 237093,
+        "partyOffset": 238897,
+        "zoneOffset": 238898,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "NINETALES"
+          },
+          {
+            "level": 63,
+            "species": "MAGNETON"
+          },
+          {
+            "level": 65,
+            "species": "VAPOREON"
+          }
+        ],
+        "laterVariantsDependOnSize": false
+      }
+    ],
+    "specialTrainerMoves": [
+      {
+        "partyNumber": 1,
+        "entryOffset": 236933,
+        "trainerNumberOffset": 236934,
+        "moveOverrides": 7
+      },
+      {
+        "partyNumber": 2,
+        "entryOffset": 236957,
+        "trainerNumberOffset": 236958,
+        "moveOverrides": 7
+      },
+      {
+        "partyNumber": 3,
+        "entryOffset": 236981,
+        "trainerNumberOffset": 236982,
+        "moveOverrides": 8
+      }
+    ],
+    "specialTrainerMovesNote": "active: these stamp fixed moves onto party slots. Write $FF at trainerNumberOffset to disable one",
+    "frontPic": {
+      "trainerPicId": 43,
+      "tableEntryOffset": 235877,
+      "tableEntryFormat": "dw pic address (bank ConnectChampionPic), bcd3 base money",
+      "symbol": "ConnectChampionPic",
+      "address": "3b:4180",
+      "offset": 967040,
+      "bank": 59,
+      "capacity": 2048,
+      "defaultCompressedSize": 277,
+      "compression": "gen1-pkmncompress",
+      "uncompressedSize": 784,
+      "dimensionsTiles": [
+        7,
+        7
+      ],
+      "defaultImage": "gfx/trainers/rival3.png",
+      "defaultPalette": null,
+      "paletteTableEntryOffset": null,
+      "paletteNote": "no per-trainer palette: every trainer pic uses MonsterPalettes[0] in battle",
+      "coordsEntryOffset": null,
+      "bankHook": {
+        "symbol": "ConnectLoadTrainerPicBank",
+        "address": "3d:6946",
+        "offset": 1009990
+      },
+      "writeRule": "overwrite in place, up to capacity bytes; the loader reads RIVAL3 pics from this bank"
+    },
+    "overworld": {
+      "graphicsId": 31,
+      "graphicsConstant": "SPRITE_CONNECT_CHAMPION",
+      "graphicsInfoPointerOffset": 82721,
+      "graphicsInfo": {
+        "format": "dw sheet address, db tiles * 16 (half sheet), db bank",
+        "size": 4
+      },
+      "picTable": null,
+      "picData": {
+        "symbol": "ConnectChampionSprite",
+        "address": "3b:4000",
+        "offset": 966656,
+        "size": 384,
+        "frames": 6,
+        "frameWidth": 16,
+        "frameHeight": 16,
+        "format": "uncompressed 2bpp",
+        "overwriteInPlace": true
+      },
+      "palette": {
+        "tag": null,
+        "paletteListEntryOffset": null,
+        "note": "no per-sprite palette: every overworld NPC draws with the shared OBP0/OBP1 colors"
+      },
+      "usedBy": [
+        "ChampionsRoom object 1 (TEXT_CHAMPIONSROOM_RIVAL)"
+      ]
+    },
+    "name": {
+      "source": "rom",
+      "flagOffset": 1015552,
+      "flagAddress": "3d:7f00",
+      "flagDefault": 0,
+      "nameBufferOffset": 1015553,
+      "nameBufferAddress": "3d:7f01",
+      "maxLength": 7,
+      "terminator": 80,
+      "bufferSize": 8,
+      "defaultFill": 80,
+      "reservedAfterBuffer": 5,
+      "hook": {
+        "symbol": "ConnectGetChampionName",
+        "address": "3d:7f0e",
+        "offset": 1015566
+      },
+      "fallback": {
+        "source": "save",
+        "symbol": "wRivalName",
+        "saveOffset": 9718
+      },
+      "appliesTo": "RIVAL3's trainer name in battle, via GetTrainerName_ (the 'wants to fight' intro, send-out lines and the name before the end-of-battle text)",
+      "notAffected": "texts that use the <RIVAL> control code still print wRivalName"
+    }
+  }
+}

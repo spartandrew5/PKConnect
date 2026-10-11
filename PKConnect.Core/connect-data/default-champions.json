@@ -1,0 +1,215 @@
+{
+  "regions": {
+    "kanto": {
+      "championName": "Blue",
+      "source": "default",
+      "team": [
+        {
+          "species": 18,
+          "level": 59,
+          "nickname": "Pidgeot",
+          "moves": ["Aerial Ace", "FeatherDance", "Sand-Attack", "Whirlwind"]
+        },
+        {
+          "species": 65,
+          "level": 57,
+          "nickname": "Alakazam",
+          "moves": ["Psychic", "Future Sight", "Recover", "Reflect"]
+        },
+        {
+          "species": 112,
+          "level": 59,
+          "nickname": "Rhydon",
+          "moves": ["Take Down", "Earthquake", "Rock Tomb", "Scary Face"]
+        },
+        {
+          "species": 103,
+          "level": 59,
+          "nickname": "Exeggutor",
+          "moves": ["Giga Drain", "Egg Bomb", "Sleep Powder", "Light Screen"]
+        },
+        {
+          "species": 130,
+          "level": 61,
+          "nickname": "Gyarados",
+          "moves": ["Hydro Pump", "Dragon Rage", "Bite", "Thrash"]
+        },
+        {
+          "species": 6,
+          "level": 63,
+          "nickname": "Charizard",
+          "moves": ["Wing Attack", "Slash", "Flamethrower", "Earthquake"]
+        }
+      ]
+    },
+    "johto": {
+      "championName": "Lance",
+      "source": "default",
+      "team": [
+        {
+          "species": 130,
+          "level": 44,
+          "nickname": "Gyarados",
+          "moves": ["Rain Dance", "Surf", "Flail", "Hyper Beam"]
+        },
+        {
+          "species": 149,
+          "level": 47,
+          "nickname": "Dragonite",
+          "moves": ["Twister", "Thunder Wave", "Blizzard", "Hyper Beam"]
+        },
+        {
+          "species": 6,
+          "level": 46,
+          "nickname": "Charizard",
+          "moves": ["Flamethrower", "Wing Attack", "Slash", "Hyper Beam"]
+        },
+        {
+          "species": 142,
+          "level": 46,
+          "nickname": "Aerodactyl",
+          "moves": ["Rock Slide", "AncientPower", "Wing Attack", "Hyper Beam"]
+        },
+        {
+          "species": 149,
+          "level": 47,
+          "nickname": "Dragonite",
+          "moves": ["Twister", "Thunder Wave", "Thunder", "Hyper Beam"]
+        },
+        {
+          "species": 149,
+          "level": 50,
+          "nickname": "Dragonite",
+          "moves": ["Safeguard", "Outrage", "Fire Blast", "Hyper Beam"]
+        }
+      ]
+    },
+    "hoenn": {
+      "championName": "Steven",
+      "source": "default",
+      "team": [
+        {
+          "species": 227,
+          "level": 57,
+          "nickname": "Skarmory",
+          "moves": ["Steel Wing", "Toxic", "Aerial Ace", "Spikes"]
+        },
+        {
+          "species": 344,
+          "level": 55,
+          "nickname": "Claydol",
+          "moves": ["Earthquake", "AncientPower", "Light Screen", "Reflect"]
+        },
+        {
+          "species": 306,
+          "level": 56,
+          "nickname": "Aggron",
+          "moves": ["Earthquake", "Dragon Claw", "Thunder", "SolarBeam"]
+        },
+        {
+          "species": 346,
+          "level": 56,
+          "nickname": "Cradily",
+          "moves": ["AncientPower", "Confuse Ray", "Sludge Bomb", "Giga Drain"]
+        },
+        {
+          "species": 348,
+          "level": 56,
+          "nickname": "Armaldo",
+          "moves": ["AncientPower", "Slash", "Aerial Ace", "Water Pulse"]
+        },
+        {
+          "species": 376,
+          "level": 58,
+          "nickname": "Metagross",
+          "heldItem": "Sitrus Berry",
+          "moves": ["Meteor Mash", "Earthquake", "Psychic", "Hyper Beam"]
+        }
+      ]
+    },
+    "sinnoh": {
+      "championName": "Cynthia",
+      "source": "default",
+      "team": [
+        {
+          "species": 442,
+          "level": 58,
+          "nickname": "Spiritomb",
+          "moves": ["Shadow Ball", "Dark Pulse", "Psychic", "Silver Wind"]
+        },
+        {
+          "species": 407,
+          "level": 58,
+          "nickname": "Roserade",
+          "moves": ["Sludge Bomb", "Energy Ball", "Extrasensory", "Toxic"]
+        },
+        {
+          "species": 468,
+          "level": 60,
+          "nickname": "Togekiss",
+          "moves": ["Air Slash", "Water Pulse", "Shock Wave", "Aura Sphere"]
+        },
+        {
+          "species": 448,
+          "level": 60,
+          "nickname": "Lucario",
+          "moves": ["Psychic", "Aura Sphere", "Earthquake", "Extreme Speed"]
+        },
+        {
+          "species": 350,
+          "level": 58,
+          "nickname": "Milotic",
+          "moves": ["Aqua Ring", "Mirror Coat", "Surf", "Ice Beam"]
+        },
+        {
+          "species": 445,
+          "level": 62,
+          "nickname": "Garchomp",
+          "moves": ["Dragon Rush", "Earthquake", "Flamethrower", "Giga Impact"]
+        }
+      ]
+    },
+    "unova": {
+      "championName": "Alder",
+      "source": "default",
+      "team": [
+        {
+          "species": 617,
+          "level": 75,
+          "nickname": "Accelgor",
+          "moves": ["Focus Blast", "Bug Buzz", "Me First", "Energy Ball"]
+        },
+        {
+          "species": 626,
+          "level": 75,
+          "nickname": "Bouffalant",
+          "moves": ["Head Charge", "Megahorn", "Earthquake", "Stone Edge"]
+        },
+        {
+          "species": 621,
+          "level": 75,
+          "nickname": "Druddigon",
+          "moves": ["Outrage", "Superpower", "Night Slash", "Payback"]
+        },
+        {
+          "species": 584,
+          "level": 75,
+          "nickname": "Vanilluxe",
+          "moves": ["Blizzard", "Flash Cannon", "Light Screen", "Acid Armor"]
+        },
+        {
+          "species": 589,
+          "level": 75,
+          "nickname": "Escavalier",
+          "moves": ["X-Scissor", "Iron Head", "Aerial Ace", "Giga Impact"]
+        },
+        {
+          "species": 637,
+          "level": 77,
+          "nickname": "Volcarona",
+          "moves": ["Overheat", "Quiver Dance", "Bug Buzz", "Hyper Beam"]
+        }
+      ]
+    }
+  }
+}

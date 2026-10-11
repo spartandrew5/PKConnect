@@ -1,9 +1,12 @@
+using System.Text.Json;
+using PKConnect.Core.champions;
+
 namespace PKConnect.Core.launch;
 
 /// <summary>
 /// Writes opponent teams into the landing zones a Connect base patch reserves
 /// (see <see cref="BasePatchService"/>): gym leaders from the configured team
-/// pools. The base
+/// pools, and every champion slot from the region's current champion. The base
 /// patch already points each trainer at its zone, so a team is only the zone's
 /// records plus the GBA partySize byte or the GB terminator — no free space, no
 /// pointer rewrites.
@@ -53,6 +56,162 @@ public static class ConnectTeamPatchService
         }
 
         return (edits, results);
+    }
+
+    /// <summary>
+    /// The region's current champion team into every champion slot, with its
+    /// level curve re-centered on the traveling trainer's party average plus
+    /// <paramref name="championLevelBonus"/> (stored levels when no average).
+    /// </summary>
+    public static (List<(int Offset, byte[] Data)> Edits, List<ZoneResult> Results) BuildChampionEdits(
+        ConnectBasePatch patch, ChampionTeamDTO champion, double? averageLevel, int championLevelBonus)
+    {
+        var manifest = patch.Manifest;
+        var edits = new List<(int Offset, byte[] Data)>();
+        var results = new List<ZoneResult>();
+
+        Func<ChampionMonDTO, ChampionNameResolver.ResolvedMon> resolve = manifest.Format switch
+        {
+            ConnectRomFormat.Gba => ChampionNameResolver.ResolveGen3,
+            ConnectRomFormat.Crystal => ChampionNameResolver.ResolveGen2,
+            _ => ChampionNameResolver.ResolveGen1,
+        };
+
+        var resolved = ChampionTeamSubstitution.Adapt(manifest.GameId, champion.Team)
+            .Select(resolve)
+            .Where(m => m.Species > 0)
+            .ToList();
+
+        if (resolved.Count == 0)
+        {
+            results.AddRange(manifest.ChampionSlots.Select(slot =>
+                new ZoneResult(slot.Leader, 0, false, "No champion Pokemon exist in this game")));
+            return (edits, results);
+        }
+
+        var teamAvg = resolved.Average(m => m.Level);
+        var shift = averageLevel.HasValue ? averageLevel.Value + championLevelBonus - teamAvg : 0;
+
+        foreach (var slot in manifest.ChampionSlots)
+        {
+            var team = resolved
+                .Take(slot.Capacity)
+                .Select(m => new ZoneMon(Math.Clamp((int)Math.Round(m.Level + shift), 2, 100), m.Species, m.Item, m.Moves))
+                .ToList();
+
+            // Pad with the ace when later parties are located by walking this one.
+            while (slot.FixedSize && team.Count < slot.Capacity)
+            {
+                team.Add(team[^1]);
+            }
+
+            edits.AddRange(WriteZone(manifest, slot, team));
+
+            // Several battle-intro scripts greet you with the trainer's own
+            // struct name ("STEVEN: Welcome, RED.") rather than a hardcoded
+            // string. GB's name lives inline in the party buffer itself
+            // (see WriteZone's Crystal/Yellow branches); GBA keeps it in a
+            // fixed struct field alongside partySize.
+            if (manifest.Format == ConnectRomFormat.Gba
+                && !string.IsNullOrWhiteSpace(champion.ChampionName)
+                && slot.PartySizeOffset is { } partySizeOffset)
+            {
+                var structOffset = partySizeOffset - GymTrainerTableData.PartySizeOffset;
+                edits.Add((structOffset + GymTrainerTableData.TrainerNameOffset,
+                    ChampionNameResolver.EncodeGen3TrainerName(champion.ChampionName)));
+            }
+
+            results.Add(new(slot.Leader, team.Count, true, null));
+        }
+
+        // Crystal's champion name lives inline in the party group itself (the
+        // same physical bytes for a home-region or a visiting launch - the
+        // base patch doesn't relocate this table), unlike GBA's fixed struct
+        // field above.
+        if (manifest.Format == ConnectRomFormat.Crystal
+            && !string.IsNullOrWhiteSpace(champion.ChampionName)
+            && TryGetCrystalNameOffset(manifest.Raw, out var nameOffset))
+        {
+            edits.Add((nameOffset, ChampionNameResolver.EncodeGen2TrainerName(champion.ChampionName)));
+        }
+
+        // Yellow's champion is the same character as the save's rival, so the
+        // battle engine normally just prints wRivalName - correct by default
+        // (no custom champion) with no edit needed. When a custom champion
+        // exists, a dedicated flag+buffer added specifically for this override
+        // (championPlaceholder.name) redirects GetTrainerName_ to it instead;
+        // leaving the flag at 0 (never touched otherwise) keeps every other
+        // rival battle and every <RIVAL>-code map text reading the save as before.
+        if (manifest.Format == ConnectRomFormat.Yellow
+            && !string.IsNullOrWhiteSpace(champion.ChampionName)
+            && TryGetYellowNameOffsets(manifest.Raw, out var flagOffset, out var nameBufferOffset))
+        {
+            edits.Add((flagOffset, [1]));
+            edits.Add((nameBufferOffset, ChampionNameResolver.EncodeGen1TrainerName(champion.ChampionName)));
+        }
+
+        // Yellow's rival battles carry hardcoded "SpecialTrainerMoves" that
+        // stamp fixed moves onto specific party slots regardless of what
+        // species occupies them - active in the vanilla ROM (a visiting launch
+        // already has these disabled by the base patch's own IPS edits). Write
+        // $FF at each entry's trainerNumberOffset to disable it, same as the
+        // base patch does, so the champion's real moveset isn't overwritten.
+        // Harmless (no-op) to repeat on an already-patched ROM.
+        if (manifest.Format == ConnectRomFormat.Yellow)
+        {
+            foreach (var offset in GetYellowSpecialTrainerMoveOffsets(manifest.Raw))
+            {
+                edits.Add((offset, [0xFF]));
+            }
+        }
+
+        return (edits, results);
+    }
+
+    private static bool TryGetCrystalNameOffset(JsonElement raw, out int offset)
+    {
+        offset = 0;
+        if (raw.TryGetProperty("championPlaceholder", out var placeholder)
+            && placeholder.TryGetProperty("party", out var party)
+            && party.TryGetProperty("nameOffset", out var nameOffsetEl))
+        {
+            offset = nameOffsetEl.GetInt32();
+            return true;
+        }
+        return false;
+    }
+
+    private static bool TryGetYellowNameOffsets(JsonElement raw, out int flagOffset, out int nameBufferOffset)
+    {
+        flagOffset = 0;
+        nameBufferOffset = 0;
+        if (raw.TryGetProperty("championPlaceholder", out var placeholder)
+            && placeholder.TryGetProperty("name", out var name)
+            && name.TryGetProperty("flagOffset", out var flagOffsetEl)
+            && name.TryGetProperty("nameBufferOffset", out var nameBufferOffsetEl))
+        {
+            flagOffset = flagOffsetEl.GetInt32();
+            nameBufferOffset = nameBufferOffsetEl.GetInt32();
+            return true;
+        }
+        return false;
+    }
+
+    private static IEnumerable<int> GetYellowSpecialTrainerMoveOffsets(JsonElement raw)
+    {
+        if (!raw.TryGetProperty("homeRegionChampion", out var home)
+            || !home.TryGetProperty("specialTrainerMoves", out var entries))
+        {
+            yield break;
+        }
+
+        foreach (var entry in entries.EnumerateArray())
+        {
+            if (entry.TryGetProperty("trainerNumberOffset", out var off))
+            {
+                yield return off.GetInt32();
+            }
+        }
     }
 
     public static List<(int Offset, byte[] Data)> WriteZone(

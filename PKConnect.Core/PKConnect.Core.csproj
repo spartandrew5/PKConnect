@@ -5,6 +5,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PKVault.Core\PKVault.Core.csproj" />
+    <Reference Include="../PKVault.Core/PKHeX.Core.dll" />
   </ItemGroup>
 
   <ItemGroup>

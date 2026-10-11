@@ -1,0 +1,9 @@
+{
+  "_comment": "championLevelBonus is added to the travelling party's average level when a stored champion team is re-centered on it. gbaChampionTrainerIds are the League champion's gTrainers[] indices in the retail ROMs (pret decomps, include/constants/opponents.h), used on a home launch, where there is no Connect base patch: every id listed for a game gets the same team, which covers FireRed's one battle per rival starter.",
+  "championLevelBonus": 4,
+  "gbaChampionTrainerIds": {
+    "emerald": [335],
+    "firered": [438, 439, 440],
+    "leafgreen": [438, 439, 440]
+  }
+}

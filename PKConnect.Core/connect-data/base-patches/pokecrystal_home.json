@@ -1,0 +1,135 @@
+{
+  "format": 1,
+  "game": "crystal",
+  "patch": "home",
+  "rom": {
+    "size": 2097152,
+    "vanillaSha1": "f4cd194bdee0d04ca4eac29e09b8e4e9d818c133",
+    "sha1": "174ebcb300bea5fc79a197fa2d1fe0579af1ca71",
+    "gameCode": "BYTE"
+  },
+  "ips": {
+    "file": "pokecrystal_home.ips",
+    "size": 2565,
+    "sha1": "76c6e766b9553b2de59df62e782be5ad2ca0cec6",
+    "records": 24
+  },
+  "homeRegionChampionPlaceholder": {
+    "trainerId": 1,
+    "trainerConstant": "LANCE",
+    "trainerClass": 16,
+    "trainerClassConstant": "CHAMPION",
+    "trainerPicFieldOffset": null,
+    "notes": "Gen 2 has no per-trainer pic field: the front pic and its palette are indexed by trainer class, and CHAMPION (class 16) is used only by the final LEAGUE battle.",
+    "party": {
+      "groupPointerOffset": 235959,
+      "groupOffset": 244327,
+      "nameOffset": 244327,
+      "nameSlotSize": 8,
+      "nameMaxLength": 7,
+      "namePadByte": 37,
+      "nameTerminator": 80,
+      "trainerTypeOffset": 244335,
+      "trainerType": "TRAINERTYPE_ITEM_MOVES",
+      "trainerTypeValue": 3,
+      "zoneOffset": 244336,
+      "partyOffset": 244336,
+      "recordSize": 7,
+      "recordLayout": [
+        "level",
+        "species",
+        "item",
+        "move1",
+        "move2",
+        "move3",
+        "move4"
+      ],
+      "capacity": 6,
+      "terminator": 255,
+      "defaultTeamSize": 6,
+      "groupSize": 52,
+      "layout": "name: 8 fixed bytes = 1-7 characters, padded with 0x25 (<WBR>, never drawn), then 0x50 at byte 7; trainerType at +8; records from +9; 0xFF after the last record. Every offset is fixed whatever the name length."
+    },
+    "dialogue": {
+      "nameSource": "party.nameOffset, read at print time through TrainerGroups (as the battle banner does); nothing else needs patching",
+      "texts": [
+        "LancesRoom intro (LanceBattleIntroText)",
+        "LancesRoom after the battle (LancesRoomNoisyText)",
+        "Hall of Fame (HallOfFame_LanceText)"
+      ]
+    },
+    "frontPic": {
+      "trainerPicId": 16,
+      "tableEntryOffset": 1212461,
+      "tableEntryLayout": "db bank - PICS_FIX ($36), dw address (little endian); bank must be a Pics bank ($48-$5F)",
+      "paletteTableEntryOffset": 45326,
+      "paletteEntrySize": 4,
+      "paletteFormat": "two RGB555 colors, little endian (the middle colors; white and black are fixed)",
+      "coordsEntryOffset": null,
+      "width": 56,
+      "height": 56,
+      "uncompressedSize": 784,
+      "defaultImage": {
+        "symbol": "ChampionPlaceholderPic",
+        "address": "5b:57fe",
+        "offset": 1497086,
+        "size": 532,
+        "capacity": 1024,
+        "compression": "pokecrystal LZ (home/decompress.asm), ends with 0xFF"
+      },
+      "defaultPalette": {
+        "offset": 45326,
+        "size": 4
+      }
+    },
+    "overworld": {
+      "graphicsId": 63,
+      "graphicsIdConstant": "SPRITE_CHAMPION_PLACEHOLDER",
+      "graphicsInfoPointerOffset": 84138,
+      "graphicsInfo": {
+        "entrySize": 6,
+        "layout": [
+          "dw address",
+          "db length (tiles, nybble-swapped)",
+          "db bank",
+          "db type",
+          "db palette"
+        ],
+        "type": "WALKING_SPRITE",
+        "paletteSlot": 7
+      },
+      "picTable": null,
+      "picData": {
+        "symbol": "ChampionPlaceholderSpriteGFX",
+        "address": "01:747b",
+        "offset": 29819,
+        "size": 384,
+        "format": "uncompressed 2bpp",
+        "frameWidth": 16,
+        "frameHeight": 16,
+        "frames": 6
+      },
+      "palette": {
+        "symbol": "ChampionPlaceholderObjectPal",
+        "address": "02:784a",
+        "offset": 47178,
+        "tag": 7,
+        "tagConstant": "PAL_OW_ROCK",
+        "paletteListEntryOffset": 47178,
+        "size": 8,
+        "format": "four RGB555 colors, little endian"
+      },
+      "usedBy": [
+        "LancesRoom object LANCESROOM_LANCE (LancesRoom_MapEvents)",
+        "HallOfFame object HALLOFFAME_LANCE (HallOfFame_MapEvents)"
+      ]
+    },
+    "writableInPlace": [
+      "party group, groupSize bytes (name slot, type byte, records)",
+      "frontPic.defaultImage, up to capacity bytes (LZ data; pad with 0xFF)",
+      "frontPic.defaultPalette (4 bytes)",
+      "overworld.picData (fixed size, uncompressed)",
+      "overworld.palette (8 bytes)"
+    ]
+  }
+}
