@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PKConnect.Core.champions;
 using PKConnect.Core.launch;
+using PKConnect.Core.profiles;
 using PKConnect.Core.status;
 using PKVault.Core;
 
@@ -26,5 +27,9 @@ public static class ConnectModule
         services.AddScoped<ConnectController>();
         services.AddScoped<PatchController>();
         services.AddScoped<ChampionsController>();
+
+        services.AddSingleton<ITrainerProfilesService, TrainerProfilesService>();
+        CoreRouter.AddControllers(typeof(TrainerProfilesController));
+        services.AddScoped<TrainerProfilesController>();
     }
 }

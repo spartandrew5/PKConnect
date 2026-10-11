@@ -1,3 +1,5 @@
+using PKHeX.Core;
+
 namespace PKConnect.Core.regions;
 
 /// <summary>
@@ -44,6 +46,22 @@ public static class ConnectRegions
 
     public static string? ForGameId(string? gameId) =>
         gameId is not null && RegionByGameId.TryGetValue(gameId.Trim(), out var region) ? region : null;
+
+    /// <summary>The region of a save file's game.</summary>
+    public static string? ForSave(SaveFile save, string? path = null) => ForGameVersion(save.Version);
+
+    public static string? ForGameVersion(GameVersion version) => version switch
+    {
+        GameVersion.RD or GameVersion.GN or GameVersion.BU or GameVersion.YW or GameVersion.RB or GameVersion.RBY
+            or GameVersion.FR or GameVersion.LG or GameVersion.FRLG => "kanto",
+        GameVersion.GD or GameVersion.SI or GameVersion.C or GameVersion.GS or GameVersion.GSC
+            or GameVersion.HG or GameVersion.SS or GameVersion.HGSS => "johto",
+        GameVersion.R or GameVersion.S or GameVersion.E or GameVersion.RS or GameVersion.RSE => "hoenn",
+        GameVersion.D or GameVersion.P or GameVersion.Pt or GameVersion.DP or GameVersion.DPPt => "sinnoh",
+        GameVersion.B or GameVersion.W or GameVersion.B2 or GameVersion.W2 or GameVersion.BW
+            or GameVersion.B2W2 or GameVersion.Gen5 => "unova",
+        _ => null,
+    };
 
     /// <summary>
     /// Whether launching <paramref name="gameId"/> is a visit for a trainer from

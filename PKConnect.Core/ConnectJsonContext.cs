@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using PKConnect.Core.champions;
 using PKConnect.Core.launch;
+using PKConnect.Core.profiles;
 using PKConnect.Core.status;
 
 namespace PKConnect.Core;
@@ -10,6 +11,8 @@ namespace PKConnect.Core;
 [JsonSerializable(typeof(PatchResultDTO))]
 [JsonSerializable(typeof(ChampionsDTO))]
 [JsonSerializable(typeof(SetChampionRequestDTO))]
+[JsonSerializable(typeof(TrainerProfilesDTO))]
+[JsonSerializable(typeof(RegionBadgesDTO))]
 public partial class ConnectJsonContext : JsonSerializerContext
 {
 }

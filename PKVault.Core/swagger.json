@@ -1724,6 +1724,464 @@
         }
       }
     },
+    "/api/trainer-profiles": {
+      "get": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_Create",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pendingGameVersion",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "homeRegion",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}": {
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_Rename",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_Delete",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/activate-base-save": {
+      "post": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_ActivateBaseSave",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "gameVersion",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/active-save": {
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_SetActiveSave",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "saveId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/conquered-regions": {
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_AddConqueredRegions",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "style": "form",
+            "explode": true,
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/import-save": {
+      "post": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_ImportSave",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "file",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/region-badges": {
+      "get": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_GetRegionBadges",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionBadgesDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_SetRegionBadges",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegionBadgesDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionBadgesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/save-globs": {
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_UpdateSaveGlobs",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "saveGlobs",
+            "in": "query",
+            "style": "form",
+            "explode": true,
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerProfilesDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainer-profiles/{profileId}/switch": {
+      "put": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_Switch",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/warnings/warnings": {
       "get": {
         "tags": [
@@ -5382,6 +5840,127 @@
           },
           "editPayload": {
             "$ref": "#/components/schemas/EditPkmVariantPayload"
+          }
+        }
+      },
+      "TrainerProfilesDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profiles"
+        ],
+        "properties": {
+          "profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainerProfileDTO"
+            }
+          },
+          "activeProfileId": {
+            "type": "string"
+          },
+          "createdProfileId": {
+            "type": "string"
+          }
+        }
+      },
+      "TrainerProfileDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "lastPlayedAt",
+          "rootPath",
+          "settingsMutable"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastPlayedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rootPath": {
+            "type": "string"
+          },
+          "settingsMutable": {
+            "$ref": "#/components/schemas/SettingsMutableDTO"
+          },
+          "activeSaveId": {
+            "type": "integer"
+          },
+          "pendingGameVersion": {
+            "type": "string"
+          },
+          "regionBadges": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              }
+            }
+          },
+          "regionBadgeSnapshots": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "homeRegion": {
+            "type": "string"
+          },
+          "conqueredRegions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RegionBadgesDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "regions"
+        ],
+        "properties": {
+          "regions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              }
+            }
+          },
+          "snapshots": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         }
       },
