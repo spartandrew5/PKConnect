@@ -63,4 +63,17 @@ public class HallOfFameExtractionTest
 
         Assert.Empty(hallOfFame);
     }
+
+    [Fact]
+    public void NoBaseSave_ComesWithAHallOfFame()
+    {
+        // A visitor who has never beaten the League must not be taken for its champion.
+        var folder = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves");
+        foreach (var path in Directory.EnumerateFiles(folder))
+        {
+            Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path), path);
+            Assert.True(save!.ChecksumsValid, $"{Path.GetFileName(path)}: checksums");
+            Assert.True(HallOfFameReader.Read(save).Count == 0, $"{Path.GetFileName(path)} has Hall of Fame teams");
+        }
+    }
 }
