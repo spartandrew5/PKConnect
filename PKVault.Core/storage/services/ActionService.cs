@@ -453,6 +453,12 @@ public class ActionService(
 
         var pkm = await GetPkm();
 
+        // An added format brings its own learnsets; the moves it already knows always stay allowed.
+        if (PkmFormatExtension.For(pkm.GetMutablePkm())?.LearnableMoves(pkm.GetMutablePkm()) is { } learnable)
+        {
+            return [.. learnable.Concat(pkm.Moves).Where(move => move > 0).Distinct().Select(move => new MoveItem(move))];
+        }
+
         var legality = LegalityAnalysisService.GetLegalitySafeRaw(pkm, save);
 
         var moveComboSource = new LegalMoveComboSource();

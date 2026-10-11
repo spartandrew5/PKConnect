@@ -80,6 +80,21 @@ public abstract class SaveExtension
     /// <summary>False when the save's other slots (see <see cref="SaveFile.GetExtraSlots"/>) can't be read by PKHeX.</summary>
     public virtual bool ReadsExtraSlots => true;
 
+    /// <summary>
+    /// Added to what a save's id is made from, for saves that would otherwise share the id of
+    /// another game's save of the same trainer; null changes nothing.
+    /// </summary>
+    public virtual string? IdSalt => null;
+
+    /// <summary>The save's Pokédex reader and writer, or null for the one of the save's generation.</summary>
+    public virtual DexGenService? CreateDexService() => null;
+
+    /// <summary>
+    /// The game the save plays as, when it isn't what PKHeX reports (a ROM hack built on another
+    /// game's save structure, or paired versions PKHeX can't tell apart); null otherwise.
+    /// </summary>
+    public virtual GameVersion? PlayedVersion => null;
+
     /// <summary>False when the save's Pokédex isn't where PKHeX expects, so its flags are left alone.</summary>
     public virtual bool HasVanillaPokedex => true;
 

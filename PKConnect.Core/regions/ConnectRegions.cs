@@ -35,6 +35,10 @@ public static class ConnectRegions
         ["white"] = "unova",
         ["black2"] = "unova",
         ["white2"] = "unova",
+        // pokeemerald-expansion builds, by the game they are built as.
+        ["emeraldexpansion"] = "hoenn",
+        ["fireredexpansion"] = "kanto",
+        ["leafgreenexpansion"] = "kanto",
     };
 
     /// <summary>The slug in its canonical form, or null if it isn't a region.</summary>
@@ -48,7 +52,8 @@ public static class ConnectRegions
         gameId is not null && RegionByGameId.TryGetValue(gameId.Trim(), out var region) ? region : null;
 
     /// <summary>The region of a save file's game.</summary>
-    public static string? ForSave(SaveFile save, string? path = null) => ForGameVersion(save.Version);
+    public static string? ForSave(SaveFile save, string? path = null) =>
+        ForGameVersion(PKVault.Core.SaveExtension.For(save)?.PlayedVersion ?? save.Version);
 
     public static string? ForGameVersion(GameVersion version) => version switch
     {

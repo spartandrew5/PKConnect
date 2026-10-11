@@ -1,0 +1,37 @@
+{
+  "_comment": "Pokemon Connect base patch for SoulSilver (same decomp and Connect source as HeartGold, built with make soulsilver) (pret/pokeheartgold + Connect, see the decomp's include/constants/connect.h). Applied in memory at launch by Gen4ConnectPatchService; every per-launch edit is a same-size write inside these archives. Gym ids are the leaders' rematch trainers in badge order (Johto 1-8, then Kanto 1-8); champion ids are Lance and his rematch.",
+  "patches": [
+    {
+      "file": "soulsilver_connect.bps",
+      "vanillaSha1": "f8dc38ea20c17541a43b58c5e6d18c1732c7e582",
+      "targetSha1": "b2af3c9d628ddb5290d575f98963066fe3e87962"
+    }
+  ],
+  "trdataPath": "a/0/5/5",
+  "trpokePath": "a/0/5/6",
+  "messagePath": "a/0/2/7",
+  "trainerNamesBank": 729,
+  "gymTrainerIds": [
+    712,
+    713,
+    714,
+    715,
+    718,
+    717,
+    716,
+    719,
+    720,
+    721,
+    722,
+    723,
+    724,
+    725,
+    726,
+    727
+  ],
+  "championTrainerIds": [
+    244,
+    701
+  ],
+  "partyCapacity": 6
+}

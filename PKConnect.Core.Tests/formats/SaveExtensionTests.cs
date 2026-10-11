@@ -150,4 +150,97 @@ public class SaveExtensionTests
         Assert.Null(wrapper.FormatExtension);
         Assert.All(wrapper.GetPartyData(), pk => Assert.IsType<PK3>(pk.GetMutablePkm()));
     }
+
+    [Fact]
+    public void ExpansionSave_CountsWhatItOwns_InItsPokedex()
+    {
+        var wrapper = Load(Asset("emeraldexpansion.sav"));
+        var before = wrapper.CaughtCount;
+
+        wrapper.SetBoxSlotAtIndex(new ImmutablePKM(ExpansionVictini()), 0, 0);
+
+        Assert.Equal(before + 1, wrapper.CaughtCount);
+        Assert.True(wrapper.SeenCount >= wrapper.CaughtCount);
+    }
+
+    [Fact]
+    public async Task ExpansionSave_HasItsOwnPokedex_PastGen3()
+    {
+        var wrapper = Load(Asset("emeraldexpansion.sav"));
+        wrapper.SetBoxSlotAtIndex(new ImmutablePKM(ExpansionVictini()), 0, 0);
+        var service = Assert.IsType<ExpansionDexService>(wrapper.FormatExtension!.CreateDexService());
+
+        Dictionary<ushort, Dictionary<uint, DexItemDTO>> dex = [];
+        Assert.True(await service.UpdateDexWithSave(dex, null!, null));
+
+        Assert.Equal(ExpansionDexFlags.MaxDexSpecies, dex.Count);
+        var victini = Assert.Single(dex[Victini][wrapper.Id].Forms);
+        Assert.True(victini.IsOwned);
+        Assert.True(victini.IsCaught);
+        Assert.Equal(EntityContext.Gen3, victini.Context);
+        Assert.Equal(2, victini.Types.Distinct().Count());
+        Assert.Equal(2, dex[25][wrapper.Id].Forms.Count); // Pikachu, male and female
+        Assert.False(dex[25][wrapper.Id].Forms[0].IsOwned);
+    }
+
+    [Theory]
+    [InlineData("emeraldexpansion.sav", "emeraldexpansion.sav", GameVersion.E)]
+    [InlineData("emeraldexpansion.sav", "fireredexpansion.sav", GameVersion.FR)]
+    [InlineData("emeraldexpansion.sav", "pokeleafgreen.sav", GameVersion.LG)]
+    [InlineData("heartgold.dsv", "heartgold.dsv", GameVersion.HG)]
+    [InlineData("heartgold.dsv", "soulsilver.dsv", GameVersion.SS)]
+    [InlineData("platinum.sav", "platinum.sav", GameVersion.Pt)]
+    public void ASave_PlaysAsTheGameItsFileIsNamedFor(string asset, string fileName, GameVersion expected)
+    {
+        var folder = Path.Combine(Path.GetTempPath(), $"pkconnect-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var path = Path.Combine(folder, fileName);
+            File.Copy(Asset(asset), path);
+
+            Assert.Equal(expected, Load(path).PlayedVersion);
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public void TheSameTrainersSaves_HaveDifferentIds()
+    {
+        // A profile keeps one identity across its saves, and several of these are the same save
+        // type to PKHeX.
+        var folder = Path.Combine(Path.GetTempPath(), $"pkconnect-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        try
+        {
+            SaveWrapper Named(string asset, string name)
+            {
+                var path = Path.Combine(folder, name);
+                File.Copy(asset, path);
+                return Load(path);
+            }
+
+            var vanilla = Named(Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves", "emerald.sav"), "emerald.sav");
+            var expansion = Named(Asset("emeraldexpansion.sav"), "emeraldexpansion.sav");
+            var fireRed = Named(Asset("emeraldexpansion.sav"), "fireredexpansion.sav");
+            var heartGold = Named(Asset("heartgold.dsv"), "heartgold.dsv");
+            var soulSilver = Named(Asset("heartgold.dsv"), "soulsilver.dsv");
+            foreach (var save in new[] { vanilla, expansion, fireRed })
+            {
+                var raw = save.GetSave();
+                raw.TID16 = 12345; raw.SID16 = 54321; raw.OT = "RED"; raw.Gender = 0; raw.Language = 2;
+            }
+
+            Assert.Equal(3, new[] { vanilla.Id, expansion.Id, fireRed.Id }.Distinct().Count());
+            Assert.NotEqual(heartGold.Id, soulSilver.Id);
+            Assert.Equal(expansion.Id, expansion.Clone().Id);
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
 }

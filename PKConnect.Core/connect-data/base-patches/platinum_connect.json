@@ -1,0 +1,29 @@
+{
+  "_comment": "Pokemon Connect base patch for Platinum (pret/pokeplatinum \u002B Connect, see the decomp\u0027s include/constants/connect.h). Applied in memory at launch by Gen4ConnectPatchService; every per-launch edit is a same-size write inside these archives.",
+  "patches": [
+    {
+      "file": "platinum_connect_rev0.bps",
+      "vanillaSha1": "ce81046eda7d232513069519cb2085349896dec7",
+      "targetSha1": "2f3bad7f5e323106d260d2f3d3313574f1eec4b3"
+    }
+  ],
+  "trdataPath": "poketool/trainer/trdata.narc",
+  "trpokePath": "poketool/trainer/trpoke.narc",
+  "messagePath": "msgdata/pl_msg.narc",
+  "trainerNamesBank": 618,
+  "gymTrainerIds": [
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    785,
+    786
+  ],
+  "championTrainerIds": [
+    267,
+    870
+  ],
+  "partyCapacity": 6
+}

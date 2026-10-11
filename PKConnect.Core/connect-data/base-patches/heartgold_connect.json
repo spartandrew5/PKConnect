@@ -1,0 +1,37 @@
+{
+  "_comment": "Pokemon Connect base patch for HeartGold (pret/pokeheartgold + Connect, see the decomp's include/constants/connect.h). Applied in memory at launch by Gen4ConnectPatchService; every per-launch edit is a same-size write inside these archives. Gym ids are the leaders' rematch trainers in badge order (Johto 1-8, then Kanto 1-8); champion ids are Lance and his rematch.",
+  "patches": [
+    {
+      "file": "heartgold_connect.bps",
+      "vanillaSha1": "4fcded0e2713dc03929845de631d0932ea2b5a37",
+      "targetSha1": "27f8a8c26c2f0258cf2a959263b9abfe524b3ed2"
+    }
+  ],
+  "trdataPath": "a/0/5/5",
+  "trpokePath": "a/0/5/6",
+  "messagePath": "a/0/2/7",
+  "trainerNamesBank": 729,
+  "gymTrainerIds": [
+    712,
+    713,
+    714,
+    715,
+    718,
+    717,
+    716,
+    719,
+    720,
+    721,
+    722,
+    723,
+    724,
+    725,
+    726,
+    727
+  ],
+  "championTrainerIds": [
+    244,
+    701
+  ],
+  "partyCapacity": 6
+}

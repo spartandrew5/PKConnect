@@ -61,6 +61,9 @@ public class DexService(
             return null;
         }
 
+        if (save.FormatExtension?.CreateDexService() is { } extended)
+            return extended;
+
         return save.GetSave() switch
         {
             FakeSaveFile => new DexMainService(sp),

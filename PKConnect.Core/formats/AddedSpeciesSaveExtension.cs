@@ -50,6 +50,19 @@ public sealed class AddedSpeciesSaveExtension(SaveFile save) : SaveExtension
         _ => null,
     };
 
+    // PKHeX can't tell HeartGold from SoulSilver by the save; the file name decides when it names one - base
+    // saves and travel copies are "<game>.sav".
+    public override GameVersion? PlayedVersion
+    {
+        get
+        {
+            if (save is not SAV4HGSS || string.IsNullOrEmpty(save.Metadata.FilePath))
+                return null;
+            var name = new string([.. Path.GetFileNameWithoutExtension(save.Metadata.FilePath).Where(char.IsLetter)]).ToLowerInvariant();
+            return name.Contains("soulsilver") ? GameVersion.SS : name.Contains("heartgold") ? GameVersion.HG : null;
+        }
+    }
+
     public override bool? IsPresentInGame(ushort species, byte form) => Gen4AddedSpecies.Contains(species) ? true : null;
 
     // An added species keeps its own type: the save's vanilla one has no data for it.

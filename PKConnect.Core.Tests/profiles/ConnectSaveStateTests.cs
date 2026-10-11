@@ -8,14 +8,16 @@ public class ConnectSaveStateTests
 {
     private static SaveFile BaseSave(string game)
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves", $"{game}.sav");
+        var folder = Path.Combine(AppContext.BaseDirectory, "connect-data", "base-saves");
+        var path = Directory.EnumerateFiles(folder, $"{game}.*").Single();
         Assert.True(SaveUtil.TryGetSaveFile(File.ReadAllBytes(path), out var save, path), $"{game}.sav is not a save PKHeX reads");
         return save!;
     }
 
+    // Under its own name: an expansion FireRed/LeafGreen save is only told from Emerald's by it.
     private static SaveFile Reload(SaveFile save)
     {
-        Assert.True(SaveUtil.TryGetSaveFile(save.Write().ToArray(), out var again));
+        Assert.True(SaveUtil.TryGetSaveFile(save.Write().ToArray(), out var again, save.Metadata.FilePath));
         return again!;
     }
 
@@ -25,6 +27,12 @@ public class ConnectSaveStateTests
     [InlineData("leafgreen")]
     [InlineData("crystal")]
     [InlineData("yellow")]
+    [InlineData("platinum")]
+    [InlineData("heartgold")]
+    [InlineData("soulsilver")]
+    [InlineData("emeraldexpansion")]
+    [InlineData("fireredexpansion")]
+    [InlineData("leafgreenexpansion")]
     public void HomeRegionAndConqueredRegions_SurviveBeingWrittenToTheFile(string game)
     {
         var save = BaseSave(game);
@@ -77,5 +85,27 @@ public class ConnectSaveStateTests
         var changedFlags = Enumerable.Range(0, ((IEventFlagArray)before).EventFlagCount)
             .Count(i => ((IEventFlagArray)before).GetEventFlag(i) != ((IEventFlagArray)after).GetEventFlag(i));
         Assert.InRange(changedFlags, 0, 1); // the Hoenn champion flag, unless the base save had it already
+    }
+
+    [Fact]
+    public void AnExpansionFireRedSave_KeepsItsStateWhereTheBuildReadsIt()
+    {
+        // PKHeX reads the save as Emerald, whose variables start 12 bytes later than this build's.
+        var save = BaseSave("fireredexpansion");
+        ConnectSaveState.Apply(save, "hoenn", ["kanto"]);
+
+        var asEmerald = (IEventWorkArray<ushort>)save;
+        Assert.Equal((3, 1), ConnectSaveState.Read(save));
+        Assert.Equal(3, asEmerald.GetWork(16632 - 0x4000 - 6));
+        Assert.True(((IEventFlagArray)save).GetEventFlag(2243)); // FireRed's flag for Kanto, not Emerald's
+    }
+
+    [Theory]
+    [InlineData("black")]
+    [InlineData("white2")]
+    public void TheGen5Games_KeepNoStateInTheSave(string game)
+    {
+        // Their ROM is edited at launch for a visitor; nothing is read from the save.
+        Assert.False(ConnectSaveState.IsSupported(BaseSave(game)));
     }
 }

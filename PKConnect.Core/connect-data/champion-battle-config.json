@@ -5,5 +5,11 @@
     "emerald": [335],
     "firered": [438, 439, 440],
     "leafgreen": [438, 439, 440]
+  },
+  "_expansionComment": "pokeemerald-expansion builds: TRAINER_WALLACE (opponents.h) and TRAINER_CHAMPION_FIRST_SQUIRTLE/BULBASAUR/CHARMANDER (opponents_frlg.h), found through the build's .elf (gTrainers).",
+  "expansionChampionTrainerIds": {
+    "emeraldexpansion": [335],
+    "fireredexpansion": [338, 339, 340],
+    "leafgreenexpansion": [338, 339, 340]
   }
 }

@@ -235,7 +235,9 @@ public class TrainerProfilesService(
                     throw new InvalidOperationException("Empty action list is required before changing save paths");
                 }
 
-                await settingsService.UpdateSettings(updatedMutable, restartSession, persistSession, flags);
+                // A save file added under a glob that didn't change is only found by a new scan.
+                var scanSaves = persistSession || sessionService.HasEmptyActionList();
+                await settingsService.UpdateSettings(updatedMutable, restartSession, scanSaves, flags);
             }
 
             await WriteStore(store);
@@ -419,7 +421,9 @@ public class TrainerProfilesService(
                     throw new InvalidOperationException("Empty action list is required before changing save paths");
                 }
 
-                await settingsService.UpdateSettings(updatedMutable, restartSession, persistSession, flags);
+                // A save file added under a glob that didn't change is only found by a new scan.
+                var scanSaves = persistSession || sessionService.HasEmptyActionList();
+                await settingsService.UpdateSettings(updatedMutable, restartSession, scanSaves, flags);
             }
 
             await WriteStore(store);

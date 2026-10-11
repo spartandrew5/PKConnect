@@ -8,19 +8,63 @@ namespace PKConnect.Core.formats;
 /// Gen 3 save and its slot offsets are right, but the Pokémon in the slots are the expansion's
 /// own format, which PKHeX's sealed PK3 path would misread. So slots are read as raw bytes at
 /// the save's own offsets and decoded through <see cref="ExpansionPK3"/>, and written the same way.
-///
-/// Not handled yet: the expansion's Pokédex flags, which live elsewhere than the vanilla ones -
-/// the counts PKHeX gives for such a save are not the game's, and nothing is marked seen or caught.
 /// </summary>
 public sealed class ExpansionSaveExtension(SAV3 save, string gameId) : SaveExtension
 {
     /// <summary>Which expansion build wrote the save: "emeraldexpansion", "fireredexpansion" or "leafgreenexpansion".</summary>
     public string GameId => gameId;
 
-    public static SaveExtension? For(SaveFile save) =>
-        save is SAV3 sav3 && ExpansionSaveDetector.DetectGameId(save, save.Metadata.FilePath) is { } id
-            ? new ExpansionSaveExtension(sav3, id)
-            : null;
+    // Telling a vanilla save from an expansion one can mean reading every slot, and PKVault wraps
+    // the same save many times over.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<SaveFile, string> Detected = [];
+
+    public static SaveExtension? For(SaveFile save)
+    {
+        if (save is not SAV3 sav3)
+            return null;
+        var id = Detected.GetValue(save, s => ExpansionSaveDetector.DetectGameId(s, s.Metadata.FilePath) ?? "");
+        return id.Length == 0 ? null : new ExpansionSaveExtension(sav3, id);
+    }
+
+    /// <summary>The expansion's own Pokédex flags, when they can be located (see <see cref="ExpansionDexFlags"/>).</summary>
+    public ExpansionDexFlags? DexFlags => ExpansionDexFlags.For(save, gameId, ReadBoxes().Concat(ReadParty()));
+
+    public override DexGenService CreateDexService() => new ExpansionDexService(this, save);
+
+    // The same trainer's vanilla Emerald save would otherwise have the same id.
+    public override string? IdSalt => gameId;
+
+    // An expansion FireRed/LeafGreen build loads as Emerald, whose save structure it uses.
+    public override GameVersion? PlayedVersion => ExpansionSaveDetector.BaseVersion(gameId);
+
+    // Owned species always count: the ones given by the debug menu or traveled in never set their flags.
+    public override int? SeenCount => CountDex(seen: true);
+    public override int? CaughtCount => CountDex(seen: false);
+
+    private int CountDex(bool seen)
+    {
+        var flags = DexFlags;
+        var owned = GetAllPKM().Where(pk => !pk.IsEgg).Select(pk => pk.Species).ToHashSet();
+        var count = 0;
+        for (ushort n = 1; n <= ExpansionDexFlags.MaxDexSpecies; n++)
+        {
+            if (owned.Contains(n) || (flags is not null && (seen ? flags.GetSeen(n) : flags.GetCaught(n))))
+                count++;
+        }
+        return count;
+    }
+
+    // What PKHeX does on a slot write, for the expansion's own flags - only when their place is known exactly.
+    private void UpdateDex(ExpansionPK3 pk, EntityImportSettings settings)
+    {
+        if (settings.UpdatePokeDex == EntityImportOption.Disable || pk.IsEgg || pk.Species is 0 or > ExpansionDexFlags.MaxDexSpecies)
+            return;
+        if (DexFlags is { IsExact: true } flags)
+        {
+            flags.SetSeen(pk.Species);
+            flags.SetCaught(pk.Species);
+        }
+    }
 
     public override SaveExtension CloneFor(SaveFile clone) => new ExpansionSaveExtension((SAV3)clone, gameId);
 
@@ -77,21 +121,23 @@ public sealed class ExpansionSaveExtension(SAV3 save, string gameId) : SaveExten
             save.LargeBlock.PartyCount = (byte)index;
         }
         pk.WriteEncryptedDataParty(save.LargeBlock.PartyBuffer[save.GetPartyOffset(index)..]);
+        UpdateDex(pk, settings);
         return true;
     }
 
     public override bool SetBoxSlot(PKM pkm, int box, int slot, EntityImportSettings settings) =>
-        WriteBoxSlot(pkm, save.GetBoxSlotOffset(box, slot));
+        WriteBoxSlot(pkm, save.GetBoxSlotOffset(box, slot), settings);
 
     public override bool SetBoxSlot(PKM pkm, int index, EntityImportSettings settings) =>
-        WriteBoxSlot(pkm, save.GetBoxSlotOffset(index));
+        WriteBoxSlot(pkm, save.GetBoxSlotOffset(index), settings);
 
-    private bool WriteBoxSlot(PKM pkm, int offset)
+    private bool WriteBoxSlot(PKM pkm, int offset, EntityImportSettings settings)
     {
         var pk = Expect(pkm);
         if (pk.Species != 0)
             pk.RefreshChecksum();
         pk.WriteEncryptedDataStored(save.Storage[offset..]);
+        UpdateDex(pk, settings);
         return true;
     }
 

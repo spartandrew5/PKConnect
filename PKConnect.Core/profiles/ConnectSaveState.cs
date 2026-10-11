@@ -1,4 +1,6 @@
+using PKConnect.Core.formats;
 using PKConnect.Core.regions;
+using PKVault.Core;
 using PKHeX.Core;
 
 namespace PKConnect.Core.profiles;
@@ -35,8 +37,22 @@ public static class ConnectSaveState
     private static readonly Layout Crystal = new(false, new() { ["kanto"] = 512, ["johto"] = 513, ["hoenn"] = 514 }, 525, 521);
     private static readonly Layout Yellow = new(false, new() { ["kanto"] = 448, ["johto"] = 449, ["hoenn"] = 450 }, 476, 472);
 
+    // The decomp builds have Sinnoh's flag too; the variables are the unused 0x406C / 0x406D.
+    private static readonly Layout Platinum = new(true, new() { ["kanto"] = 2156, ["johto"] = 2157, ["hoenn"] = 2158, ["sinnoh"] = 2159 }, 16492, 16493);
+    private static readonly Layout HeartGoldSoulSilver = new(true, new() { ["kanto"] = 2176, ["johto"] = 2177, ["hoenn"] = 2178, ["sinnoh"] = 2179 }, 16492, 16493);
+
+    /// <summary>
+    /// An expansion FireRed/LeafGreen build: FireRed's numbers, in a save PKHeX reads as Emerald -
+    /// so its variables aren't where PKHeX looks (see <see cref="ExpansionSaveLayout"/>).
+    /// </summary>
+    private static bool IsExpansionFrlg(SaveFile save) =>
+        SaveExtension.For(save) is ExpansionSaveExtension extension && ExpansionSaveLayout.IsFrlg(extension.GameId);
+
     private static Layout? LayoutFor(SaveFile save) => save switch
     {
+        SAV3E when IsExpansionFrlg(save) => FireRedLeafGreen,
+        SAV4Pt => Platinum,
+        SAV4HGSS => HeartGoldSoulSilver,
         SAV3E => Emerald,
         SAV3FRLG => FireRedLeafGreen,
         SAV2 { Version: GameVersion.C } => Crystal,
@@ -71,7 +87,19 @@ public static class ConnectSaveState
         var home = ConnectRegions.Normalize(homeRegion) is { } slug && RegionIds.TryGetValue(slug, out var id) ? id : 0;
         var cleared = Math.Min(conquered.Count, (1 << FieldBits) - 1);
 
-        if (layout.Variables)
+        if (layout.Variables && save is SAV3E sav3 && IsExpansionFrlg(save))
+        {
+            var vars = ExpansionSaveLayout.GetFrlgEventWork(sav3);
+            var before = (vars[layout.HomeRegion - Gen3VarBase], vars[layout.RegionsCleared - Gen3VarBase]);
+            vars[layout.HomeRegion - Gen3VarBase] = home;
+            vars[layout.RegionsCleared - Gen3VarBase] = cleared;
+            if (before != (home, cleared))
+            {
+                ExpansionSaveLayout.SetFrlgEventWork(sav3, vars);
+                changed = true;
+            }
+        }
+        else if (layout.Variables)
         {
             if (save is not IEventWorkArray<ushort> work)
                 return changed;
@@ -91,6 +119,11 @@ public static class ConnectSaveState
     {
         if (LayoutFor(save) is not { } layout || save is not IEventFlagArray flags)
             return null;
+        if (layout.Variables && save is SAV3E sav3 && IsExpansionFrlg(save))
+        {
+            var vars = ExpansionSaveLayout.GetFrlgEventWork(sav3);
+            return (vars[layout.HomeRegion - Gen3VarBase], vars[layout.RegionsCleared - Gen3VarBase]);
+        }
         if (layout.Variables)
             return save is IEventWorkArray<ushort> work
                 ? (work.GetWork(layout.HomeRegion - Gen3VarBase), work.GetWork(layout.RegionsCleared - Gen3VarBase))

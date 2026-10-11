@@ -55,7 +55,7 @@ public record SaveInfosDTO(
         return new SaveInfosDTO(
             Id: save.Id,
             LastWriteTime: lastWriteTime,
-            DisplayedVersion: displayedVersion ?? save.Version,
+            DisplayedVersion: displayedVersion ?? save.PlayedVersion,
             Version: save.Version,
             Context: save.Context,
             Generation: save.Generation,

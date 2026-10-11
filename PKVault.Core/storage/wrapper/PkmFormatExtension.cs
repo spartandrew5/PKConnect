@@ -64,6 +64,9 @@ public abstract class PkmFormatExtension
     public virtual bool? IsNicknamed(PKM pk) => null;
     public virtual int? MaxNicknameLength(PKM pk) => null;
 
+    /// <summary>The moves the Pokémon can be taught, when PKHeX's legality doesn't know the format's learnsets; null otherwise.</summary>
+    public virtual IReadOnlyList<ushort>? LearnableMoves(PKM pk) => null;
+
     /// <summary>The held item as its current-generation id, to compare with the stored official variant.</summary>
     public virtual int? ModernHeldItem(PKM pk) => null;
 

@@ -107,6 +107,8 @@ public class StorageHooksTests : IAsyncLifetime
 
         Assert.Equal(stored.DynamicChecksum, expansion.DynamicChecksum);
         Assert.Equal(ExpansionPK3.NicknameMaxLength, expansion.MaxStringLengthNickname);
+        // Its own learnsets, where PKHeX's Gen 3 ones have nothing for the species.
+        Assert.NotEmpty(PkmFormatExtension.For(expansion.GetMutablePkm())!.LearnableMoves(expansion.GetMutablePkm())!);
     }
 
     [Fact]

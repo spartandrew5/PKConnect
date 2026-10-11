@@ -80,9 +80,10 @@ public class EditPkmVariantAction(
             return;
         }
 
-        if (nickname.Length > pkm.MaxStringLengthNickname)
+        var maxLength = PkmFormatExtension.For(pkm)?.MaxNicknameLength(pkm) ?? pkm.MaxStringLengthNickname;
+        if (nickname.Length > maxLength)
         {
-            throw new ArgumentException($"Nickname should be <= {pkm.MaxStringLengthNickname} for this generation & language");
+            throw new ArgumentException($"Nickname should be <= {maxLength} for this generation & language");
         }
 
         pkmUpdateService.ApplyNicknameToPkm(pkm, nickname, true);

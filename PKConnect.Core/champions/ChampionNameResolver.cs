@@ -90,6 +90,25 @@ public static class ChampionNameResolver
         return new ResolvedMon(internalSpecies, mon.Level, itemId, ResolveMoves(mon.Moves, 354));
     }
 
+    /// <summary>
+    /// pokeemerald-expansion: the build's own species id (National Dex through #1025, forms
+    /// elsewhere), its own item id (mapped from the modern one by name), and modern move ids, which
+    /// the expansion uses unchanged - so later-gen champions keep their moves.
+    /// </summary>
+    public static ResolvedMon ResolveExpansion(ChampionMonDTO mon)
+    {
+        if (mon.Species is <= 0 or > 1025)
+        {
+            return new ResolvedMon(0, mon.Level, 0, new int[4]);
+        }
+        var rawSpecies = formats.ExpansionSpeciesTable.GetRawSpecies((ushort)mon.Species);
+
+        var modernItem = IndexOfName(GameInfo.GetStrings("en").Item, mon.HeldItem);
+        var itemId = formats.ExpansionItemTable.ToExpansion((ushort)modernItem);
+
+        return new ResolvedMon(rawSpecies, mon.Level, itemId, ResolveMoves(mon.Moves, GameInfo.GetStrings("en").Move.Count - 1));
+    }
+
     /// <summary>Gen 1 (Yellow): scrambled internal species; moves not written.</summary>
     public static ResolvedMon ResolveGen1(ChampionMonDTO mon)
     {

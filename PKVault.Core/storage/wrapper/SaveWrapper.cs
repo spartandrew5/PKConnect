@@ -18,7 +18,7 @@ public class SaveWrapper(SaveFile Save)
     {
         get
         {
-            string rawKey = $"{(byte)Save.Version}-{Save.Language}-{ID32}-{Save.OT}-{(byte)Save.Gender}";
+            string rawKey = $"{(byte)PlayedVersion}-{Save.Language}-{ID32}-{Save.OT}-{(byte)Save.Gender}{FormatExtension?.IdSalt}";
 
             byte[] inputBytes = Encoding.UTF8.GetBytes(rawKey);
             byte[] hashBytes = SHA256.HashData(inputBytes);
@@ -59,6 +59,8 @@ public class SaveWrapper(SaveFile Save)
 
     #region Metadata & Limits
     public GameVersion Version => Save.Version;
+    /// <summary>The game the save plays as; <see cref="Version"/> unless its extension says otherwise.</summary>
+    public GameVersion PlayedVersion => FormatExtension?.PlayedVersion ?? Save.Version;
     public bool ChecksumsValid => Save.ChecksumsValid;
     public string ChecksumInfo => Save.ChecksumInfo;
     public byte Generation => Save.Generation;

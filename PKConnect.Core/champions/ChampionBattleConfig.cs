@@ -13,6 +13,13 @@ public class ChampionBattleConfigFile
     /// FireRed's one battle per rival starter.
     /// </summary>
     public Dictionary<string, int[]> GbaChampionTrainerIds { get; set; } = [];
+
+    /// <summary>
+    /// The champion's trainer ids in pokeemerald-expansion builds (its opponents.h /
+    /// opponents_frlg.h - they differ from retail FireRed's). Kept apart from
+    /// <see cref="GbaChampionTrainerIds"/>, whose ids index the retail ROMs' tables.
+    /// </summary>
+    public Dictionary<string, int[]> ExpansionChampionTrainerIds { get; set; } = [];
 }
 
 /// <summary>

@@ -58,6 +58,9 @@ public sealed class ExpansionFormat : PkmFormatExtension
 
     public override int? MaxNicknameLength(PKM pk) => ExpansionPK3.NicknameMaxLength;
 
+    // PKHeX's legality only knows Gen 3 learnsets for this context; the decomp's own are used instead.
+    public override IReadOnlyList<ushort>? LearnableMoves(PKM pk) => ExpansionSpeciesTable.GetLearnableMoves(((ExpansionPK3)pk).SpeciesInternal);
+
     public override int? ModernHeldItem(PKM pk) => ((ExpansionPK3)pk).HeldItemModern;
 
     // The expansion uses modern mixed-case species names ("Torterra") as the un-nicknamed default,
