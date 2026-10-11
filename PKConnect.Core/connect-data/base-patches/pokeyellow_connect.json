@@ -1,0 +1,935 @@
+{
+  "format": 1,
+  "game": "yellow",
+  "rom": {
+    "size": 1048576,
+    "sha1": "9c891b89300e034f4c94be122eaf3c0b0106e4f6",
+    "baseSha1": "cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1",
+    "title": "POKEMON YELLOW"
+  },
+  "layout": {
+    "romBankSize": 16384,
+    "partyBank": 14,
+    "partyFormat": "gen1-per-level",
+    "partyMarker": 255,
+    "recordSize": 2,
+    "partyCapacity": 6,
+    "terminator": 0,
+    "hasMoves": false
+  },
+  "symbols": {
+    "TrainerDataPointers": {
+      "offset": 237009
+    },
+    "SpecialTrainerMoves": {
+      "offset": 236651
+    },
+    "ConnectBrockData": {
+      "offset": 244651
+    },
+    "ConnectGiovanniData": {
+      "offset": 244749
+    },
+    "Rival3Data": {
+      "offset": 238869
+    },
+    "ConnectGymRecords": {
+      "offset": 966656
+    }
+  },
+  "save": {
+    "eventFlagsOffset": 10739,
+    "obtainedBadgesOffset": 9730,
+    "beatGymFlagsOffset": 10710,
+    "rivalStarterOffset": 10689,
+    "toggleableObjectFlagsOffset": 10322,
+    "checksumOffset": 13603,
+    "checksumStart": 9624,
+    "checksumEnd": 13603,
+    "flagBitOrder": "lsb-first"
+  },
+  "gyms": [
+    {
+      "index": 0,
+      "leader": "BROCK",
+      "trainerClass": "BROCK",
+      "trainerClassId": 34,
+      "partyNumber": 1,
+      "pointerOffset": 237075,
+      "classDataOffset": 244651,
+      "partyOffset": 244651,
+      "zoneOffset": 244652,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 2,
+      "defaultTeam": [
+        {
+          "level": 10,
+          "species": "GEODUDE"
+        },
+        {
+          "level": 12,
+          "species": "ONIX"
+        }
+      ],
+      "badgeBit": 0,
+      "badgeName": "BOULDERBADGE",
+      "defeatedFlag": 119,
+      "defeatedFlagName": "EVENT_BEAT_BROCK",
+      "prizeTakenFlag": 458,
+      "gymTrainerFlags": [
+        114
+      ],
+      "prizeItem": "IRON",
+      "prizeItemId": 37,
+      "prizeMoney": 3000
+    },
+    {
+      "index": 1,
+      "leader": "MISTY",
+      "trainerClass": "MISTY",
+      "trainerClassId": 35,
+      "partyNumber": 1,
+      "pointerOffset": 237077,
+      "classDataOffset": 244665,
+      "partyOffset": 244665,
+      "zoneOffset": 244666,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 2,
+      "defaultTeam": [
+        {
+          "level": 18,
+          "species": "STARYU"
+        },
+        {
+          "level": 21,
+          "species": "STARMIE"
+        }
+      ],
+      "badgeBit": 1,
+      "badgeName": "CASCADEBADGE",
+      "defeatedFlag": 191,
+      "defeatedFlagName": "EVENT_BEAT_MISTY",
+      "prizeTakenFlag": 459,
+      "gymTrainerFlags": [
+        186,
+        187
+      ],
+      "prizeItem": "CALCIUM",
+      "prizeItemId": 39,
+      "prizeMoney": 4000
+    },
+    {
+      "index": 2,
+      "leader": "LT.SURGE",
+      "trainerClass": "LT_SURGE",
+      "trainerClassId": 36,
+      "partyNumber": 1,
+      "pointerOffset": 237079,
+      "classDataOffset": 244679,
+      "partyOffset": 244679,
+      "zoneOffset": 244680,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 1,
+      "defaultTeam": [
+        {
+          "level": 28,
+          "species": "RAICHU"
+        }
+      ],
+      "badgeBit": 2,
+      "badgeName": "THUNDERBADGE",
+      "defeatedFlag": 359,
+      "defeatedFlagName": "EVENT_BEAT_LT_SURGE",
+      "prizeTakenFlag": 460,
+      "gymTrainerFlags": [
+        354,
+        355,
+        356
+      ],
+      "prizeItem": "CARBOS",
+      "prizeItemId": 38,
+      "prizeMoney": 5000
+    },
+    {
+      "index": 3,
+      "leader": "ERIKA",
+      "trainerClass": "ERIKA",
+      "trainerClassId": 37,
+      "partyNumber": 1,
+      "pointerOffset": 237081,
+      "classDataOffset": 244693,
+      "partyOffset": 244693,
+      "zoneOffset": 244694,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 3,
+      "defaultTeam": [
+        {
+          "level": 30,
+          "species": "TANGELA"
+        },
+        {
+          "level": 32,
+          "species": "WEEPINBELL"
+        },
+        {
+          "level": 32,
+          "species": "GLOOM"
+        }
+      ],
+      "badgeBit": 3,
+      "badgeName": "RAINBOWBADGE",
+      "defeatedFlag": 425,
+      "defeatedFlagName": "EVENT_BEAT_ERIKA",
+      "prizeTakenFlag": 461,
+      "gymTrainerFlags": [
+        426,
+        427,
+        428,
+        429,
+        430,
+        431,
+        432
+      ],
+      "prizeItem": "HP_UP",
+      "prizeItemId": 35,
+      "prizeMoney": 6000
+    },
+    {
+      "index": 4,
+      "leader": "KOGA",
+      "trainerClass": "KOGA",
+      "trainerClassId": 38,
+      "partyNumber": 1,
+      "pointerOffset": 237083,
+      "classDataOffset": 244707,
+      "partyOffset": 244707,
+      "zoneOffset": 244708,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 4,
+      "defaultTeam": [
+        {
+          "level": 44,
+          "species": "VENONAT"
+        },
+        {
+          "level": 46,
+          "species": "VENONAT"
+        },
+        {
+          "level": 48,
+          "species": "VENONAT"
+        },
+        {
+          "level": 50,
+          "species": "VENOMOTH"
+        }
+      ],
+      "badgeBit": 4,
+      "badgeName": "SOULBADGE",
+      "defeatedFlag": 601,
+      "defeatedFlagName": "EVENT_BEAT_KOGA",
+      "prizeTakenFlag": 462,
+      "gymTrainerFlags": [
+        602,
+        603,
+        604,
+        605,
+        606,
+        607
+      ],
+      "prizeItem": "PROTEIN",
+      "prizeItemId": 36,
+      "prizeMoney": 7000
+    },
+    {
+      "index": 5,
+      "leader": "SABRINA",
+      "trainerClass": "SABRINA",
+      "trainerClassId": 40,
+      "partyNumber": 1,
+      "pointerOffset": 237087,
+      "classDataOffset": 244735,
+      "partyOffset": 244735,
+      "zoneOffset": 244736,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 3,
+      "defaultTeam": [
+        {
+          "level": 50,
+          "species": "ABRA"
+        },
+        {
+          "level": 50,
+          "species": "KADABRA"
+        },
+        {
+          "level": 50,
+          "species": "ALAKAZAM"
+        }
+      ],
+      "badgeBit": 5,
+      "badgeName": "MARSHBADGE",
+      "defeatedFlag": 865,
+      "defeatedFlagName": "EVENT_BEAT_SABRINA",
+      "prizeTakenFlag": 463,
+      "gymTrainerFlags": [
+        866,
+        867,
+        868,
+        869,
+        870,
+        871,
+        872
+      ],
+      "prizeItem": "PP_UP",
+      "prizeItemId": 79,
+      "prizeMoney": 8000
+    },
+    {
+      "index": 6,
+      "leader": "BLAINE",
+      "trainerClass": "BLAINE",
+      "trainerClassId": 39,
+      "partyNumber": 1,
+      "pointerOffset": 237085,
+      "classDataOffset": 244721,
+      "partyOffset": 244721,
+      "zoneOffset": 244722,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 3,
+      "defaultTeam": [
+        {
+          "level": 48,
+          "species": "NINETALES"
+        },
+        {
+          "level": 50,
+          "species": "RAPIDASH"
+        },
+        {
+          "level": 54,
+          "species": "ARCANINE"
+        }
+      ],
+      "badgeBit": 6,
+      "badgeName": "VOLCANOBADGE",
+      "defeatedFlag": 665,
+      "defeatedFlagName": "EVENT_BEAT_BLAINE",
+      "prizeTakenFlag": 464,
+      "gymTrainerFlags": [
+        666,
+        667,
+        668,
+        669,
+        670,
+        671,
+        672
+      ],
+      "prizeItem": "RARE_CANDY",
+      "prizeItemId": 40,
+      "prizeMoney": 9000
+    },
+    {
+      "index": 7,
+      "leader": "GIOVANNI",
+      "trainerClass": "GIOVANNI",
+      "trainerClassId": 29,
+      "partyNumber": 3,
+      "pointerOffset": 237065,
+      "classDataOffset": 244749,
+      "partyOffset": 244767,
+      "zoneOffset": 244768,
+      "recordSize": 2,
+      "capacity": 6,
+      "terminator": 0,
+      "defaultTeamSize": 5,
+      "defaultTeam": [
+        {
+          "level": 50,
+          "species": "DUGTRIO"
+        },
+        {
+          "level": 53,
+          "species": "PERSIAN"
+        },
+        {
+          "level": 53,
+          "species": "NIDOQUEEN"
+        },
+        {
+          "level": 55,
+          "species": "NIDOKING"
+        },
+        {
+          "level": 55,
+          "species": "RHYDON"
+        }
+      ],
+      "badgeBit": 7,
+      "badgeName": "EARTHBADGE",
+      "defeatedFlag": 81,
+      "defeatedFlagName": "EVENT_BEAT_VIRIDIAN_GYM_GIOVANNI",
+      "prizeTakenFlag": 465,
+      "gymTrainerFlags": [
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89
+      ],
+      "prizeItem": "NUGGET",
+      "prizeItemId": 49,
+      "prizeMoney": 10000
+    }
+  ],
+  "eliteFour": [
+    {
+      "name": "LORELEI",
+      "landingZone": false,
+      "trainerClass": "LORELEI",
+      "trainerClassId": 44,
+      "partyNumber": 1,
+      "pointerOffset": 237095,
+      "classDataOffset": 238911,
+      "partyOffset": 238911,
+      "defaultTeamSize": 5,
+      "defaultTeam": [
+        {
+          "level": 54,
+          "species": "DEWGONG"
+        },
+        {
+          "level": 53,
+          "species": "CLOYSTER"
+        },
+        {
+          "level": 54,
+          "species": "SLOWBRO"
+        },
+        {
+          "level": 56,
+          "species": "JYNX"
+        },
+        {
+          "level": 56,
+          "species": "LAPRAS"
+        }
+      ],
+      "defeatedFlag": 2273
+    },
+    {
+      "name": "BRUNO",
+      "landingZone": false,
+      "trainerClass": "BRUNO",
+      "trainerClassId": 33,
+      "partyNumber": 1,
+      "pointerOffset": 237073,
+      "classDataOffset": 238664,
+      "partyOffset": 238664,
+      "defaultTeamSize": 5,
+      "defaultTeam": [
+        {
+          "level": 53,
+          "species": "ONIX"
+        },
+        {
+          "level": 55,
+          "species": "HITMONCHAN"
+        },
+        {
+          "level": 55,
+          "species": "HITMONLEE"
+        },
+        {
+          "level": 56,
+          "species": "ONIX"
+        },
+        {
+          "level": 58,
+          "species": "MACHAMP"
+        }
+      ],
+      "defeatedFlag": 2281
+    },
+    {
+      "name": "AGATHA",
+      "landingZone": false,
+      "trainerClass": "AGATHA",
+      "trainerClassId": 46,
+      "partyNumber": 1,
+      "pointerOffset": 237099,
+      "classDataOffset": 239002,
+      "partyOffset": 239002,
+      "defaultTeamSize": 5,
+      "defaultTeam": [
+        {
+          "level": 56,
+          "species": "GENGAR"
+        },
+        {
+          "level": 56,
+          "species": "GOLBAT"
+        },
+        {
+          "level": 55,
+          "species": "HAUNTER"
+        },
+        {
+          "level": 58,
+          "species": "ARBOK"
+        },
+        {
+          "level": 60,
+          "species": "GENGAR"
+        }
+      ],
+      "defeatedFlag": 2289
+    },
+    {
+      "name": "LANCE",
+      "landingZone": false,
+      "trainerClass": "LANCE",
+      "trainerClassId": 47,
+      "partyNumber": 1,
+      "pointerOffset": 237101,
+      "classDataOffset": 239014,
+      "partyOffset": 239014,
+      "defaultTeamSize": 5,
+      "defaultTeam": [
+        {
+          "level": 58,
+          "species": "GYARADOS"
+        },
+        {
+          "level": 56,
+          "species": "DRAGONAIR"
+        },
+        {
+          "level": 56,
+          "species": "DRAGONAIR"
+        },
+        {
+          "level": 60,
+          "species": "AERODACTYL"
+        },
+        {
+          "level": 62,
+          "species": "DRAGONITE"
+        }
+      ],
+      "defeatedFlag": 2302
+    }
+  ],
+  "champion": {
+    "name": "RIVAL",
+    "starterDependent": true,
+    "starterSaveOffset": 10689,
+    "defeatedFlag": 2305,
+    "connectDefeatedFlag": 466,
+    "variants": [
+      {
+        "rivalStarter": 1,
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 1,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238869,
+        "zoneOffset": 238870,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "CLOYSTER"
+          },
+          {
+            "level": 63,
+            "species": "NINETALES"
+          },
+          {
+            "level": 65,
+            "species": "JOLTEON"
+          }
+        ],
+        "lastMon": "JOLTEON",
+        "laterVariantsDependOnSize": true
+      },
+      {
+        "rivalStarter": 2,
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 2,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238883,
+        "zoneOffset": 238884,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "MAGNETON"
+          },
+          {
+            "level": 63,
+            "species": "CLOYSTER"
+          },
+          {
+            "level": 65,
+            "species": "FLAREON"
+          }
+        ],
+        "lastMon": "FLAREON",
+        "laterVariantsDependOnSize": true
+      },
+      {
+        "rivalStarter": 3,
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 3,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238897,
+        "zoneOffset": 238898,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6,
+        "defaultTeam": [
+          {
+            "level": 61,
+            "species": "SANDSLASH"
+          },
+          {
+            "level": 59,
+            "species": "ALAKAZAM"
+          },
+          {
+            "level": 61,
+            "species": "EXEGGUTOR"
+          },
+          {
+            "level": 61,
+            "species": "NINETALES"
+          },
+          {
+            "level": 63,
+            "species": "MAGNETON"
+          },
+          {
+            "level": 65,
+            "species": "VAPOREON"
+          }
+        ],
+        "lastMon": "VAPOREON",
+        "laterVariantsDependOnSize": false
+      }
+    ]
+  },
+  "championPlaceholder": {
+    "trainerId": 43,
+    "trainerConstant": "RIVAL3",
+    "newTrainerAllocated": false,
+    "trainerNumbers": [
+      1,
+      2,
+      3
+    ],
+    "trainerPicFieldOffset": 0,
+    "frontPic": {
+      "trainerPicId": 43,
+      "tableEntryOffset": 235877,
+      "tableEntryFormat": "dw pic address (bank of Trainer Pics), bcd3 base money",
+      "paletteTableEntryOffset": null,
+      "paletteNote": "no per-trainer palette: every trainer pic uses MonsterPalettes[0] in battle",
+      "coordsEntryOffset": null,
+      "uncompressedSize": 784,
+      "dimensionsTiles": [
+        7,
+        7
+      ],
+      "defaultImage": "gfx/trainers/rival3.png",
+      "defaultPalette": null,
+      "symbol": "Rival3Pic",
+      "address": "13:75e1",
+      "offset": 325089,
+      "compression": "gen1-pkmncompress",
+      "compressedSize": 277,
+      "bank": 19,
+      "writeRule": "compressed: overwrite in place only within compressedSize, otherwise repoint tableEntryOffset to free space in the same bank"
+    },
+    "overworld": {
+      "graphicsId": 31,
+      "graphicsConstant": "SPRITE_CONNECT_CHAMPION",
+      "graphicsInfoPointerOffset": 82721,
+      "graphicsInfo": {
+        "format": "dw sheet address, db tiles * 16 (half sheet), db bank",
+        "size": 4
+      },
+      "picTable": null,
+      "picData": {
+        "symbol": "ConnectChampionSprite",
+        "address": "3b:43d6",
+        "offset": 967638,
+        "size": 384,
+        "frames": 6,
+        "frameWidth": 16,
+        "frameHeight": 16,
+        "format": "uncompressed 2bpp",
+        "overwriteInPlace": true
+      },
+      "palette": {
+        "tag": null,
+        "paletteListEntryOffset": null,
+        "note": "no per-sprite palette: every overworld NPC draws with the shared OBP0/OBP1 colors"
+      },
+      "usedBy": [
+        "ChampionsRoom object 1 (TEXT_CHAMPIONSROOM_RIVAL)"
+      ]
+    },
+    "name": {
+      "source": "rom",
+      "flagOffset": 1015552,
+      "flagAddress": "3d:7f00",
+      "flagDefault": 0,
+      "nameBufferOffset": 1015553,
+      "nameBufferAddress": "3d:7f01",
+      "maxLength": 7,
+      "terminator": 80,
+      "bufferSize": 8,
+      "defaultFill": 80,
+      "reservedAfterBuffer": 5,
+      "hook": {
+        "symbol": "ConnectGetChampionName",
+        "address": "3d:7f0e",
+        "offset": 1015566
+      },
+      "fallback": {
+        "source": "save",
+        "symbol": "wRivalName",
+        "saveOffset": 9718
+      },
+      "appliesTo": "RIVAL3's trainer name in battle, via GetTrainerName_ (the 'wants to fight' intro, send-out lines and the name before the end-of-battle text)",
+      "notAffected": "texts that use the <RIVAL> control code still print wRivalName"
+    }
+  },
+  "homeRegionChampion": {
+    "validFor": "vanilla and patched ROMs (vanilla symbols do not move)",
+    "trainerId": 43,
+    "parties": [
+      {
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 1,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238869,
+        "zoneOffset": 238870,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6
+      },
+      {
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 2,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238883,
+        "zoneOffset": 238884,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6
+      },
+      {
+        "trainerClass": "RIVAL3",
+        "trainerClassId": 43,
+        "partyNumber": 3,
+        "pointerOffset": 237093,
+        "classDataOffset": 238869,
+        "partyOffset": 238897,
+        "zoneOffset": 238898,
+        "recordSize": 2,
+        "capacity": 6,
+        "terminator": 0,
+        "defaultTeamSize": 6
+      }
+    ],
+    "specialTrainerMoves": [
+      {
+        "partyNumber": 1,
+        "entryOffset": 236933,
+        "trainerNumberOffset": 236934,
+        "vanillaTrainerNumber": 1,
+        "moveOverrides": 7
+      },
+      {
+        "partyNumber": 2,
+        "entryOffset": 236957,
+        "trainerNumberOffset": 236958,
+        "vanillaTrainerNumber": 2,
+        "moveOverrides": 7
+      },
+      {
+        "partyNumber": 3,
+        "entryOffset": 236981,
+        "trainerNumberOffset": 236982,
+        "vanillaTrainerNumber": 3,
+        "moveOverrides": 8
+      }
+    ],
+    "specialTrainerMovesNote": "active in vanilla: these stamp fixed moves onto party slots. Write $FF at trainerNumberOffset to disable one (the base patch does)",
+    "frontPic": {
+      "symbol": "Rival3Pic",
+      "address": "13:75e1",
+      "offset": 325089,
+      "tableEntryOffset": 235877,
+      "compression": "gen1-pkmncompress",
+      "compressedSize": 277,
+      "bank": 19,
+      "shared": false
+    },
+    "overworld": {
+      "graphicsId": 2,
+      "graphicsConstant": "SPRITE_BLUE",
+      "graphicsInfoPointerOffset": 82605,
+      "picData": {
+        "symbol": "BlueSprite",
+        "address": "05:46f1",
+        "offset": 83697,
+        "size": 384,
+        "frames": 6,
+        "frameWidth": 16,
+        "frameHeight": 16,
+        "format": "uncompressed 2bpp",
+        "overwriteInPlace": true
+      },
+      "palette": null,
+      "shared": true,
+      "sharedWith": [
+        "OaksLab",
+        "Route22 (x2)",
+        "CeruleanCity",
+        "SSAnne2F",
+        "PokemonTower2F",
+        "SilphCo7F",
+        "ChampionsRoom"
+      ]
+    },
+    "name": {
+      "source": "save",
+      "saveOffset": 9718,
+      "maxLength": 7,
+      "terminator": 80,
+      "bufferSize": 8,
+      "note": "RIVAL1/2/3 battles print wRivalName, so the name is shared with every rival scene and is not part of the ROM party data"
+    }
+  },
+  "flags": {
+    "EVENT_CONNECT_START": 448,
+    "EVENT_CONNECT_CHAMPION_KANTO": 448,
+    "EVENT_CONNECT_CHAMPION_JOHTO": 449,
+    "EVENT_CONNECT_CHAMPION_HOENN": 450,
+    "EVENT_CONNECT_CHAMPION_SINNOH": 451,
+    "EVENT_CONNECT_CHAMPION_UNOVA": 452,
+    "EVENT_CONNECT_CHAMPION_KALOS": 453,
+    "EVENT_CONNECT_CHAMPION_ALOLA": 454,
+    "EVENT_CONNECT_CHAMPION_GALAR": 455,
+    "EVENT_CONNECT_CHAMPION_PALDEA": 456,
+    "EVENT_CONNECT_RESERVED_1C9": 457,
+    "EVENT_CONNECT_PRIZE_TAKEN_BROCK": 458,
+    "EVENT_CONNECT_PRIZE_TAKEN_MISTY": 459,
+    "EVENT_CONNECT_PRIZE_TAKEN_LT_SURGE": 460,
+    "EVENT_CONNECT_PRIZE_TAKEN_ERIKA": 461,
+    "EVENT_CONNECT_PRIZE_TAKEN_KOGA": 462,
+    "EVENT_CONNECT_PRIZE_TAKEN_SABRINA": 463,
+    "EVENT_CONNECT_PRIZE_TAKEN_BLAINE": 464,
+    "EVENT_CONNECT_PRIZE_TAKEN_GIOVANNI": 465,
+    "EVENT_CONNECT_CHAMPION_DEFEATED": 466,
+    "EVENT_CONNECT_RESERVED_1D3": 467,
+    "EVENT_CONNECT_RESERVED_1D4": 468,
+    "EVENT_CONNECT_RESERVED_1D5": 469,
+    "EVENT_CONNECT_RESERVED_1D6": 470,
+    "EVENT_CONNECT_RESERVED_1D7": 471,
+    "EVENT_CONNECT_REGIONS_CLEARED_BIT0": 472,
+    "EVENT_CONNECT_REGIONS_CLEARED_BIT1": 473,
+    "EVENT_CONNECT_REGIONS_CLEARED_BIT2": 474,
+    "EVENT_CONNECT_REGIONS_CLEARED_BIT3": 475,
+    "EVENT_CONNECT_HOME_REGION_BIT0": 476,
+    "EVENT_CONNECT_HOME_REGION_BIT1": 477,
+    "EVENT_CONNECT_HOME_REGION_BIT2": 478,
+    "EVENT_CONNECT_HOME_REGION_BIT3": 479,
+    "EVENT_CONNECT_END": 479
+  },
+  "flagFields": {
+    "EVENT_CONNECT_REGIONS_CLEARED": {
+      "firstFlag": 472,
+      "bits": 4
+    },
+    "EVENT_CONNECT_HOME_REGION": {
+      "firstFlag": 476,
+      "bits": 4
+    }
+  },
+  "legendRegionCount": 3,
+  "regions": {
+    "NONE": 0,
+    "KANTO": 1,
+    "JOHTO": 2,
+    "HOENN": 3,
+    "SINNOH": 4,
+    "UNOVA": 5,
+    "KALOS": 6,
+    "ALOLA": 7,
+    "GALAR": 8,
+    "PALDEA": 9
+  }
+}

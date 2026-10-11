@@ -1,0 +1,870 @@
+{
+  "_comment": "Pokemon Connect - dynamic gym leader team pools. `species`/`item`/`moves` are Gen3 INTERNAL ROM constants (matching pokeemerald/pokeruby/pokefirered constants/species.h, items.h, moves.h) - NOT always equal to National Dex number (Gen3-native species have a +offset due to reserved slots 252-276). `trainerIds` map gameId -> the numeric TRAINER_* id of that leader's main story battle in gTrainers[] for that game (matched against each gym's trainerId in the base patch manifest). `teamSize` = how many Pokemon are randomly drawn (without repeats) from `pool` to build a generated team; `pool` may contain more entries than `teamSize`. Levels are computed at patch-build time from the traveling trainer's average party level +/- levelVariance (see ConnectTeamPatchService).",
+  "defaultLevelVariance": 2,
+  "leaders": [
+    {
+      "id": "roxanne",
+      "displayName": "Roxanne (Rustboro Gym)",
+      "trainerIds": { "emerald": 265, "ruby": 265, "sapphire": 265 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Geodude", "species": 74, "item": 0, "moves": [33, 111, 88, 317] },
+        { "speciesName": "Graveler", "species": 75, "item": 204, "moves": [88, 317, 89, 157] },
+        { "speciesName": "Nosepass", "species": 320, "item": 139, "moves": [335, 106, 88, 317] },
+        { "speciesName": "Shuckle", "species": 213, "item": 139, "moves": [106, 88, 201, 317] },
+        { "speciesName": "Baltoy", "species": 318, "item": 0, "moves": [317, 60, 93, 201] },
+        { "speciesName": "Claydol", "species": 319, "item": 142, "moves": [157, 94, 89, 93] },
+        { "speciesName": "Solrock", "species": 349, "item": 0, "moves": [157, 94, 93, 153] },
+        { "speciesName": "Sudowoodo", "species": 185, "item": 204, "moves": [88, 157, 68, 21] }
+      ]
+    },
+    {
+      "id": "brawly",
+      "displayName": "Brawly (Dewford Gym)",
+      "trainerIds": { "emerald": 266, "ruby": 266, "sapphire": 266 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Machop", "species": 66, "item": 0, "moves": [2, 67, 339, 69] },
+        { "speciesName": "Machoke", "species": 67, "item": 0, "moves": [2, 67, 339, 238] },
+        { "speciesName": "Meditite", "species": 356, "item": 139, "moves": [93, 67, 339, 68] },
+        { "speciesName": "Medicham", "species": 357, "item": 142, "moves": [94, 67, 339, 238] },
+        { "speciesName": "Makuhita", "species": 335, "item": 0, "moves": [67, 69, 339, 68] },
+        { "speciesName": "Hariyama", "species": 336, "item": 200, "moves": [67, 238, 339, 68] },
+        { "speciesName": "Heracross", "species": 214, "item": 0, "moves": [67, 339, 280, 68] },
+        { "speciesName": "Mankey", "species": 56, "item": 0, "moves": [67, 2, 339, 68] }
+      ]
+    },
+    {
+      "id": "wattson",
+      "displayName": "Wattson (Mauville Gym)",
+      "trainerIds": { "emerald": 267, "ruby": 267, "sapphire": 267 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Magnemite", "species": 81, "item": 0, "moves": [85, 86, 49, 129] },
+        { "speciesName": "Magneton", "species": 82, "item": 208, "moves": [85, 86, 129, 103] },
+        { "speciesName": "Voltorb", "species": 100, "item": 0, "moves": [85, 86, 153, 49] },
+        { "speciesName": "Electrode", "species": 101, "item": 0, "moves": [85, 86, 153, 129] },
+        { "speciesName": "Electrike", "species": 337, "item": 0, "moves": [85, 86, 44, 129] },
+        { "speciesName": "Manectric", "species": 338, "item": 208, "moves": [85, 86, 87, 44] },
+        { "speciesName": "Plusle", "species": 353, "item": 0, "moves": [85, 86, 209, 129] },
+        { "speciesName": "Minun", "species": 354, "item": 0, "moves": [85, 86, 209, 129] }
+      ]
+    },
+    {
+      "id": "flannery",
+      "displayName": "Flannery (Lavaridge Gym)",
+      "trainerIds": { "emerald": 268, "ruby": 268, "sapphire": 268 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Slugma", "species": 218, "item": 0, "moves": [52, 83, 261, 103] },
+        { "speciesName": "Magcargo", "species": 219, "item": 215, "moves": [53, 83, 261, 157] },
+        { "speciesName": "Numel", "species": 339, "item": 0, "moves": [52, 83, 89, 157] },
+        { "speciesName": "Camerupt", "species": 340, "item": 215, "moves": [53, 89, 157, 83] },
+        { "speciesName": "Torkoal", "species": 321, "item": 215, "moves": [53, 315, 83, 201] },
+        { "speciesName": "Vulpix", "species": 37, "item": 0, "moves": [52, 53, 261, 93] },
+        { "speciesName": "Growlithe", "species": 58, "item": 0, "moves": [52, 53, 7, 44] },
+        { "speciesName": "Ninetales", "species": 38, "item": 0, "moves": [53, 261, 83, 93] }
+      ]
+    },
+    {
+      "id": "norman",
+      "displayName": "Norman (Petalburg Gym)",
+      "trainerIds": { "emerald": 269, "ruby": 269, "sapphire": 269 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Slakoth", "species": 364, "item": 0, "moves": [263, 68, 21, 44] },
+        { "speciesName": "Vigoroth", "species": 365, "item": 0, "moves": [263, 68, 21, 242] },
+        { "speciesName": "Slaking", "species": 366, "item": 200, "moves": [263, 21, 68, 63] },
+        { "speciesName": "Zangoose", "species": 380, "item": 0, "moves": [263, 242, 21, 68] },
+        { "speciesName": "Linoone", "species": 289, "item": 0, "moves": [263, 21, 242, 28] },
+        { "speciesName": "Spinda", "species": 308, "item": 0, "moves": [263, 93, 21, 227] },
+        { "speciesName": "Whismur", "species": 370, "item": 0, "moves": [263, 21, 103, 44] },
+        { "speciesName": "Loudred", "species": 371, "item": 0, "moves": [263, 21, 103, 242] }
+      ]
+    },
+    {
+      "id": "winona",
+      "displayName": "Winona (Fortree Gym)",
+      "trainerIds": { "emerald": 270, "ruby": 270, "sapphire": 270 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Swablu", "species": 358, "item": 0, "moves": [17, 19, 28, 129] },
+        { "speciesName": "Altaria", "species": 359, "item": 0, "moves": [332, 19, 225, 89] },
+        { "speciesName": "Tropius", "species": 369, "item": 0, "moves": [332, 19, 72, 89] },
+        { "speciesName": "Pelipper", "species": 310, "item": 0, "moves": [17, 57, 127, 332] },
+        { "speciesName": "Skarmory", "species": 227, "item": 0, "moves": [211, 332, 28, 314] },
+        { "speciesName": "Swellow", "species": 305, "item": 0, "moves": [332, 263, 314, 211] },
+        { "speciesName": "Xatu", "species": 178, "item": 0, "moves": [94, 332, 93, 314] },
+        { "speciesName": "Wingull", "species": 309, "item": 0, "moves": [17, 127, 57, 314] }
+      ]
+    },
+    {
+      "id": "tate_liza",
+      "displayName": "Tate & Liza (Mossdeep Gym)",
+      "trainerIds": { "emerald": 271, "ruby": 271, "sapphire": 271 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Solrock", "species": 349, "item": 0, "moves": [94, 157, 93, 153] },
+        { "speciesName": "Lunatone", "species": 348, "item": 0, "moves": [94, 157, 93, 153] },
+        { "speciesName": "Xatu", "species": 178, "item": 0, "moves": [94, 93, 332, 115] },
+        { "speciesName": "Gardevoir", "species": 394, "item": 214, "moves": [94, 347, 115, 93] },
+        { "speciesName": "Grumpig", "species": 352, "item": 0, "moves": [94, 347, 93, 103] },
+        { "speciesName": "Chimecho", "species": 411, "item": 0, "moves": [94, 347, 115, 93] },
+        { "speciesName": "Wobbuffet", "species": 202, "item": 0, "moves": [68, 93, 28, 103] },
+        { "speciesName": "Natu", "species": 177, "item": 0, "moves": [93, 94, 28, 103] }
+      ]
+    },
+    {
+      "id": "juan",
+      "displayName": "Juan (Sootopolis Gym - Emerald) / Wallace (Sootopolis Gym - Ruby/Sapphire)",
+      "trainerIds": { "emerald": 272, "ruby": 272, "sapphire": 272 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Luvdisc", "species": 325, "item": 0, "moves": [57, 58, 127, 240] },
+        { "speciesName": "Whiscash", "species": 324, "item": 0, "moves": [57, 89, 58, 189] },
+        { "speciesName": "Corsola", "species": 222, "item": 0, "moves": [57, 157, 58, 189] },
+        { "speciesName": "Milotic", "species": 329, "item": 200, "moves": [57, 58, 240, 189] },
+        { "speciesName": "Kingdra", "species": 230, "item": 0, "moves": [57, 58, 225, 127] },
+        { "speciesName": "Wailord", "species": 314, "item": 200, "moves": [57, 56, 58, 240] },
+        { "speciesName": "Barboach", "species": 323, "item": 0, "moves": [57, 189, 58, 89] },
+        { "speciesName": "Relicanth", "species": 381, "item": 204, "moves": [57, 157, 89, 127] }
+      ]
+    },
+    {
+      "id": "brock",
+      "displayName": "Brock (Pewter Gym)",
+      "trainerIds": { "firered": 414, "leafgreen": 414 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Geodude", "species": 74, "item": 0, "moves": [33, 111, 88, 106] },
+        { "speciesName": "Graveler", "species": 75, "item": 204, "moves": [88, 89, 157, 106] },
+        { "speciesName": "Onix", "species": 95, "item": 0, "moves": [88, 89, 106, 103] },
+        { "speciesName": "Rhyhorn", "species": 111, "item": 0, "moves": [88, 89, 103, 28] },
+        { "speciesName": "Kabuto", "species": 140, "item": 0, "moves": [10, 157, 189, 28] },
+        { "speciesName": "Kabutops", "species": 141, "item": 204, "moves": [21, 157, 189, 28] },
+        { "speciesName": "Omanyte", "species": 138, "item": 0, "moves": [57, 157, 189, 28] },
+        { "speciesName": "Sudowoodo", "species": 185, "item": 204, "moves": [88, 157, 68, 21] }
+      ]
+    },
+    {
+      "id": "misty",
+      "displayName": "Misty (Cerulean Gym)",
+      "trainerIds": { "firered": 415, "leafgreen": 415 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Staryu", "species": 120, "item": 0, "moves": [129, 127, 57, 240] },
+        { "speciesName": "Starmie", "species": 121, "item": 209, "moves": [57, 58, 94, 129] },
+        { "speciesName": "Psyduck", "species": 54, "item": 0, "moves": [57, 93, 127, 10] },
+        { "speciesName": "Golduck", "species": 55, "item": 209, "moves": [57, 93, 58, 127] },
+        { "speciesName": "Poliwag", "species": 60, "item": 0, "moves": [57, 127, 95, 189] },
+        { "speciesName": "Poliwhirl", "species": 61, "item": 0, "moves": [57, 127, 95, 58] },
+        { "speciesName": "Poliwrath", "species": 62, "item": 209, "moves": [57, 127, 67, 58] },
+        { "speciesName": "Seaking", "species": 119, "item": 0, "moves": [57, 127, 58, 129] }
+      ]
+    },
+    {
+      "id": "surge",
+      "displayName": "Lt. Surge (Vermilion Gym)",
+      "trainerIds": { "firered": 416, "leafgreen": 416 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Voltorb", "species": 100, "item": 0, "moves": [85, 86, 153, 49] },
+        { "speciesName": "Electrode", "species": 101, "item": 0, "moves": [85, 86, 153, 129] },
+        { "speciesName": "Pikachu", "species": 25, "item": 0, "moves": [85, 86, 129, 21] },
+        { "speciesName": "Raichu", "species": 26, "item": 208, "moves": [85, 87, 9, 129] },
+        { "speciesName": "Magnemite", "species": 81, "item": 0, "moves": [85, 86, 49, 129] },
+        { "speciesName": "Magneton", "species": 82, "item": 208, "moves": [85, 86, 129, 103] },
+        { "speciesName": "Electabuzz", "species": 125, "item": 0, "moves": [85, 9, 86, 129] },
+        { "speciesName": "Elekid", "species": 239, "item": 0, "moves": [85, 9, 86, 129] }
+      ]
+    },
+    {
+      "id": "erika",
+      "displayName": "Erika (Celadon Gym)",
+      "trainerIds": { "firered": 417, "leafgreen": 417 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Oddish", "species": 43, "item": 0, "moves": [72, 78, 79, 51] },
+        { "speciesName": "Gloom", "species": 44, "item": 0, "moves": [72, 78, 79, 188] },
+        { "speciesName": "Vileplume", "species": 45, "item": 0, "moves": [202, 78, 79, 188] },
+        { "speciesName": "Bellsprout", "species": 69, "item": 0, "moves": [72, 78, 79, 51] },
+        { "speciesName": "Weepinbell", "species": 70, "item": 0, "moves": [72, 78, 79, 188] },
+        { "speciesName": "Victreebel", "species": 71, "item": 0, "moves": [202, 78, 79, 188] },
+        { "speciesName": "Tangela", "species": 114, "item": 0, "moves": [72, 78, 79, 103] },
+        { "speciesName": "Exeggcute", "species": 102, "item": 0, "moves": [72, 78, 79, 93] }
+      ]
+    },
+    {
+      "id": "koga",
+      "displayName": "Koga (Fuchsia Gym)",
+      "trainerIds": { "firered": 418, "leafgreen": 418 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Grimer", "species": 88, "item": 0, "moves": [124, 139, 51, 103] },
+        { "speciesName": "Muk", "species": 89, "item": 0, "moves": [188, 51, 103, 189] },
+        { "speciesName": "Weezing", "species": 110, "item": 0, "moves": [188, 261, 51, 153] },
+        { "speciesName": "Koffing", "species": 109, "item": 0, "moves": [124, 139, 51, 153] },
+        { "speciesName": "Venonat", "species": 48, "item": 0, "moves": [139, 93, 51, 78] },
+        { "speciesName": "Venomoth", "species": 49, "item": 0, "moves": [60, 188, 78, 79] },
+        { "speciesName": "Tentacool", "species": 72, "item": 0, "moves": [57, 51, 188, 127] },
+        { "speciesName": "Tentacruel", "species": 73, "item": 0, "moves": [57, 188, 51, 127] }
+      ]
+    },
+    {
+      "id": "sabrina",
+      "displayName": "Sabrina (Saffron Gym)",
+      "trainerIds": { "firered": 420, "leafgreen": 420 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Abra", "species": 63, "item": 0, "moves": [94, 93, 115, 347] },
+        { "speciesName": "Kadabra", "species": 64, "item": 214, "moves": [94, 93, 115, 347] },
+        { "speciesName": "Alakazam", "species": 65, "item": 214, "moves": [94, 347, 115, 93] },
+        { "speciesName": "Drowzee", "species": 96, "item": 0, "moves": [94, 93, 95, 138] },
+        { "speciesName": "Hypno", "species": 97, "item": 0, "moves": [94, 95, 138, 93] },
+        { "speciesName": "Slowpoke", "species": 79, "item": 0, "moves": [94, 93, 57, 127] },
+        { "speciesName": "Slowbro", "species": 80, "item": 0, "moves": [94, 57, 127, 93] },
+        { "speciesName": "Mr. Mime", "species": 122, "item": 0, "moves": [94, 93, 115, 226] }
+      ]
+    },
+    {
+      "id": "blaine",
+      "displayName": "Blaine (Cinnabar Gym)",
+      "trainerIds": { "firered": 419, "leafgreen": 419 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Growlithe", "species": 58, "item": 0, "moves": [52, 53, 7, 44] },
+        { "speciesName": "Arcanine", "species": 59, "item": 215, "moves": [53, 7, 242, 44] },
+        { "speciesName": "Ponyta", "species": 77, "item": 0, "moves": [52, 53, 28, 44] },
+        { "speciesName": "Rapidash", "species": 78, "item": 0, "moves": [53, 7, 44, 28] },
+        { "speciesName": "Vulpix", "species": 37, "item": 0, "moves": [52, 53, 261, 93] },
+        { "speciesName": "Ninetales", "species": 38, "item": 0, "moves": [53, 261, 83, 93] },
+        { "speciesName": "Magmar", "species": 126, "item": 0, "moves": [7, 53, 83, 93] },
+        { "speciesName": "Magby", "species": 240, "item": 0, "moves": [7, 53, 83, 93] }
+      ]
+    },
+    {
+      "id": "giovanni",
+      "displayName": "Giovanni (Viridian Gym)",
+      "trainerIds": { "firered": 350, "leafgreen": 350 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Sandshrew", "species": 27, "item": 0, "moves": [89, 28, 10, 189] },
+        { "speciesName": "Sandslash", "species": 28, "item": 203, "moves": [89, 28, 157, 21] },
+        { "speciesName": "Nidoking", "species": 34, "item": 203, "moves": [89, 157, 87, 58] },
+        { "speciesName": "Nidoqueen", "species": 31, "item": 203, "moves": [89, 157, 87, 58] },
+        { "speciesName": "Rhyhorn", "species": 111, "item": 0, "moves": [89, 157, 28, 103] },
+        { "speciesName": "Rhydon", "species": 112, "item": 203, "moves": [89, 157, 28, 103] },
+        { "speciesName": "Diglett", "species": 50, "item": 0, "moves": [89, 28, 10, 189] },
+        { "speciesName": "Dugtrio", "species": 51, "item": 203, "moves": [89, 28, 189, 103] }
+      ]
+    },
+    {
+      "id": "roark",
+      "displayName": "Roark (Oreburgh Gym)",
+      "trainerIds": { "platinum": 779 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Rampardos", "species": 409, "item": 238, "moves": [457, 428, 89, 242] },
+        { "speciesName": "Golem", "species": 76, "item": 234, "moves": [444, 89, 153, 397] },
+        { "speciesName": "Probopass", "species": 476, "item": 158, "moves": [408, 414, 86, 435] },
+        { "speciesName": "Rhyperior", "species": 464, "item": 238, "moves": [439, 89, 224, 444] },
+        { "speciesName": "Bastiodon", "species": 411, "item": 234, "moves": [442, 444, 182, 368] },
+        { "speciesName": "Aerodactyl", "species": 142, "item": 275, "moves": [444, 89, 424, 332] },
+        { "speciesName": "Omastar", "species": 139, "item": 158, "moves": [246, 57, 58, 191] },
+        { "speciesName": "Kabutops", "species": 141, "item": 238, "moves": [444, 127, 404, 14] }
+      ]
+    },
+    {
+      "id": "gardenia",
+      "displayName": "Gardenia (Eterna Gym)",
+      "trainerIds": { "platinum": 780 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Roserade", "species": 407, "item": 239, "moves": [412, 188, 247, 390] },
+        { "speciesName": "Torterra", "species": 389, "item": 234, "moves": [452, 89, 242, 444] },
+        { "speciesName": "Cherrim", "species": 421, "item": 284, "moves": [76, 241, 412, 73] },
+        { "speciesName": "Tangrowth", "species": 465, "item": 158, "moves": [438, 89, 79, 157] },
+        { "speciesName": "Leafeon", "species": 470, "item": 239, "moves": [348, 404, 14, 98] },
+        { "speciesName": "Carnivine", "species": 455, "item": 234, "moves": [438, 242, 79, 14] },
+        { "speciesName": "Abomasnow", "species": 460, "item": 246, "moves": [59, 452, 420, 89] },
+        { "speciesName": "Breloom", "species": 286, "item": 275, "moves": [402, 183, 147, 444] }
+      ]
+    },
+    {
+      "id": "fantina",
+      "displayName": "Fantina (Hearthome Gym)",
+      "trainerIds": { "platinum": 781 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Mismagius", "species": 429, "item": 247, "moves": [247, 85, 94, 261] },
+        { "speciesName": "Gengar", "species": 94, "item": 270, "moves": [247, 411, 188, 85] },
+        { "speciesName": "Drifblim", "species": 426, "item": 158, "moves": [247, 85, 261, 226] },
+        { "speciesName": "Dusknoir", "species": 477, "item": 234, "moves": [325, 8, 89, 261] },
+        { "speciesName": "Froslass", "species": 478, "item": 275, "moves": [59, 247, 420, 194] },
+        { "speciesName": "Spiritomb", "species": 442, "item": 234, "moves": [399, 425, 261, 389] },
+        { "speciesName": "Rotom", "species": 479, "item": 247, "moves": [85, 247, 261, 86] },
+        { "speciesName": "Banette", "species": 354, "item": 270, "moves": [421, 389, 261, 86] }
+      ]
+    },
+    {
+      "id": "maylene",
+      "displayName": "Maylene (Veilstone Gym)",
+      "trainerIds": { "platinum": 782 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Lucario", "species": 448, "item": 241, "moves": [396, 399, 406, 430] },
+        { "speciesName": "Medicham", "species": 308, "item": 220, "moves": [136, 428, 8, 7] },
+        { "speciesName": "Machamp", "species": 68, "item": 241, "moves": [238, 444, 89, 418] },
+        { "speciesName": "Toxicroak", "species": 454, "item": 270, "moves": [280, 398, 389, 14] },
+        { "speciesName": "Infernape", "species": 392, "item": 275, "moves": [370, 394, 183, 369] },
+        { "speciesName": "Hitmontop", "species": 237, "item": 234, "moves": [370, 444, 229, 389] },
+        { "speciesName": "Gallade", "species": 475, "item": 241, "moves": [370, 427, 348, 400] },
+        { "speciesName": "Heracross", "species": 214, "item": 287, "moves": [370, 224, 444, 400] }
+      ]
+    },
+    {
+      "id": "wake",
+      "displayName": "Crasher Wake (Pastoria Gym)",
+      "trainerIds": { "platinum": 783 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Floatzel", "species": 419, "item": 243, "moves": [127, 242, 423, 453] },
+        { "speciesName": "Gyarados", "species": 130, "item": 234, "moves": [127, 89, 423, 349] },
+        { "speciesName": "Quagsire", "species": 195, "item": 234, "moves": [57, 89, 281, 105] },
+        { "speciesName": "Empoleon", "species": 395, "item": 243, "moves": [57, 58, 430, 447] },
+        { "speciesName": "Gastrodon", "species": 423, "item": 158, "moves": [57, 414, 105, 58] },
+        { "speciesName": "Lumineon", "species": 457, "item": 243, "moves": [127, 369, 58, 392] },
+        { "speciesName": "Kingdra", "species": 230, "item": 270, "moves": [57, 406, 58, 56] },
+        { "speciesName": "Vaporeon", "species": 134, "item": 234, "moves": [57, 58, 273, 182] }
+      ]
+    },
+    {
+      "id": "byron",
+      "displayName": "Byron (Canalave Gym)",
+      "trainerIds": { "platinum": 784 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Bastiodon", "species": 411, "item": 233, "moves": [442, 444, 89, 368] },
+        { "speciesName": "Steelix", "species": 208, "item": 234, "moves": [231, 89, 444, 242] },
+        { "speciesName": "Bronzong", "species": 437, "item": 158, "moves": [360, 89, 95, 94] },
+        { "speciesName": "Magnezone", "species": 462, "item": 242, "moves": [85, 430, 429, 86] },
+        { "speciesName": "Metagross", "species": 376, "item": 233, "moves": [309, 89, 428, 418] },
+        { "speciesName": "Skarmory", "species": 227, "item": 234, "moves": [211, 65, 191, 355] },
+        { "speciesName": "Probopass", "species": 476, "item": 158, "moves": [414, 430, 408, 86] },
+        { "speciesName": "Scizor", "species": 212, "item": 220, "moves": [418, 404, 276, 14] }
+      ]
+    },
+    {
+      "id": "candice",
+      "displayName": "Candice (Snowpoint Gym)",
+      "trainerIds": { "platinum": 785 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Abomasnow", "species": 460, "item": 246, "moves": [59, 452, 420, 89] },
+        { "speciesName": "Froslass", "species": 478, "item": 275, "moves": [59, 247, 420, 194] },
+        { "speciesName": "Weavile", "species": 461, "item": 270, "moves": [8, 400, 420, 67] },
+        { "speciesName": "Mamoswine", "species": 473, "item": 246, "moves": [89, 420, 444, 419] },
+        { "speciesName": "Glaceon", "species": 471, "item": 234, "moves": [59, 247, 258, 112] },
+        { "speciesName": "Walrein", "species": 365, "item": 234, "moves": [59, 57, 34, 156] },
+        { "speciesName": "Lapras", "species": 131, "item": 158, "moves": [58, 57, 85, 94] },
+        { "speciesName": "Glalie", "species": 362, "item": 246, "moves": [423, 242, 89, 153] }
+      ]
+    },
+    {
+      "id": "volkner",
+      "displayName": "Volkner (Sunyshore Gym)",
+      "trainerIds": { "platinum": 786 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Luxray", "species": 405, "item": 242, "moves": [422, 242, 424, 423] },
+        { "speciesName": "Electivire", "species": 466, "item": 270, "moves": [9, 238, 8, 89] },
+        { "speciesName": "Raichu", "species": 26, "item": 275, "moves": [85, 57, 411, 447] },
+        { "speciesName": "Jolteon", "species": 135, "item": 242, "moves": [85, 247, 324, 86] },
+        { "speciesName": "Magnezone", "species": 462, "item": 234, "moves": [85, 430, 429, 393] },
+        { "speciesName": "Lanturn", "species": 171, "item": 158, "moves": [85, 57, 58, 109] },
+        { "speciesName": "Manectric", "species": 310, "item": 242, "moves": [85, 53, 242, 86] },
+        { "speciesName": "Ampharos", "species": 181, "item": 234, "moves": [85, 411, 408, 324] }
+      ]
+    },
+    {
+      "id": "falkner",
+      "displayName": "Falkner (Violet Gym)",
+      "trainerIds": { "heartgold": 712, "soulsilver": 712 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Pidgeot", "species": 18, "item": 244, "moves": [413, 332, 98, 355] },
+        { "speciesName": "Noctowl", "species": 164, "item": 234, "moves": [403, 95, 94, 355] },
+        { "speciesName": "Xatu", "species": 178, "item": 234, "moves": [403, 94, 95, 366] },
+        { "speciesName": "Skarmory", "species": 227, "item": 234, "moves": [65, 211, 446, 355] },
+        { "speciesName": "Dodrio", "species": 85, "item": 244, "moves": [413, 65, 38, 98] },
+        { "speciesName": "Honchkrow", "species": 430, "item": 270, "moves": [413, 389, 400, 399] },
+        { "speciesName": "Staraptor", "species": 398, "item": 220, "moves": [413, 370, 369, 98] },
+        { "speciesName": "Togekiss", "species": 468, "item": 234, "moves": [403, 396, 366, 355] }
+      ]
+    },
+    {
+      "id": "bugsy",
+      "displayName": "Bugsy (Azalea Gym)",
+      "trainerIds": { "heartgold": 713, "soulsilver": 713 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Scizor", "species": 212, "item": 220, "moves": [418, 404, 369, 14] },
+        { "speciesName": "Heracross", "species": 214, "item": 270, "moves": [224, 370, 444, 89] },
+        { "speciesName": "Pinsir", "species": 127, "item": 222, "moves": [404, 370, 444, 89] },
+        { "speciesName": "Yanmega", "species": 469, "item": 297, "moves": [405, 403, 369, 324] },
+        { "speciesName": "Ariados", "species": 168, "item": 222, "moves": [404, 398, 389, 390] },
+        { "speciesName": "Forretress", "species": 205, "item": 234, "moves": [360, 191, 229, 153] },
+        { "speciesName": "Shuckle", "species": 213, "item": 234, "moves": [446, 157, 92, 156] },
+        { "speciesName": "Scyther", "species": 123, "item": 222, "moves": [404, 332, 400, 14] }
+      ]
+    },
+    {
+      "id": "whitney",
+      "displayName": "Whitney (Goldenrod Gym)",
+      "trainerIds": { "heartgold": 714, "soulsilver": 714 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Miltank", "species": 241, "item": 234, "moves": [34, 205, 208, 89] },
+        { "speciesName": "Clefable", "species": 36, "item": 234, "moves": [304, 85, 58, 347] },
+        { "speciesName": "Blissey", "species": 242, "item": 234, "moves": [58, 85, 135, 94] },
+        { "speciesName": "Girafarig", "species": 203, "item": 234, "moves": [94, 85, 34, 347] },
+        { "speciesName": "Ursaring", "species": 217, "item": 270, "moves": [263, 370, 444, 89] },
+        { "speciesName": "Tauros", "species": 128, "item": 220, "moves": [38, 89, 428, 444] },
+        { "speciesName": "Porygon-Z", "species": 474, "item": 297, "moves": [161, 85, 58, 247] },
+        { "speciesName": "Snorlax", "species": 143, "item": 234, "moves": [34, 89, 242, 156] }
+      ]
+    },
+    {
+      "id": "morty",
+      "displayName": "Morty (Ecruteak Gym)",
+      "trainerIds": { "heartgold": 715, "soulsilver": 715 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Gengar", "species": 94, "item": 270, "moves": [247, 85, 411, 95] },
+        { "speciesName": "Mismagius", "species": 429, "item": 297, "moves": [247, 85, 399, 261] },
+        { "speciesName": "Dusknoir", "species": 477, "item": 234, "moves": [425, 8, 9, 261] },
+        { "speciesName": "Misdreavus", "species": 200, "item": 234, "moves": [247, 261, 220, 212] },
+        { "speciesName": "Drifblim", "species": 426, "item": 158, "moves": [247, 466, 366, 261] },
+        { "speciesName": "Spiritomb", "species": 442, "item": 234, "moves": [247, 389, 261, 220] },
+        { "speciesName": "Froslass", "species": 478, "item": 275, "moves": [247, 58, 95, 194] },
+        { "speciesName": "Sableye", "species": 302, "item": 234, "moves": [421, 389, 261, 220] }
+      ]
+    },
+    {
+      "id": "chuck",
+      "displayName": "Chuck (Cianwood Gym)",
+      "trainerIds": { "heartgold": 718, "soulsilver": 718 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Poliwrath", "species": 62, "item": 234, "moves": [127, 280, 8, 95] },
+        { "speciesName": "Hitmonlee", "species": 106, "item": 220, "moves": [136, 444, 389, 370] },
+        { "speciesName": "Hitmonchan", "species": 107, "item": 268, "moves": [183, 8, 9, 7] },
+        { "speciesName": "Hitmontop", "species": 237, "item": 234, "moves": [370, 183, 229, 389] },
+        { "speciesName": "Machamp", "species": 68, "item": 241, "moves": [223, 444, 8, 418] },
+        { "speciesName": "Primeape", "species": 57, "item": 220, "moves": [238, 444, 369, 89] },
+        { "speciesName": "Lucario", "species": 448, "item": 270, "moves": [396, 430, 410, 399] },
+        { "speciesName": "Breloom", "species": 286, "item": 158, "moves": [409, 402, 183, 147] }
+      ]
+    },
+    {
+      "id": "jasmine",
+      "displayName": "Jasmine (Olivine Gym)",
+      "trainerIds": { "heartgold": 717, "soulsilver": 717 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Steelix", "species": 208, "item": 233, "moves": [442, 89, 444, 242] },
+        { "speciesName": "Magnezone", "species": 462, "item": 234, "moves": [85, 430, 393, 443] },
+        { "speciesName": "Skarmory", "species": 227, "item": 234, "moves": [65, 446, 211, 355] },
+        { "speciesName": "Scizor", "species": 212, "item": 233, "moves": [418, 404, 369, 14] },
+        { "speciesName": "Metagross", "species": 376, "item": 233, "moves": [309, 89, 428, 8] },
+        { "speciesName": "Bronzong", "species": 437, "item": 234, "moves": [360, 94, 89, 446] },
+        { "speciesName": "Empoleon", "species": 395, "item": 158, "moves": [57, 430, 58, 446] },
+        { "speciesName": "Aggron", "species": 306, "item": 233, "moves": [442, 89, 444, 242] }
+      ]
+    },
+    {
+      "id": "pryce",
+      "displayName": "Pryce (Mahogany Gym)",
+      "trainerIds": { "heartgold": 716, "soulsilver": 716 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Mamoswine", "species": 473, "item": 234, "moves": [89, 419, 420, 444] },
+        { "speciesName": "Lapras", "species": 131, "item": 234, "moves": [58, 57, 85, 94] },
+        { "speciesName": "Walrein", "species": 365, "item": 234, "moves": [58, 57, 89, 156] },
+        { "speciesName": "Weavile", "species": 461, "item": 275, "moves": [8, 400, 420, 14] },
+        { "speciesName": "Glaceon", "species": 471, "item": 246, "moves": [58, 247, 59, 196] },
+        { "speciesName": "Jynx", "species": 124, "item": 246, "moves": [58, 94, 142, 247] },
+        { "speciesName": "Dewgong", "species": 87, "item": 234, "moves": [58, 57, 62, 156] },
+        { "speciesName": "Abomasnow", "species": 460, "item": 234, "moves": [59, 412, 89, 420] }
+      ]
+    },
+    {
+      "id": "clair",
+      "displayName": "Clair (Blackthorn Gym)",
+      "trainerIds": { "heartgold": 719, "soulsilver": 719 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Kingdra", "species": 230, "item": 234, "moves": [56, 406, 58, 349] },
+        { "speciesName": "Dragonite", "species": 149, "item": 220, "moves": [200, 245, 89, 7] },
+        { "speciesName": "Garchomp", "species": 445, "item": 270, "moves": [200, 89, 444, 424] },
+        { "speciesName": "Salamence", "species": 373, "item": 297, "moves": [434, 53, 89, 406] },
+        { "speciesName": "Flygon", "species": 330, "item": 287, "moves": [200, 89, 444, 369] },
+        { "speciesName": "Altaria", "species": 334, "item": 234, "moves": [406, 53, 355, 349] },
+        { "speciesName": "Gyarados", "species": 130, "item": 234, "moves": [127, 349, 89, 423] },
+        { "speciesName": "Dragonair", "species": 148, "item": 250, "moves": [406, 57, 85, 58] }
+      ]
+    },
+    {
+      "id": "brock-hgss",
+      "displayName": "Brock (Pewter Gym - HGSS)",
+      "trainerIds": { "heartgold": 720, "soulsilver": 720 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Golem", "species": 76, "item": 238, "moves": [444, 89, 153, 446] },
+        { "speciesName": "Rhyperior", "species": 464, "item": 238, "moves": [439, 89, 224, 444] },
+        { "speciesName": "Omastar", "species": 139, "item": 234, "moves": [57, 58, 446, 191] },
+        { "speciesName": "Kabutops", "species": 141, "item": 238, "moves": [444, 127, 404, 14] },
+        { "speciesName": "Aerodactyl", "species": 142, "item": 275, "moves": [444, 89, 424, 332] },
+        { "speciesName": "Relicanth", "species": 369, "item": 234, "moves": [38, 444, 89, 156] },
+        { "speciesName": "Tyranitar", "species": 248, "item": 238, "moves": [444, 242, 89, 349] },
+        { "speciesName": "Probopass", "species": 476, "item": 234, "moves": [408, 414, 86, 446] }
+      ]
+    },
+    {
+      "id": "misty-hgss",
+      "displayName": "Misty (Cerulean Gym - HGSS)",
+      "trainerIds": { "heartgold": 721, "soulsilver": 721 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Starmie", "species": 121, "item": 243, "moves": [57, 94, 85, 58] },
+        { "speciesName": "Gyarados", "species": 130, "item": 234, "moves": [127, 349, 89, 423] },
+        { "speciesName": "Lapras", "species": 131, "item": 234, "moves": [57, 58, 85, 94] },
+        { "speciesName": "Golduck", "species": 55, "item": 243, "moves": [57, 58, 94, 347] },
+        { "speciesName": "Vaporeon", "species": 134, "item": 234, "moves": [57, 58, 62, 156] },
+        { "speciesName": "Politoed", "species": 186, "item": 243, "moves": [57, 58, 95, 34] },
+        { "speciesName": "Kingler", "species": 99, "item": 220, "moves": [152, 157, 14, 182] },
+        { "speciesName": "Lanturn", "species": 171, "item": 234, "moves": [57, 85, 58, 109] }
+      ]
+    },
+    {
+      "id": "surge-hgss",
+      "displayName": "Lt. Surge (Vermilion Gym - HGSS)",
+      "trainerIds": { "heartgold": 722, "soulsilver": 722 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Raichu", "species": 26, "item": 270, "moves": [85, 57, 411, 98] },
+        { "speciesName": "Electivire", "species": 466, "item": 270, "moves": [9, 8, 89, 7] },
+        { "speciesName": "Magnezone", "species": 462, "item": 234, "moves": [85, 430, 393, 443] },
+        { "speciesName": "Electrode", "species": 101, "item": 275, "moves": [85, 153, 86, 113] },
+        { "speciesName": "Jolteon", "species": 135, "item": 242, "moves": [85, 247, 324, 86] },
+        { "speciesName": "Luxray", "species": 405, "item": 242, "moves": [422, 242, 424, 423] },
+        { "speciesName": "Ampharos", "species": 181, "item": 234, "moves": [85, 411, 408, 324] },
+        { "speciesName": "Manectric", "species": 310, "item": 242, "moves": [85, 53, 242, 86] }
+      ]
+    },
+    {
+      "id": "erika-hgss",
+      "displayName": "Erika (Celadon Gym - HGSS)",
+      "trainerIds": { "heartgold": 723, "soulsilver": 723 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Vileplume", "species": 45, "item": 239, "moves": [202, 188, 79, 78] },
+        { "speciesName": "Victreebel", "species": 71, "item": 239, "moves": [437, 188, 79, 389] },
+        { "speciesName": "Tangrowth", "species": 465, "item": 234, "moves": [438, 89, 79, 157] },
+        { "speciesName": "Bellossom", "species": 182, "item": 234, "moves": [412, 202, 79, 34] },
+        { "speciesName": "Roserade", "species": 407, "item": 239, "moves": [412, 188, 247, 390] },
+        { "speciesName": "Jumpluff", "species": 189, "item": 234, "moves": [202, 79, 369, 332] },
+        { "speciesName": "Leafeon", "species": 470, "item": 239, "moves": [348, 404, 14, 98] },
+        { "speciesName": "Exeggutor", "species": 103, "item": 234, "moves": [94, 412, 95, 153] }
+      ]
+    },
+    {
+      "id": "janine",
+      "displayName": "Janine (Fuchsia Gym)",
+      "trainerIds": { "heartgold": 724, "soulsilver": 724 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Crobat", "species": 169, "item": 234, "moves": [413, 440, 369, 355] },
+        { "speciesName": "Weezing", "species": 110, "item": 245, "moves": [188, 261, 53, 153] },
+        { "speciesName": "Muk", "species": 89, "item": 281, "moves": [188, 9, 7, 153] },
+        { "speciesName": "Venomoth", "species": 49, "item": 222, "moves": [405, 94, 79, 188] },
+        { "speciesName": "Tentacruel", "species": 73, "item": 281, "moves": [57, 188, 58, 229] },
+        { "speciesName": "Toxicroak", "species": 454, "item": 270, "moves": [398, 409, 389, 89] },
+        { "speciesName": "Nidoking", "species": 34, "item": 270, "moves": [414, 224, 188, 58] },
+        { "speciesName": "Drapion", "species": 452, "item": 245, "moves": [404, 398, 242, 89] }
+      ]
+    },
+    {
+      "id": "sabrina-hgss",
+      "displayName": "Sabrina (Saffron Gym - HGSS)",
+      "trainerIds": { "heartgold": 725, "soulsilver": 725 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Alakazam", "species": 65, "item": 248, "moves": [94, 247, 411, 347] },
+        { "speciesName": "Espeon", "species": 196, "item": 248, "moves": [94, 247, 347, 98] },
+        { "speciesName": "Mr. Mime", "species": 122, "item": 234, "moves": [94, 85, 247, 113] },
+        { "speciesName": "Gardevoir", "species": 282, "item": 297, "moves": [94, 85, 247, 347] },
+        { "speciesName": "Metagross", "species": 376, "item": 233, "moves": [309, 89, 428, 8] },
+        { "speciesName": "Bronzong", "species": 437, "item": 234, "moves": [360, 94, 89, 446] },
+        { "speciesName": "Slowbro", "species": 80, "item": 234, "moves": [94, 57, 58, 347] },
+        { "speciesName": "Hypno", "species": 97, "item": 234, "moves": [94, 95, 8, 9] }
+      ]
+    },
+    {
+      "id": "blaine-hgss",
+      "displayName": "Blaine (Seafoam Gym - HGSS)",
+      "trainerIds": { "heartgold": 726, "soulsilver": 726 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Arcanine", "species": 59, "item": 249, "moves": [394, 245, 242, 424] },
+        { "speciesName": "Magmortar", "species": 467, "item": 270, "moves": [53, 85, 411, 126] },
+        { "speciesName": "Rapidash", "species": 78, "item": 249, "moves": [394, 340, 98, 34] },
+        { "speciesName": "Ninetales", "species": 38, "item": 234, "moves": [53, 261, 326, 257] },
+        { "speciesName": "Houndoom", "species": 229, "item": 270, "moves": [53, 399, 389, 46] },
+        { "speciesName": "Charizard", "species": 6, "item": 249, "moves": [53, 403, 89, 406] },
+        { "speciesName": "Typhlosion", "species": 157, "item": 297, "moves": [53, 411, 89, 257] },
+        { "speciesName": "Infernape", "species": 392, "item": 270, "moves": [394, 370, 183, 8] }
+      ]
+    },
+    {
+      "id": "blue",
+      "displayName": "Blue (Viridian Gym)",
+      "trainerIds": { "heartgold": 727, "soulsilver": 727 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Pidgeot", "species": 18, "item": 244, "moves": [413, 332, 98, 355] },
+        { "speciesName": "Alakazam", "species": 65, "item": 297, "moves": [94, 247, 411, 347] },
+        { "speciesName": "Rhyperior", "species": 464, "item": 238, "moves": [439, 89, 224, 444] },
+        { "speciesName": "Exeggutor", "species": 103, "item": 234, "moves": [94, 412, 95, 153] },
+        { "speciesName": "Arcanine", "species": 59, "item": 234, "moves": [394, 245, 242, 424] },
+        { "speciesName": "Gyarados", "species": 130, "item": 234, "moves": [127, 349, 89, 423] },
+        { "speciesName": "Machamp", "species": 68, "item": 241, "moves": [223, 444, 8, 418] },
+        { "speciesName": "Tyranitar", "species": 248, "item": 238, "moves": [444, 242, 89, 349] }
+      ]
+    },
+    {
+      "id": "cilan",
+      "displayName": "Cilan (Striaton Gym)",
+      "trainerIds": { "black": 12, "white": 12 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Simisage", "species": 512, "item": 158, "moves": [402, 242, 157, 512] },
+        { "speciesName": "Serperior", "species": 497, "item": 234, "moves": [348, 489, 525, 216] },
+        { "speciesName": "Leavanny", "species": 542, "item": 157, "moves": [348, 404, 14, 421] },
+        { "speciesName": "Lilligant", "species": 549, "item": 268, "moves": [483, 80, 202, 79] },
+        { "speciesName": "Whimsicott", "species": 547, "item": 270, "moves": [202, 542, 73, 369] },
+        { "speciesName": "Ferrothorn", "species": 598, "item": 275, "moves": [438, 360, 73, 86] },
+        { "speciesName": "Amoonguss", "species": 591, "item": 158, "moves": [202, 188, 147, 235] },
+        { "speciesName": "Maractus", "species": 556, "item": 234, "moves": [80, 389, 302, 538] }
+      ]
+    },
+    {
+      "id": "chili",
+      "displayName": "Chili (Striaton Gym)",
+      "trainerIds": { "black": 11, "white": 11 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Simisear", "species": 514, "item": 158, "moves": [53, 242, 157, 512] },
+        { "speciesName": "Emboar", "species": 500, "item": 234, "moves": [394, 359, 457, 528] },
+        { "speciesName": "Darmanitan", "species": 555, "item": 157, "moves": [394, 276, 157, 369] },
+        { "speciesName": "Chandelure", "species": 609, "item": 268, "moves": [247, 53, 412, 347] },
+        { "speciesName": "Volcarona", "species": 637, "item": 270, "moves": [483, 552, 405, 542] },
+        { "speciesName": "Heatmor", "species": 631, "item": 275, "moves": [53, 389, 202, 421] },
+        { "speciesName": "Arcanine", "species": 59, "item": 158, "moves": [394, 245, 242, 528] },
+        { "speciesName": "Houndoom", "species": 229, "item": 234, "moves": [53, 399, 188, 417] }
+      ]
+    },
+    {
+      "id": "cress",
+      "displayName": "Cress (Striaton Gym)",
+      "trainerIds": { "black": 13, "white": 13 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Simipour", "species": 516, "item": 158, "moves": [503, 242, 58, 512] },
+        { "speciesName": "Samurott", "species": 503, "item": 234, "moves": [57, 224, 58, 453] },
+        { "speciesName": "Seismitoad", "species": 537, "item": 157, "moves": [57, 89, 482, 409] },
+        { "speciesName": "Jellicent", "species": 593, "item": 268, "moves": [503, 247, 105, 58] },
+        { "speciesName": "Carracosta", "species": 565, "item": 270, "moves": [127, 444, 504, 453] },
+        { "speciesName": "Swanna", "species": 581, "item": 275, "moves": [57, 542, 58, 355] },
+        { "speciesName": "Basculin", "species": 550, "item": 158, "moves": [127, 242, 453, 38] },
+        { "speciesName": "Alomomola", "species": 594, "item": 234, "moves": [503, 273, 182, 92] }
+      ]
+    },
+    {
+      "id": "lenora",
+      "displayName": "Lenora (Nacrene Gym)",
+      "trainerIds": { "black": 21, "white": 21 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Watchog", "species": 505, "item": 158, "moves": [158, 242, 95, 514] },
+        { "speciesName": "Stoutland", "species": 508, "item": 234, "moves": [216, 242, 528, 276] },
+        { "speciesName": "Cinccino", "species": 573, "item": 157, "moves": [541, 331, 350, 369] },
+        { "speciesName": "Bouffalant", "species": 626, "item": 268, "moves": [543, 224, 89, 444] },
+        { "speciesName": "Audino", "species": 531, "item": 270, "moves": [216, 273, 182, 86] },
+        { "speciesName": "Sawsbuck", "species": 586, "item": 275, "moves": [532, 216, 26, 14] },
+        { "speciesName": "Unfezant", "species": 521, "item": 158, "moves": [216, 332, 369, 355] },
+        { "speciesName": "Braviary", "species": 628, "item": 234, "moves": [413, 276, 157, 421] }
+      ]
+    },
+    {
+      "id": "burgh",
+      "displayName": "Burgh (Castelia Gym)",
+      "trainerIds": { "black": 22, "white": 22, "black2": 154, "white2": 154, "black2-challenge": 766, "white2-challenge": 766 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Leavanny", "species": 542, "item": 158, "moves": [348, 404, 14, 421] },
+        { "speciesName": "Scolipede", "species": 545, "item": 234, "moves": [224, 398, 89, 157] },
+        { "speciesName": "Crustle", "species": 558, "item": 157, "moves": [404, 444, 89, 504] },
+        { "speciesName": "Escavalier", "species": 589, "item": 268, "moves": [224, 442, 14, 332] },
+        { "speciesName": "Accelgor", "species": 617, "item": 270, "moves": [405, 411, 412, 369] },
+        { "speciesName": "Galvantula", "species": 596, "item": 275, "moves": [87, 405, 412, 521] },
+        { "speciesName": "Durant", "species": 632, "item": 158, "moves": [404, 442, 242, 468] },
+        { "speciesName": "Volcarona", "species": 637, "item": 234, "moves": [483, 552, 405, 542] }
+      ]
+    },
+    {
+      "id": "elesa",
+      "displayName": "Elesa (Nimbasa Gym)",
+      "trainerIds": { "black": 23, "white": 23, "black2": 153, "white2": 153, "black2-challenge": 767, "white2-challenge": 767 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Zebstrika", "species": 523, "item": 158, "moves": [528, 488, 521, 228] },
+        { "speciesName": "Emolga", "species": 587, "item": 234, "moves": [85, 403, 521, 355] },
+        { "speciesName": "Galvantula", "species": 596, "item": 157, "moves": [87, 405, 412, 521] },
+        { "speciesName": "Eelektross", "species": 604, "item": 268, "moves": [85, 53, 202, 491] },
+        { "speciesName": "Stunfisk", "species": 618, "item": 270, "moves": [435, 414, 503, 188] },
+        { "speciesName": "Ampharos", "species": 181, "item": 275, "moves": [85, 324, 411, 408] },
+        { "speciesName": "Jolteon", "species": 135, "item": 158, "moves": [85, 247, 521, 324] },
+        { "speciesName": "Electivire", "species": 466, "item": 234, "moves": [528, 8, 89, 238] }
+      ]
+    },
+    {
+      "id": "clay",
+      "displayName": "Clay (Driftveil Gym)",
+      "trainerIds": { "black": 24, "white": 24, "black2": 158, "white2": 158, "black2-challenge": 768, "white2-challenge": 768 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Excadrill", "species": 530, "item": 158, "moves": [89, 157, 404, 14] },
+        { "speciesName": "Krookodile", "species": 553, "item": 234, "moves": [89, 242, 444, 337] },
+        { "speciesName": "Seismitoad", "species": 537, "item": 157, "moves": [57, 89, 482, 409] },
+        { "speciesName": "Golurk", "species": 623, "item": 268, "moves": [89, 325, 359, 8] },
+        { "speciesName": "Stunfisk", "species": 618, "item": 270, "moves": [435, 414, 503, 188] },
+        { "speciesName": "Gliscor", "species": 472, "item": 275, "moves": [89, 512, 444, 14] },
+        { "speciesName": "Mamoswine", "species": 473, "item": 158, "moves": [89, 556, 420, 444] },
+        { "speciesName": "Hippowdon", "species": 450, "item": 234, "moves": [89, 242, 444, 303] }
+      ]
+    },
+    {
+      "id": "skyla",
+      "displayName": "Skyla (Mistralton Gym)",
+      "trainerIds": { "black": 25, "white": 25, "black2": 155, "white2": 155, "black2-challenge": 769, "white2-challenge": 769 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Swanna", "species": 581, "item": 158, "moves": [57, 542, 58, 355] },
+        { "speciesName": "Unfezant", "species": 521, "item": 234, "moves": [216, 332, 369, 355] },
+        { "speciesName": "Swoobat", "species": 528, "item": 157, "moves": [94, 403, 347, 257] },
+        { "speciesName": "Braviary", "species": 628, "item": 268, "moves": [413, 276, 157, 421] },
+        { "speciesName": "Mandibuzz", "species": 630, "item": 270, "moves": [413, 492, 355, 92] },
+        { "speciesName": "Sigilyph", "species": 561, "item": 275, "moves": [94, 403, 58, 322] },
+        { "speciesName": "Archeops", "species": 567, "item": 158, "moves": [512, 444, 89, 369] },
+        { "speciesName": "Emolga", "species": 587, "item": 234, "moves": [85, 403, 521, 355] }
+      ]
+    },
+    {
+      "id": "brycen",
+      "displayName": "Brycen (Icirrus Gym)",
+      "trainerIds": { "black": 131, "white": 131 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Beartic", "species": 614, "item": 158, "moves": [556, 276, 453, 444] },
+        { "speciesName": "Cryogonal", "species": 615, "item": 234, "moves": [58, 430, 105, 115] },
+        { "speciesName": "Vanilluxe", "species": 584, "item": 157, "moves": [59, 430, 113, 151] },
+        { "speciesName": "Weavile", "species": 461, "item": 268, "moves": [400, 8, 67, 420] },
+        { "speciesName": "Mamoswine", "species": 473, "item": 270, "moves": [89, 556, 420, 444] },
+        { "speciesName": "Froslass", "species": 478, "item": 275, "moves": [58, 247, 85, 194] },
+        { "speciesName": "Walrein", "species": 365, "item": 158, "moves": [57, 58, 89, 156] },
+        { "speciesName": "Glaceon", "species": 471, "item": 234, "moves": [58, 247, 324, 112] }
+      ]
+    },
+    {
+      "id": "drayden",
+      "displayName": "Drayden (Opelucid Gym)",
+      "trainerIds": { "black": 133, "white": 133, "black2": 159, "white2": 159, "black2-challenge": 770, "white2-challenge": 770 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Haxorus", "species": 612, "item": 158, "moves": [337, 89, 157, 349] },
+        { "speciesName": "Druddigon", "species": 621, "item": 234, "moves": [337, 276, 389, 157] },
+        { "speciesName": "Hydreigon", "species": 635, "item": 157, "moves": [406, 399, 53, 57] },
+        { "speciesName": "Dragonite", "species": 149, "item": 268, "moves": [337, 7, 89, 349] },
+        { "speciesName": "Salamence", "species": 373, "item": 270, "moves": [337, 89, 53, 349] },
+        { "speciesName": "Garchomp", "species": 445, "item": 275, "moves": [337, 89, 444, 14] },
+        { "speciesName": "Flygon", "species": 330, "item": 158, "moves": [89, 337, 369, 444] },
+        { "speciesName": "Kingdra", "species": 230, "item": 234, "moves": [57, 406, 58, 349] }
+      ]
+    },
+    {
+      "id": "iris",
+      "displayName": "Iris (Opelucid Gym)",
+      "trainerIds": { "black": 132, "white": 132 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Haxorus", "species": 612, "item": 158, "moves": [337, 89, 157, 349] },
+        { "speciesName": "Druddigon", "species": 621, "item": 234, "moves": [337, 276, 389, 157] },
+        { "speciesName": "Hydreigon", "species": 635, "item": 157, "moves": [406, 399, 53, 57] },
+        { "speciesName": "Dragonite", "species": 149, "item": 268, "moves": [337, 7, 89, 349] },
+        { "speciesName": "Salamence", "species": 373, "item": 270, "moves": [337, 89, 53, 349] },
+        { "speciesName": "Garchomp", "species": 445, "item": 275, "moves": [337, 89, 444, 14] },
+        { "speciesName": "Flygon", "species": 330, "item": 158, "moves": [89, 337, 369, 444] },
+        { "speciesName": "Kingdra", "species": 230, "item": 234, "moves": [57, 406, 58, 349] }
+      ]
+    },
+    {
+      "id": "cheren",
+      "displayName": "Cheren (Aspertia Gym)",
+      "trainerIds": { "black2": 156, "white2": 156, "black2-challenge": 764, "white2-challenge": 764 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Stoutland", "species": 508, "item": 158, "moves": [216, 242, 528, 276] },
+        { "speciesName": "Cinccino", "species": 573, "item": 234, "moves": [541, 331, 350, 369] },
+        { "speciesName": "Bouffalant", "species": 626, "item": 157, "moves": [543, 224, 89, 444] },
+        { "speciesName": "Watchog", "species": 505, "item": 268, "moves": [158, 242, 95, 514] },
+        { "speciesName": "Unfezant", "species": 521, "item": 270, "moves": [216, 332, 369, 355] },
+        { "speciesName": "Braviary", "species": 628, "item": 275, "moves": [413, 276, 157, 421] },
+        { "speciesName": "Sawsbuck", "species": 586, "item": 158, "moves": [532, 216, 26, 14] },
+        { "speciesName": "Audino", "species": 531, "item": 234, "moves": [216, 273, 182, 86] }
+      ]
+    },
+    {
+      "id": "roxie",
+      "displayName": "Roxie (Virbank Gym)",
+      "trainerIds": { "black2": 157, "white2": 157, "black2-challenge": 765, "white2-challenge": 765 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Scolipede", "species": 545, "item": 158, "moves": [224, 398, 89, 157] },
+        { "speciesName": "Garbodor", "species": 569, "item": 234, "moves": [441, 34, 402, 390] },
+        { "speciesName": "Amoonguss", "species": 591, "item": 157, "moves": [202, 188, 147, 235] },
+        { "speciesName": "Crobat", "species": 169, "item": 268, "moves": [440, 512, 369, 355] },
+        { "speciesName": "Toxicroak", "species": 454, "item": 270, "moves": [409, 398, 389, 14] },
+        { "speciesName": "Drapion", "species": 452, "item": 275, "moves": [400, 440, 89, 14] },
+        { "speciesName": "Weezing", "species": 110, "item": 158, "moves": [188, 53, 85, 261] },
+        { "speciesName": "Muk", "species": 89, "item": 234, "moves": [441, 425, 280, 174] }
+      ]
+    },
+    {
+      "id": "marlon",
+      "displayName": "Marlon (Humilau Gym)",
+      "trainerIds": { "black2": 160, "white2": 160, "black2-challenge": 771, "white2-challenge": 771 },
+      "teamSize": 6,
+      "pool": [
+        { "speciesName": "Carracosta", "species": 565, "item": 158, "moves": [127, 444, 504, 453] },
+        { "speciesName": "Jellicent", "species": 593, "item": 234, "moves": [503, 247, 105, 58] },
+        { "speciesName": "Seismitoad", "species": 537, "item": 157, "moves": [57, 89, 482, 409] },
+        { "speciesName": "Swanna", "species": 581, "item": 268, "moves": [57, 542, 58, 355] },
+        { "speciesName": "Alomomola", "species": 594, "item": 270, "moves": [503, 273, 182, 92] },
+        { "speciesName": "Basculin", "species": 550, "item": 275, "moves": [127, 242, 453, 38] },
+        { "speciesName": "Wailord", "species": 321, "item": 158, "moves": [57, 58, 340, 34] },
+        { "speciesName": "Mantine", "species": 226, "item": 234, "moves": [57, 403, 58, 355] }
+      ]
+    }
+  ]
+}

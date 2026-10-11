@@ -1,0 +1,458 @@
+{
+  "format": 1,
+  "game": "firered",
+  "rom": {
+    "size": 16777216,
+    "sha1": "5647efce677331c36b683a75c618467089b5d8f3",
+    "vanillaSha1": "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc",
+    "gameCode": "BPRE"
+  },
+  "layout": {
+    "romBase": 134217728,
+    "trainerStructSize": 40,
+    "trainerMonSize": 16,
+    "partyCapacity": 6,
+    "partyFlagsValue": 3
+  },
+  "symbols": {
+    "gTrainers": {
+      "offset": 2353864,
+      "address": 136571592,
+      "size": 29720
+    },
+    "gConnectGymParties": {
+      "offset": 15404612,
+      "address": 149622340,
+      "size": 768
+    },
+    "gConnectChampionParties": {
+      "offset": 15405380,
+      "address": 149623108,
+      "size": 288
+    },
+    "gTrainerFrontPicTable": {
+      "offset": 2332028,
+      "address": 136549756,
+      "size": 1184
+    },
+    "gTrainerFrontPicPaletteTable": {
+      "offset": 2333212,
+      "address": 136550940,
+      "size": 1184
+    },
+    "gTrainerFrontPicCoords": {
+      "offset": 2331436,
+      "address": 136549164,
+      "size": 592
+    },
+    "gObjectEventGraphicsInfoPointers": {
+      "offset": 3800496,
+      "address": 138018224,
+      "size": 608
+    },
+    "gConnectObjectEventSpritePalettes": {
+      "offset": 15420844,
+      "address": 149638572,
+      "size": 160
+    }
+  },
+  "gyms": [
+    {
+      "index": 0,
+      "leader": "BROCK",
+      "trainerId": 414,
+      "trainerConstant": "TRAINER_LEADER_BROCK",
+      "trainerStructOffset": 2370424,
+      "partyFlagsOffset": 2370424,
+      "partySizeOffset": 2370456,
+      "partySizeDefault": 2,
+      "partyPointerOffset": 2370460,
+      "trainerBattledFlag": 1694,
+      "partyOffset": 15404612,
+      "badgeFlag": 2080,
+      "defeatedFlag": 1200,
+      "prizeTakenFlag": 2253
+    },
+    {
+      "index": 1,
+      "leader": "MISTY",
+      "trainerId": 415,
+      "trainerConstant": "TRAINER_LEADER_MISTY",
+      "trainerStructOffset": 2370464,
+      "partyFlagsOffset": 2370464,
+      "partySizeOffset": 2370496,
+      "partySizeDefault": 2,
+      "partyPointerOffset": 2370500,
+      "trainerBattledFlag": 1695,
+      "partyOffset": 15404708,
+      "badgeFlag": 2081,
+      "defeatedFlag": 1201,
+      "prizeTakenFlag": 2254
+    },
+    {
+      "index": 2,
+      "leader": "LT.SURGE",
+      "trainerId": 416,
+      "trainerConstant": "TRAINER_LEADER_LT_SURGE",
+      "trainerStructOffset": 2370504,
+      "partyFlagsOffset": 2370504,
+      "partySizeOffset": 2370536,
+      "partySizeDefault": 3,
+      "partyPointerOffset": 2370540,
+      "trainerBattledFlag": 1696,
+      "partyOffset": 15404804,
+      "badgeFlag": 2082,
+      "defeatedFlag": 1202,
+      "prizeTakenFlag": 2255
+    },
+    {
+      "index": 3,
+      "leader": "ERIKA",
+      "trainerId": 417,
+      "trainerConstant": "TRAINER_LEADER_ERIKA",
+      "trainerStructOffset": 2370544,
+      "partyFlagsOffset": 2370544,
+      "partySizeOffset": 2370576,
+      "partySizeDefault": 3,
+      "partyPointerOffset": 2370580,
+      "trainerBattledFlag": 1697,
+      "partyOffset": 15404900,
+      "badgeFlag": 2083,
+      "defeatedFlag": 1203,
+      "prizeTakenFlag": 2256
+    },
+    {
+      "index": 4,
+      "leader": "KOGA",
+      "trainerId": 418,
+      "trainerConstant": "TRAINER_LEADER_KOGA",
+      "trainerStructOffset": 2370584,
+      "partyFlagsOffset": 2370584,
+      "partySizeOffset": 2370616,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 2370620,
+      "trainerBattledFlag": 1698,
+      "partyOffset": 15404996,
+      "badgeFlag": 2084,
+      "defeatedFlag": 1204,
+      "prizeTakenFlag": 2257
+    },
+    {
+      "index": 5,
+      "leader": "SABRINA",
+      "trainerId": 420,
+      "trainerConstant": "TRAINER_LEADER_SABRINA",
+      "trainerStructOffset": 2370664,
+      "partyFlagsOffset": 2370664,
+      "partySizeOffset": 2370696,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 2370700,
+      "trainerBattledFlag": 1700,
+      "partyOffset": 15405092,
+      "badgeFlag": 2085,
+      "defeatedFlag": 1205,
+      "prizeTakenFlag": 2258
+    },
+    {
+      "index": 6,
+      "leader": "BLAINE",
+      "trainerId": 419,
+      "trainerConstant": "TRAINER_LEADER_BLAINE",
+      "trainerStructOffset": 2370624,
+      "partyFlagsOffset": 2370624,
+      "partySizeOffset": 2370656,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 2370660,
+      "trainerBattledFlag": 1699,
+      "partyOffset": 15405188,
+      "badgeFlag": 2086,
+      "defeatedFlag": 1206,
+      "prizeTakenFlag": 2259
+    },
+    {
+      "index": 7,
+      "leader": "GIOVANNI",
+      "trainerId": 350,
+      "trainerConstant": "TRAINER_LEADER_GIOVANNI",
+      "trainerStructOffset": 2367864,
+      "partyFlagsOffset": 2367864,
+      "partySizeOffset": 2367896,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 2367900,
+      "trainerBattledFlag": 1630,
+      "partyOffset": 15405284,
+      "badgeFlag": 2087,
+      "defeatedFlag": 1207,
+      "prizeTakenFlag": 2260
+    }
+  ],
+  "eliteFour": [
+    {
+      "name": "LORELEI",
+      "trainerId": 410,
+      "trainerConstant": "TRAINER_ELITE_FOUR_LORELEI",
+      "trainerStructOffset": 2370264,
+      "partyFlagsOffset": 2370264,
+      "partySizeOffset": 2370296,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 2370300,
+      "trainerBattledFlag": 1690,
+      "defeatedFlag": 1208
+    },
+    {
+      "name": "BRUNO",
+      "trainerId": 411,
+      "trainerConstant": "TRAINER_ELITE_FOUR_BRUNO",
+      "trainerStructOffset": 2370304,
+      "partyFlagsOffset": 2370304,
+      "partySizeOffset": 2370336,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 2370340,
+      "trainerBattledFlag": 1691,
+      "defeatedFlag": 1209
+    },
+    {
+      "name": "AGATHA",
+      "trainerId": 412,
+      "trainerConstant": "TRAINER_ELITE_FOUR_AGATHA",
+      "trainerStructOffset": 2370344,
+      "partyFlagsOffset": 2370344,
+      "partySizeOffset": 2370376,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 2370380,
+      "trainerBattledFlag": 1692,
+      "defeatedFlag": 1210
+    },
+    {
+      "name": "LANCE",
+      "trainerId": 413,
+      "trainerConstant": "TRAINER_ELITE_FOUR_LANCE",
+      "trainerStructOffset": 2370384,
+      "partyFlagsOffset": 2370384,
+      "partySizeOffset": 2370416,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 2370420,
+      "trainerBattledFlag": 1693,
+      "defeatedFlag": 1211
+    }
+  ],
+  "champion": {
+    "name": "RIVAL",
+    "starterDependent": true,
+    "starterVar": 16433,
+    "defeatedFlag": 1212,
+    "gameClearFlag": 2092,
+    "connectDefeatedFlag": 2261,
+    "variants": [
+      {
+        "starter": "CHARMANDER",
+        "starterMonValue": 0,
+        "trainerId": 440,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_CHARMANDER",
+        "trainerStructOffset": 2371464,
+        "partyFlagsOffset": 2371464,
+        "partySizeOffset": 2371496,
+        "partySizeDefault": 6,
+        "partyPointerOffset": 2371500,
+        "trainerBattledFlag": 1720,
+        "partyOffset": 15405380
+      },
+      {
+        "starter": "BULBASAUR",
+        "starterMonValue": 1,
+        "trainerId": 439,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_BULBASAUR",
+        "trainerStructOffset": 2371424,
+        "partyFlagsOffset": 2371424,
+        "partySizeOffset": 2371456,
+        "partySizeDefault": 6,
+        "partyPointerOffset": 2371460,
+        "trainerBattledFlag": 1719,
+        "partyOffset": 15405476
+      },
+      {
+        "starter": "SQUIRTLE",
+        "starterMonValue": 2,
+        "trainerId": 438,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_SQUIRTLE",
+        "trainerStructOffset": 2371384,
+        "partyFlagsOffset": 2371384,
+        "partySizeOffset": 2371416,
+        "partySizeDefault": 6,
+        "partyPointerOffset": 2371420,
+        "trainerBattledFlag": 1718,
+        "partyOffset": 15405572
+      }
+    ]
+  },
+  "championPlaceholder": {
+    "variants": [
+      {
+        "starter": "CHARMANDER",
+        "trainerId": 440,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_CHARMANDER",
+        "trainerPicFieldOffset": 2371467,
+        "trainerPicFieldAddress": 136589195
+      },
+      {
+        "starter": "BULBASAUR",
+        "trainerId": 439,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_BULBASAUR",
+        "trainerPicFieldOffset": 2371427,
+        "trainerPicFieldAddress": 136589155
+      },
+      {
+        "starter": "SQUIRTLE",
+        "trainerId": 438,
+        "trainerConstant": "TRAINER_CONNECT_CHAMPION_SQUIRTLE",
+        "trainerPicFieldOffset": 2371387,
+        "trainerPicFieldAddress": 136589115
+      }
+    ],
+    "frontPic": {
+      "trainerPicId": 125,
+      "tableEntryOffset": 2333028,
+      "tableEntryAddress": 136550756,
+      "tableEntryLayout": "u32 dataPointer, u16 uncompressedSize, u16 tag",
+      "uncompressedSize": 2048,
+      "paletteTableEntryOffset": 2334212,
+      "paletteTableEntryAddress": 136551940,
+      "paletteTableEntryLayout": "u32 dataPointer, u16 tag, u16 padding",
+      "coordsEntryOffset": 2331936,
+      "coordsEntryAddress": 136549664,
+      "coordsEntryLayout": "u8 size, u8 yOffset, u16 padding",
+      "defaultImage": {
+        "symbol": "gConnectChampionTrainerFrontPic",
+        "offset": 15403808,
+        "address": 149621536,
+        "size": 764,
+        "format": "LZ77-compressed 4bpp, 64x64"
+      },
+      "defaultPalette": {
+        "symbol": "gConnectChampionTrainerPalette",
+        "offset": 15404572,
+        "address": 149622300,
+        "size": 40,
+        "format": "LZ77-compressed 16-colour palette"
+      },
+      "alsoUsedBy": [
+        "Champion battle intro mugshot (MUGSHOT_BLUE)",
+        "the unreachable post-game rematch champions (739-741)",
+        "link/e-reader trainers of facility class CHAMPION_RIVAL (no vanilla story use)"
+      ]
+    },
+    "overworld": {
+      "graphicsId": 67,
+      "graphicsInfoPointerOffset": 3800764,
+      "graphicsInfoPointerAddress": 138018492,
+      "graphicsInfo": {
+        "symbol": "gObjectEventGraphicsInfo_ConnectChampion",
+        "offset": 15420808,
+        "address": 149638536,
+        "size": 36,
+        "paletteTagFieldOffset": 15420810,
+        "imagesPointerFieldOffset": 15420836
+      },
+      "picTable": {
+        "symbol": "gObjectEventPicTable_ConnectChampion",
+        "offset": 15420736,
+        "address": 149638464,
+        "size": 72,
+        "frames": 9,
+        "frameWidth": 16,
+        "frameHeight": 32,
+        "entryLayout": "u32 dataPointer, u16 size, u16 padding"
+      },
+      "picData": {
+        "symbol": "gObjectEventPic_ConnectChampion",
+        "offset": 15418400,
+        "address": 149636128,
+        "size": 2304,
+        "format": "raw 4bpp, 9 frames of 16x32"
+      },
+      "palette": {
+        "symbol": "gObjectEventPal_ConnectChampion",
+        "offset": 15420704,
+        "address": 149638432,
+        "size": 32,
+        "format": "raw 16-colour BGR555 palette",
+        "tag": 4380,
+        "paletteSlot": 10,
+        "paletteListEntryOffset": 15420988,
+        "paletteListEntryAddress": 149638716
+      },
+      "usedBy": [
+        "MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM object 1 (LOCALID_CHAMPIONS_ROOM_RIVAL)",
+        "MAP_INDIGO_PLATEAU_EXTERIOR object 1 (LOCALID_CREDITS_RIVAL, post-Hall of Fame credits)"
+      ]
+    },
+    "overwriteInPlace": {
+      "safe": [
+        "overworld.picData (fixed size, raw)",
+        "overworld.palette (fixed size, raw)",
+        "the trainerPic byte of each variant"
+      ],
+      "repointOrKeepSize": [
+        "frontPic.defaultImage and frontPic.defaultPalette are LZ77-compressed: write new data elsewhere and repoint the table entries, or keep the compressed length within the original size"
+      ]
+    }
+  },
+  "flags": {
+    "FLAG_CONNECT_START": 2243,
+    "FLAG_CONNECT_CHAMPION_KANTO": 2243,
+    "FLAG_CONNECT_CHAMPION_JOHTO": 2244,
+    "FLAG_CONNECT_CHAMPION_HOENN": 2245,
+    "FLAG_CONNECT_CHAMPION_SINNOH": 2246,
+    "FLAG_CONNECT_CHAMPION_UNOVA": 2247,
+    "FLAG_CONNECT_CHAMPION_KALOS": 2248,
+    "FLAG_CONNECT_CHAMPION_ALOLA": 2249,
+    "FLAG_CONNECT_CHAMPION_GALAR": 2250,
+    "FLAG_CONNECT_CHAMPION_PALDEA": 2251,
+    "FLAG_CONNECT_GYM_MATCH_CALL": 2252,
+    "FLAG_CONNECT_PRIZE_TAKEN_BROCK": 2253,
+    "FLAG_CONNECT_PRIZE_TAKEN_MISTY": 2254,
+    "FLAG_CONNECT_PRIZE_TAKEN_LT_SURGE": 2255,
+    "FLAG_CONNECT_PRIZE_TAKEN_ERIKA": 2256,
+    "FLAG_CONNECT_PRIZE_TAKEN_KOGA": 2257,
+    "FLAG_CONNECT_PRIZE_TAKEN_SABRINA": 2258,
+    "FLAG_CONNECT_PRIZE_TAKEN_BLAINE": 2259,
+    "FLAG_CONNECT_PRIZE_TAKEN_GIOVANNI": 2260,
+    "FLAG_CONNECT_CHAMPION_DEFEATED": 2261,
+    "FLAG_CONNECT_RESERVED_0x8D6": 2262,
+    "FLAG_CONNECT_RESERVED_0x8D7": 2263,
+    "FLAG_CONNECT_RESERVED_0x8D8": 2264,
+    "FLAG_CONNECT_RESERVED_0x8D9": 2265,
+    "FLAG_CONNECT_RESERVED_0x8DA": 2266,
+    "FLAG_CONNECT_RESERVED_0x8DB": 2267,
+    "FLAG_CONNECT_RESERVED_0x8DC": 2268,
+    "FLAG_CONNECT_RESERVED_0x8DD": 2269,
+    "FLAG_CONNECT_RESERVED_0x8DE": 2270,
+    "FLAG_CONNECT_RESERVED_0x8DF": 2271,
+    "FLAG_CONNECT_RESERVED_0x8E0": 2272,
+    "FLAG_CONNECT_RESERVED_0x8E1": 2273,
+    "FLAG_CONNECT_END": 2273
+  },
+  "vars": {
+    "VAR_CONNECT_REGIONS_CLEARED": 16631,
+    "VAR_CONNECT_HOME_REGION": 16632,
+    "VAR_CONNECT_RESERVED_0x40F9": 16633,
+    "VAR_CONNECT_RESERVED_0x40FA": 16634,
+    "VAR_CONNECT_RESERVED_0x40FB": 16635,
+    "VAR_CONNECT_RESERVED_0x40FC": 16636,
+    "VAR_CONNECT_RESERVED_0x40FD": 16637,
+    "VAR_CONNECT_RESERVED_0x40FE": 16638,
+    "VAR_CONNECT_RESERVED_0x40FF": 16639
+  },
+  "regions": {
+    "NONE": 0,
+    "KANTO": 1,
+    "JOHTO": 2,
+    "HOENN": 3,
+    "SINNOH": 4,
+    "UNOVA": 5,
+    "KALOS": 6,
+    "ALOLA": 7,
+    "GALAR": 8,
+    "PALDEA": 9
+  }
+}

@@ -320,6 +320,65 @@
         }
       }
     },
+    "/api/patch/launch": {
+      "post": {
+        "tags": [
+          "Patch"
+        ],
+        "operationId": "Patch_Launch",
+        "parameters": [
+          {
+            "name": "gameId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "romPath",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "averageLevel",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "homeRegion",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchResultDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/save-infos": {
       "get": {
         "tags": [
@@ -4675,6 +4734,52 @@
             "items": {
               "type": "integer"
             }
+          }
+        }
+      },
+      "PatchResultDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "success",
+          "editsApplied",
+          "patchPath",
+          "warnings",
+          "teamsGenerated",
+          "teamsSkipped",
+          "basePatchApplied",
+          "homeRegionLaunch"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "editsApplied": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "patchPath": {
+            "type": "string"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "teamsGenerated": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "teamsSkipped": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "basePatchApplied": {
+            "type": "boolean"
+          },
+          "homeRegionLaunch": {
+            "type": "boolean"
           }
         }
       },

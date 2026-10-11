@@ -1,0 +1,244 @@
+{
+  "_comment": "Gen 1 (Yellow) and Gen 2 (Crystal) gym leader team pools for Connect visits. Each leader `id` is matched (case/punctuation-insensitive) against the gym `leader` in that game's base patch manifest, and the generated team is written into the landing zone the base patch reserves for that leader (see ConnectTeamPatchService). `teamSize` is how many Pokemon are drawn from `pool`, capped at the zone capacity. Species/move ids are each GAME's OWN internal index (NOT national dex numbers, NOT Gen3 ids - Gen1 internal species ordering is unique). Crystal's Kanto leaders have no pool yet, so they keep the base patch's default team.",
+  "games": {
+    "yellow": {
+      "hasMoves": false,
+      "leaders": [
+        {
+          "id": "brock",
+          "displayName": "Brock (Pewter Gym)",
+          "teamSize": 2,
+          "pool": [
+            { "speciesName": "Geodude", "species": 169 },
+            { "speciesName": "Graveler", "species": 39 },
+            { "speciesName": "Onix", "species": 34 },
+            { "speciesName": "Rhyhorn", "species": 18 },
+            { "speciesName": "Rhydon", "species": 1 },
+            { "speciesName": "Kabuto", "species": 90 },
+            { "speciesName": "Kabutops", "species": 91 },
+            { "speciesName": "Omanyte", "species": 98 }
+          ]
+        },
+        {
+          "id": "misty",
+          "displayName": "Misty (Cerulean Gym)",
+          "teamSize": 2,
+          "pool": [
+            { "speciesName": "Staryu", "species": 27 },
+            { "speciesName": "Starmie", "species": 152 },
+            { "speciesName": "Psyduck", "species": 47 },
+            { "speciesName": "Golduck", "species": 128 },
+            { "speciesName": "Poliwag", "species": 71 },
+            { "speciesName": "Poliwhirl", "species": 110 },
+            { "speciesName": "Poliwrath", "species": 111 },
+            { "speciesName": "Seaking", "species": 158 }
+          ]
+        },
+        {
+          "id": "lt_surge",
+          "displayName": "Lt. Surge (Vermilion Gym)",
+          "teamSize": 1,
+          "pool": [
+            { "speciesName": "Voltorb", "species": 6 },
+            { "speciesName": "Electrode", "species": 141 },
+            { "speciesName": "Pikachu", "species": 84 },
+            { "speciesName": "Raichu", "species": 85 },
+            { "speciesName": "Magnemite", "species": 173 },
+            { "speciesName": "Magneton", "species": 54 },
+            { "speciesName": "Electabuzz", "species": 53 },
+            { "speciesName": "Jolteon", "species": 104 }
+          ]
+        },
+        {
+          "id": "erika",
+          "displayName": "Erika (Celadon Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Oddish", "species": 185 },
+            { "speciesName": "Gloom", "species": 186 },
+            { "speciesName": "Vileplume", "species": 187 },
+            { "speciesName": "Bellsprout", "species": 188 },
+            { "speciesName": "Weepinbell", "species": 189 },
+            { "speciesName": "Victreebel", "species": 190 },
+            { "speciesName": "Tangela", "species": 30 },
+            { "speciesName": "Exeggcute", "species": 12 }
+          ]
+        },
+        {
+          "id": "koga",
+          "displayName": "Koga (Fuchsia Gym)",
+          "teamSize": 4,
+          "pool": [
+            { "speciesName": "Grimer", "species": 13 },
+            { "speciesName": "Muk", "species": 136 },
+            { "speciesName": "Weezing", "species": 143 },
+            { "speciesName": "Koffing", "species": 55 },
+            { "speciesName": "Venonat", "species": 65 },
+            { "speciesName": "Venomoth", "species": 119 },
+            { "speciesName": "Tentacool", "species": 24 },
+            { "speciesName": "Tentacruel", "species": 155 }
+          ]
+        },
+        {
+          "id": "blaine",
+          "displayName": "Blaine (Cinnabar Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Growlithe", "species": 33 },
+            { "speciesName": "Arcanine", "species": 20 },
+            { "speciesName": "Ponyta", "species": 163 },
+            { "speciesName": "Rapidash", "species": 164 },
+            { "speciesName": "Vulpix", "species": 82 },
+            { "speciesName": "Ninetales", "species": 83 },
+            { "speciesName": "Magmar", "species": 51 },
+            { "speciesName": "Flareon", "species": 103 }
+          ]
+        },
+        {
+          "id": "sabrina",
+          "displayName": "Sabrina (Saffron Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Abra", "species": 148 },
+            { "speciesName": "Kadabra", "species": 38 },
+            { "speciesName": "Alakazam", "species": 149 },
+            { "speciesName": "Drowzee", "species": 48 },
+            { "speciesName": "Hypno", "species": 129 },
+            { "speciesName": "Slowpoke", "species": 37 },
+            { "speciesName": "Slowbro", "species": 8 },
+            { "speciesName": "Mr. Mime", "species": 42 }
+          ]
+        },
+        {
+          "id": "giovanni",
+          "displayName": "Giovanni (Viridian Gym)",
+          "teamSize": 5,
+          "pool": [
+            { "speciesName": "Sandshrew", "species": 96 },
+            { "speciesName": "Sandslash", "species": 97 },
+            { "speciesName": "Nidoking", "species": 7 },
+            { "speciesName": "Nidoqueen", "species": 16 },
+            { "speciesName": "Rhyhorn", "species": 18 },
+            { "speciesName": "Rhydon", "species": 1 },
+            { "speciesName": "Diglett", "species": 59 },
+            { "speciesName": "Dugtrio", "species": 118 }
+          ]
+        }
+      ]
+    },
+    "crystal": {
+      "hasMoves": true,
+      "leaders": [
+        {
+          "id": "falkner",
+          "displayName": "Falkner (Violet Gym)",
+          "teamSize": 2,
+          "pool": [
+            { "speciesName": "Pidgey", "species": 16, "moves": [33, 189, 16, 98] },
+            { "speciesName": "Pidgeotto", "species": 17, "moves": [33, 189, 16, 17] },
+            { "speciesName": "Pidgeot", "species": 18, "moves": [17, 98, 119, 97] },
+            { "speciesName": "Hoothoot", "species": 163, "moves": [33, 95, 64, 93] },
+            { "speciesName": "Noctowl", "species": 164, "moves": [64, 93, 95, 129] },
+            { "speciesName": "Spearow", "species": 21, "moves": [64, 45, 31, 119] },
+            { "speciesName": "Fearow", "species": 22, "moves": [31, 65, 119, 97] },
+            { "speciesName": "Doduo", "species": 84, "moves": [64, 45, 31, 98] }
+          ]
+        },
+        {
+          "id": "whitney",
+          "displayName": "Whitney (Goldenrod Gym)",
+          "teamSize": 2,
+          "pool": [
+            { "speciesName": "Clefairy", "species": 35, "moves": [3, 102, 227, 118] },
+            { "speciesName": "Clefable", "species": 36, "moves": [47, 3, 107, 118] },
+            { "speciesName": "Miltank", "species": 241, "moves": [205, 213, 23, 208] },
+            { "speciesName": "Jigglypuff", "species": 39, "moves": [47, 1, 111, 3] },
+            { "speciesName": "Wigglytuff", "species": 40, "moves": [3, 111, 47, 34] },
+            { "speciesName": "Snubbull", "species": 209, "moves": [33, 44, 103, 46] },
+            { "speciesName": "Granbull", "species": 210, "moves": [44, 103, 46, 242] },
+            { "speciesName": "Igglybuff", "species": 174, "moves": [47, 1, 111, 3] }
+          ]
+        },
+        {
+          "id": "bugsy",
+          "displayName": "Bugsy (Azalea Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Metapod", "species": 11, "moves": [33, 81, 106, 1] },
+            { "speciesName": "Kakuna", "species": 14, "moves": [33, 81, 106, 1] },
+            { "speciesName": "Butterfree", "species": 12, "moves": [93, 60, 78, 16] },
+            { "speciesName": "Beedrill", "species": 15, "moves": [41, 42, 31, 99] },
+            { "speciesName": "Scyther", "species": 123, "moves": [98, 43, 210, 163] },
+            { "speciesName": "Ledian", "species": 166, "moves": [33, 78, 48, 97] },
+            { "speciesName": "Ariados", "species": 168, "moves": [81, 141, 169, 101] },
+            { "speciesName": "Yanma", "species": 193, "moves": [33, 98, 49, 97] }
+          ]
+        },
+        {
+          "id": "morty",
+          "displayName": "Morty (Ecruteak Gym)",
+          "teamSize": 4,
+          "pool": [
+            { "speciesName": "Gastly", "species": 92, "moves": [122, 180, 212, 174] },
+            { "speciesName": "Haunter", "species": 93, "moves": [95, 102, 174, 101] },
+            { "speciesName": "Gengar", "species": 94, "moves": [95, 247, 212, 138] },
+            { "speciesName": "Misdreavus", "species": 200, "moves": [180, 212, 174, 93] }
+          ]
+        },
+        {
+          "id": "pryce",
+          "displayName": "Pryce (Mahogany Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Seel", "species": 86, "moves": [29, 196, 62, 156] },
+            { "speciesName": "Dewgong", "species": 87, "moves": [29, 196, 62, 156] },
+            { "speciesName": "Piloswine", "species": 221, "moves": [196, 31, 54, 59] },
+            { "speciesName": "Swinub", "species": 220, "moves": [196, 189, 33, 205] },
+            { "speciesName": "Sneasel", "species": 215, "moves": [196, 44, 242, 163] },
+            { "speciesName": "Lapras", "species": 131, "moves": [57, 196, 34, 59] },
+            { "speciesName": "Jynx", "species": 124, "moves": [196, 93, 1, 3] }
+          ]
+        },
+        {
+          "id": "jasmine",
+          "displayName": "Jasmine (Olivine Gym)",
+          "teamSize": 3,
+          "pool": [
+            { "speciesName": "Magnemite", "species": 81, "moves": [85, 48, 49, 86] },
+            { "speciesName": "Magneton", "species": 82, "moves": [85, 48, 49, 86] },
+            { "speciesName": "Steelix", "species": 208, "moves": [103, 88, 231, 89] },
+            { "speciesName": "Skarmory", "species": 227, "moves": [64, 97, 17, 129] },
+            { "speciesName": "Forretress", "species": 205, "moves": [205, 106, 153, 191] },
+            { "speciesName": "Scizor", "species": 212, "moves": [210, 163, 97, 98] }
+          ]
+        },
+        {
+          "id": "chuck",
+          "displayName": "Chuck (Cianwood Gym)",
+          "teamSize": 2,
+          "pool": [
+            { "speciesName": "Primeape", "species": 57, "moves": [43, 99, 2, 154] },
+            { "speciesName": "Poliwrath", "species": 62, "moves": [95, 170, 57, 223] },
+            { "speciesName": "Machop", "species": 66, "moves": [67, 2, 43, 69] },
+            { "speciesName": "Machoke", "species": 67, "moves": [67, 2, 69, 238] },
+            { "speciesName": "Machamp", "species": 68, "moves": [238, 223, 69, 67] },
+            { "speciesName": "Heracross", "species": 214, "moves": [67, 31, 69, 33] },
+            { "speciesName": "Hitmonlee", "species": 106, "moves": [67, 2, 69, 97] },
+            { "speciesName": "Hitmonchan", "species": 107, "moves": [2, 69, 97, 238] }
+          ]
+        },
+        {
+          "id": "clair",
+          "displayName": "Clair (Blackthorn Gym)",
+          "teamSize": 4,
+          "pool": [
+            { "speciesName": "Dratini", "species": 147, "moves": [86, 57, 21, 225] },
+            { "speciesName": "Dragonair", "species": 148, "moves": [86, 57, 21, 225] },
+            { "speciesName": "Dragonite", "species": 149, "moves": [86, 57, 21, 225] },
+            { "speciesName": "Kingdra", "species": 230, "moves": [108, 57, 63, 225] }
+          ]
+        }
+      ]
+    }
+  }
+}

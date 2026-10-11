@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PKConnect.Core.launch;
 using PKConnect.Core.status;
 using PKVault.Core;
 
@@ -18,7 +19,8 @@ public static class ConnectModule
     {
         RouteJsonContext.AddResolver(ConnectJsonContext.Default);
 
-        CoreRouter.AddControllers(typeof(ConnectController));
+        CoreRouter.AddControllers(typeof(ConnectController), typeof(PatchController));
         services.AddScoped<ConnectController>();
+        services.AddScoped<PatchController>();
     }
 }

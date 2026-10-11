@@ -1,0 +1,357 @@
+{
+  "format": 1,
+  "rom": {
+    "size": 16777216,
+    "sha1": "cfbfddbcf3cd7aa2efc7d6939dcbe5b3ddee4d81",
+    "vanillaSha1": "f3ae088181bf583e55daf962a92bb46f4f1d07b7",
+    "gameCode": "BPEE"
+  },
+  "layout": {
+    "romBase": 134217728,
+    "trainerStructSize": 40,
+    "trainerMonSize": 16,
+    "partyCapacity": 6,
+    "partyFlagsValue": 3
+  },
+  "symbols": {
+    "gTrainers": {
+      "offset": 3211312,
+      "size": 34200
+    },
+    "gConnectGymParties": {
+      "offset": 14929764,
+      "size": 768
+    },
+    "gConnectChampionParty": {
+      "offset": 14931396,
+      "size": 96
+    },
+    "gTrainerFrontPicTable": {
+      "offset": 3167828,
+      "size": 744
+    },
+    "gTrainerFrontPicPaletteTable": {
+      "offset": 3168572,
+      "size": 744
+    },
+    "gTrainerFrontPicCoords": {
+      "offset": 3167456,
+      "size": 372
+    },
+    "gObjectEventGraphicsInfoPointers": {
+      "offset": 5264928,
+      "size": 956
+    },
+    "gConnectObjectEventSpritePalettes": {
+      "offset": 14947400,
+      "size": 296
+    }
+  },
+  "gyms": [
+    {
+      "index": 0,
+      "leader": "ROXANNE",
+      "trainerId": 265,
+      "trainerConstant": "TRAINER_ROXANNE_1",
+      "trainerStructOffset": 3221912,
+      "partyFlagsOffset": 3221912,
+      "partySizeOffset": 3221944,
+      "partySizeDefault": 3,
+      "partyPointerOffset": 3221948,
+      "trainerBattledFlag": 1545,
+      "partyOffset": 14929764,
+      "badgeFlag": 2151,
+      "defeatedFlag": 1264
+    },
+    {
+      "index": 1,
+      "leader": "BRAWLY",
+      "trainerId": 266,
+      "trainerConstant": "TRAINER_BRAWLY_1",
+      "trainerStructOffset": 3221952,
+      "partyFlagsOffset": 3221952,
+      "partySizeOffset": 3221984,
+      "partySizeDefault": 3,
+      "partyPointerOffset": 3221988,
+      "trainerBattledFlag": 1546,
+      "partyOffset": 14929860,
+      "badgeFlag": 2152,
+      "defeatedFlag": 1265
+    },
+    {
+      "index": 2,
+      "leader": "WATTSON",
+      "trainerId": 267,
+      "trainerConstant": "TRAINER_WATTSON_1",
+      "trainerStructOffset": 3221992,
+      "partyFlagsOffset": 3221992,
+      "partySizeOffset": 3222024,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 3222028,
+      "trainerBattledFlag": 1547,
+      "partyOffset": 14929956,
+      "badgeFlag": 2153,
+      "defeatedFlag": 1266
+    },
+    {
+      "index": 3,
+      "leader": "FLANNERY",
+      "trainerId": 268,
+      "trainerConstant": "TRAINER_FLANNERY_1",
+      "trainerStructOffset": 3222032,
+      "partyFlagsOffset": 3222032,
+      "partySizeOffset": 3222064,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 3222068,
+      "trainerBattledFlag": 1548,
+      "partyOffset": 14930052,
+      "badgeFlag": 2154,
+      "defeatedFlag": 1267
+    },
+    {
+      "index": 4,
+      "leader": "NORMAN",
+      "trainerId": 269,
+      "trainerConstant": "TRAINER_NORMAN_1",
+      "trainerStructOffset": 3222072,
+      "partyFlagsOffset": 3222072,
+      "partySizeOffset": 3222104,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 3222108,
+      "trainerBattledFlag": 1549,
+      "partyOffset": 14930148,
+      "badgeFlag": 2155,
+      "defeatedFlag": 1268
+    },
+    {
+      "index": 5,
+      "leader": "WINONA",
+      "trainerId": 270,
+      "trainerConstant": "TRAINER_WINONA_1",
+      "trainerStructOffset": 3222112,
+      "partyFlagsOffset": 3222112,
+      "partySizeOffset": 3222144,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3222148,
+      "trainerBattledFlag": 1550,
+      "partyOffset": 14930244,
+      "badgeFlag": 2156,
+      "defeatedFlag": 1269
+    },
+    {
+      "index": 6,
+      "leader": "TATE&LIZA",
+      "trainerId": 271,
+      "trainerConstant": "TRAINER_TATE_AND_LIZA_1",
+      "trainerStructOffset": 3222152,
+      "partyFlagsOffset": 3222152,
+      "partySizeOffset": 3222184,
+      "partySizeDefault": 4,
+      "partyPointerOffset": 3222188,
+      "trainerBattledFlag": 1551,
+      "partyOffset": 14930340,
+      "badgeFlag": 2157,
+      "defeatedFlag": 1270
+    },
+    {
+      "index": 7,
+      "leader": "JUAN",
+      "trainerId": 272,
+      "trainerConstant": "TRAINER_JUAN_1",
+      "trainerStructOffset": 3222192,
+      "partyFlagsOffset": 3222192,
+      "partySizeOffset": 3222224,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3222228,
+      "trainerBattledFlag": 1552,
+      "partyOffset": 14930436,
+      "badgeFlag": 2158,
+      "defeatedFlag": 1271
+    }
+  ],
+  "eliteFour": [
+    {
+      "name": "SIDNEY",
+      "trainerId": 261,
+      "trainerConstant": "TRAINER_SIDNEY",
+      "trainerStructOffset": 3221752,
+      "partyFlagsOffset": 3221752,
+      "partySizeOffset": 3221784,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3221788,
+      "trainerBattledFlag": 1541,
+      "defeatedFlag": 1275
+    },
+    {
+      "name": "PHOEBE",
+      "trainerId": 262,
+      "trainerConstant": "TRAINER_PHOEBE",
+      "trainerStructOffset": 3221792,
+      "partyFlagsOffset": 3221792,
+      "partySizeOffset": 3221824,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3221828,
+      "trainerBattledFlag": 1542,
+      "defeatedFlag": 1276
+    },
+    {
+      "name": "GLACIA",
+      "trainerId": 263,
+      "trainerConstant": "TRAINER_GLACIA",
+      "trainerStructOffset": 3221832,
+      "partyFlagsOffset": 3221832,
+      "partySizeOffset": 3221864,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3221868,
+      "trainerBattledFlag": 1543,
+      "defeatedFlag": 1277
+    },
+    {
+      "name": "DRAKE",
+      "trainerId": 264,
+      "trainerConstant": "TRAINER_DRAKE",
+      "trainerStructOffset": 3221872,
+      "partyFlagsOffset": 3221872,
+      "partySizeOffset": 3221904,
+      "partySizeDefault": 5,
+      "partyPointerOffset": 3221908,
+      "trainerBattledFlag": 1544,
+      "defeatedFlag": 1278
+    }
+  ],
+  "champion": {
+    "name": "STEVEN",
+    "trainerId": 335,
+    "trainerConstant": "TRAINER_CONNECT_CHAMPION",
+    "trainerStructOffset": 3224712,
+    "partyFlagsOffset": 3224712,
+    "partySizeOffset": 3224744,
+    "partySizeDefault": 6,
+    "partyPointerOffset": 3224748,
+    "trainerBattledFlag": 1615,
+    "partyOffset": 14931396,
+    "gameClearFlag": 2148
+  },
+  "championPlaceholder": {
+    "trainerId": 335,
+    "trainerPicFieldOffset": 3224715,
+    "frontPic": {
+      "trainerPicId": 54,
+      "tableEntryOffset": 3168260,
+      "tableEntryLayout": "u32 dataPointer, u16 uncompressedSize, u16 tag",
+      "uncompressedSize": 2048,
+      "paletteTableEntryOffset": 3169004,
+      "paletteTableEntryLayout": "u32 dataPointer, u16 tag, u16 padding",
+      "coordsEntryOffset": 3167672,
+      "coordsEntryLayout": "u8 size, u8 yOffset, u16 padding",
+      "defaultImage": {
+        "symbol": "gConnectChampionTrainerFrontPic",
+        "offset": 14930532,
+        "size": 824
+      },
+      "defaultPalette": {
+        "symbol": "gConnectChampionTrainerPalette",
+        "offset": 14931356,
+        "size": 40
+      },
+      "alsoUsedBy": [
+        "Champion battle intro mugshot (MUGSHOT_CHAMPION)",
+        "record-mixed Ruby/Sapphire champion-class Battle Tower trainers"
+      ]
+    },
+    "overworld": {
+      "graphicsId": 76,
+      "graphicsInfoPointerOffset": 5265232,
+      "graphicsInfo": {
+        "symbol": "gObjectEventGraphicsInfo_ConnectChampion",
+        "offset": 14947364,
+        "size": 36,
+        "paletteTagFieldOffset": 14947366,
+        "imagesPointerFieldOffset": 14947392
+      },
+      "picTable": {
+        "symbol": "gObjectEventPicTable_ConnectChampion",
+        "offset": 14947292,
+        "size": 72,
+        "frames": 9,
+        "frameWidth": 16,
+        "frameHeight": 32,
+        "entryLayout": "u32 dataPointer, u16 size, u16 padding"
+      },
+      "picData": {
+        "symbol": "gObjectEventPic_ConnectChampion",
+        "offset": 14944956,
+        "size": 2304
+      },
+      "palette": {
+        "symbol": "gObjectEventPal_ConnectChampion",
+        "offset": 14947260,
+        "size": 32,
+        "tag": 4388,
+        "paletteListEntryOffset": 14947680
+      },
+      "usedBy": [
+        "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM object 1",
+        "MAP_EVER_GRANDE_CITY_HALL_OF_FAME object 1"
+      ]
+    }
+  },
+  "flags": {
+    "FLAG_CONNECT_START": 2304,
+    "FLAG_CONNECT_CHAMPION_KANTO": 2304,
+    "FLAG_CONNECT_CHAMPION_JOHTO": 2305,
+    "FLAG_CONNECT_CHAMPION_HOENN": 2306,
+    "FLAG_CONNECT_CHAMPION_SINNOH": 2307,
+    "FLAG_CONNECT_CHAMPION_UNOVA": 2308,
+    "FLAG_CONNECT_CHAMPION_KALOS": 2309,
+    "FLAG_CONNECT_CHAMPION_ALOLA": 2310,
+    "FLAG_CONNECT_CHAMPION_GALAR": 2311,
+    "FLAG_CONNECT_CHAMPION_PALDEA": 2312,
+    "FLAG_CONNECT_GYM_MATCH_CALL": 2313,
+    "FLAG_CONNECT_PRIZE_TAKEN_ROXANNE": 2314,
+    "FLAG_CONNECT_PRIZE_TAKEN_BRAWLY": 2315,
+    "FLAG_CONNECT_PRIZE_TAKEN_WATTSON": 2316,
+    "FLAG_CONNECT_PRIZE_TAKEN_FLANNERY": 2317,
+    "FLAG_CONNECT_PRIZE_TAKEN_NORMAN": 2318,
+    "FLAG_CONNECT_PRIZE_TAKEN_WINONA": 2319,
+    "FLAG_CONNECT_PRIZE_TAKEN_TATE_AND_LIZA": 2320,
+    "FLAG_CONNECT_PRIZE_TAKEN_JUAN": 2321,
+    "FLAG_CONNECT_RESERVED_0x912": 2322,
+    "FLAG_CONNECT_RESERVED_0x913": 2323,
+    "FLAG_CONNECT_RESERVED_0x914": 2324,
+    "FLAG_CONNECT_RESERVED_0x915": 2325,
+    "FLAG_CONNECT_RESERVED_0x916": 2326,
+    "FLAG_CONNECT_RESERVED_0x917": 2327,
+    "FLAG_CONNECT_RESERVED_0x918": 2328,
+    "FLAG_CONNECT_RESERVED_0x919": 2329,
+    "FLAG_CONNECT_RESERVED_0x91A": 2330,
+    "FLAG_CONNECT_RESERVED_0x91B": 2331,
+    "FLAG_CONNECT_RESERVED_0x91C": 2332,
+    "FLAG_CONNECT_RESERVED_0x91D": 2333,
+    "FLAG_CONNECT_RESERVED_0x91E": 2334,
+    "FLAG_CONNECT_END": 2334
+  },
+  "vars": {
+    "VAR_CONNECT_REGIONS_CLEARED": 16631,
+    "VAR_CONNECT_HOME_REGION": 16632,
+    "VAR_CONNECT_RESERVED_0x40F9": 16633,
+    "VAR_CONNECT_RESERVED_0x40FA": 16634,
+    "VAR_CONNECT_RESERVED_0x40FB": 16635,
+    "VAR_CONNECT_RESERVED_0x40FC": 16636,
+    "VAR_CONNECT_RESERVED_0x40FD": 16637,
+    "VAR_CONNECT_RESERVED_0x40FE": 16638,
+    "VAR_CONNECT_RESERVED_0x40FF": 16639
+  },
+  "regions": {
+    "NONE": 0,
+    "KANTO": 1,
+    "JOHTO": 2,
+    "HOENN": 3,
+    "SINNOH": 4,
+    "UNOVA": 5,
+    "KALOS": 6,
+    "ALOLA": 7,
+    "GALAR": 8,
+    "PALDEA": 9
+  }
+}
