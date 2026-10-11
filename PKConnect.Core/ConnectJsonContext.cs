@@ -14,6 +14,7 @@ namespace PKConnect.Core;
 [JsonSerializable(typeof(List<HallOfFameTeamDTO>))]
 [JsonSerializable(typeof(TrainerProfilesDTO))]
 [JsonSerializable(typeof(RegionBadgesDTO))]
+[JsonSerializable(typeof(SaveSyncResultDTO))]
 public partial class ConnectJsonContext : JsonSerializerContext
 {
 }

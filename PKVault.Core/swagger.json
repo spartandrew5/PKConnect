@@ -2216,6 +2216,46 @@
         }
       }
     },
+    "/api/trainer-profiles/sync-save/{saveId}": {
+      "post": {
+        "tags": [
+          "TrainerProfiles"
+        ],
+        "operationId": "TrainerProfiles_SyncSave",
+        "parameters": [
+          {
+            "name": "saveId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "afterPlay",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveSyncResultDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/warnings/warnings": {
       "get": {
         "tags": [
@@ -6045,6 +6085,39 @@
                 "items": {
                   "type": "boolean"
                 }
+              }
+            }
+          }
+        }
+      },
+      "SaveSyncResultDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveWritten",
+          "badgesChanged",
+          "connectStateChanged",
+          "regionBadges"
+        ],
+        "properties": {
+          "saveWritten": {
+            "type": "boolean"
+          },
+          "badgesChanged": {
+            "type": "boolean"
+          },
+          "connectStateChanged": {
+            "type": "boolean"
+          },
+          "crownedRegion": {
+            "type": "string"
+          },
+          "regionBadges": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
               }
             }
           }

@@ -7,8 +7,19 @@ namespace PKConnect.Core.profiles;
 /// switching points the whole app at that trainer's data.
 /// </summary>
 [Route("api/[controller]")]
-public class TrainerProfilesController(DataService dataService, ITrainerProfilesService trainerProfilesService)
+public class TrainerProfilesController(DataService dataService, ITrainerProfilesService trainerProfilesService, ISaveSyncService saveSyncService)
 {
+    /// <summary>
+    /// Brings one of the active trainer's saves into step with the trainer: gym badges, the
+    /// regions they have conquered, and - with <paramref name="afterPlay"/>, when the player comes
+    /// back from the game or brings in a save of their own - the region's title.
+    /// </summary>
+    [HttpPost("sync-save/{saveId}")]
+    public async Task<SaveSyncResultDTO> SyncSave(uint saveId, bool afterPlay = false)
+    {
+        return await saveSyncService.SyncSave(saveId, afterPlay);
+    }
+
     [HttpGet()]
     public async Task<TrainerProfilesDTO> Get()
     {

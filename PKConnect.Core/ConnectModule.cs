@@ -32,6 +32,7 @@ public static class ConnectModule
         services.AddScoped<ChampionsController>();
 
         services.AddSingleton<ITrainerProfilesService, TrainerProfilesService>();
+        services.AddSingleton<ISaveSyncService, SaveSyncService>();
         CoreRouter.AddControllers(typeof(TrainerProfilesController));
         services.AddScoped<TrainerProfilesController>();
     }
