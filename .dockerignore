@@ -7,6 +7,8 @@
 **/node_modules
 **/PKVault.*/bin
 **/PKVault.*/obj
+**/PKConnect.*/bin
+**/PKConnect.*/obj
 **/dist
 **/tmp
 **/.angular

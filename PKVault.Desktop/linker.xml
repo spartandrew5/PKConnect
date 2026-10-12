@@ -10,4 +10,5 @@
   <assembly fullname="PKVault.Core">
     <type fullname="PKVault.Core.*" preserve="all"/>
   </assembly>
+  <assembly fullname="PKConnect.Core" preserve="all"/>
 </linker>

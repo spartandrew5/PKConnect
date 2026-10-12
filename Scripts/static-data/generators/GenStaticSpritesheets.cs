@@ -24,7 +24,7 @@ public class GenStaticSpritesheets(
     private const string SourcePath = "../pokeapi/sprites";
     private const string CustomSourcePath = "./static-data/generators";
 
-    private static readonly string[] ImgsPathParts = "../frontend/public/imgs".Split('/');
+    private static readonly string[] ImgsPathParts = "../connect-ui/public/imgs".Split('/');
     private static readonly string Filename = $"StaticSpritesheets";
 
     protected override async Task<StaticSpritesheetsData> GetData(string[] rootParts)

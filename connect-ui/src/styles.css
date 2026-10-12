@@ -252,6 +252,14 @@ footer button{border:0;background:none;color:var(--muted);text-decoration:underl
 .locbox .locwhere{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
 .locbox .locwhere b{font-family:var(--display);font-weight:700;font-size:15px}
 .locbox .locwhere small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+/* Pictures where the mockup had initials. */
+.mon > span:last-child{min-width:0}
+.mon b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mon .monsprite{margin:-8px -6px -8px -8px}
+.row > .monsprite{margin:-8px 0}
+.row{align-items:center}
+.minidots{gap:0;align-items:center}
+.champ .portrait .spritebox{width:64px !important;height:64px !important}
 /* Pokédex cells and PC slots with a picture in them. */
 .dx{align-items:flex-start;min-height:120px}
 .dxsprite{align-self:center;margin:-4px 0 -2px}

@@ -6,7 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PKVault.Core\PKVault.Core.csproj" />
     <Reference Include="../PKVault.Core/PKHeX.Core.dll" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 
   <ItemGroup>

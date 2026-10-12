@@ -92,6 +92,7 @@ class Program
             SetupWindow(window, baseUrl);
 
             var services = new ServiceCollection();
+            PKConnect.Core.ConnectModule.Register(services);
             Core.Program.ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
 

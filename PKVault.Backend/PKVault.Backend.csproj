@@ -17,4 +17,9 @@
     <ProjectReference Include="..\PKVault.Core\PKVault.Core.csproj" />
     <ProjectReference Include="..\PKConnect.Core\PKConnect.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- The built UI (npm run build in connect-ui), when there is one: copied beside the program as wwwroot. -->
+    <Content Include="..\connect-ui\dist\**\*" Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

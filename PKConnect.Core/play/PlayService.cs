@@ -151,7 +151,14 @@ public class PlayService(
         var sprites = trainer.Appearance?.Sprites?.ToDictionary(
             entry => entry.Key,
             entry => new GenSpriteSelection(entry.Value.Front, null, entry.Value.Overworld));
-        LaunchPatchService.WriteFor(game.Id, romPath, averageLevel, trainer.HomeRegion, champion, trainer.Appearance?.Character, sprites);
+        // The champion looks like the trainer who holds the title, when it is one of this player's.
+        var holder = champion is null ? null : journey.Trainers.Find(t => t.Id == champion.Source && champion.BeatenAt is not null)?.Appearance;
+        var championLook = !string.IsNullOrWhiteSpace(holder?.Character)
+            ? new PlayerGraphicsRequest(holder.Character, null, holder.Sprites?.ToDictionary(
+                entry => entry.Key, entry => new GenSpriteSelection(entry.Value.Front, null, entry.Value.Overworld)))
+            : !string.IsNullOrWhiteSpace(champion?.Appearance) ? new PlayerGraphicsRequest(champion.Appearance, null) : null;
+        LaunchPatchService.WriteFor(
+            game.Id, romPath, averageLevel, trainer.HomeRegion, champion, trainer.Appearance?.Character, sprites, championLook);
 
         // The emulator keeps the save beside the ROM, under the ROM's name.
         var runtimeSave = Path.ChangeExtension(romPath, ".sav");

@@ -10,6 +10,14 @@ core-test:
 core-test-file:
 	dotnet run --project PKVault.Core.Tests -class $(NAME)
 
+# PKConnect.Core
+
+connect-build:
+	dotnet build PKConnect.Core
+
+connect-test:
+	dotnet run --project PKConnect.Core.Tests
+
 # PKVault.Backend
 
 backend-build:
@@ -46,19 +54,19 @@ mobile-publish:
 # PKVault.Desktop & PKVault.Mobile
 
 apps-prepare:
-	npm run --prefix frontend build && \
+	npm run --prefix connect-ui build && \
 	rm -rf PKVault.Desktop/Resources/wwwroot && \
-	cp -r frontend/dist PKVault.Desktop/Resources/wwwroot && \
+	cp -r connect-ui/dist PKVault.Desktop/Resources/wwwroot && \
 	rm -rf PKVault.Mobile/Resources/Raw/wwwroot && \
-	cp -r frontend/dist PKVault.Mobile/Resources/Raw/wwwroot
+	cp -r connect-ui/dist PKVault.Mobile/Resources/Raw/wwwroot
 
-# frontend
+# connect-ui
 
-front-dev:
-	npm run dev
+ui-dev:
+	npm run --prefix connect-ui dev
 
-front-build:
-	npm run build
+ui-build:
+	npm run --prefix connect-ui build
 
 # Scripts
 

@@ -90,7 +90,7 @@ public partial class GenerateConvertView
         await File.WriteAllTextAsync("generate-convert-view/frontend/types.gen.ts", types);
 #endif
 
-        var sheetsPaths = fileIOService.Matcher.SearchPaths(["../frontend/public/imgs/sheets/"]);
+        var sheetsPaths = fileIOService.Matcher.SearchPaths(["../connect-ui/public/imgs/sheets/"]);
         foreach (var path in sheetsPaths)
         {
             var sheetDestPath = Path.Combine(

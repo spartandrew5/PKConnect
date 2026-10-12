@@ -13,6 +13,9 @@ public static class SaveFiles
     /// </summary>
     public static bool TryLoad(byte[] bytes, [NotNullWhen(true)] out SaveFile? save, string? path = null)
     {
+        // A save loaded here is told apart by Connect's formats, whoever loads it first.
+        ConnectModule.RegisterFormats();
+
         if (!SaveUtil.TryGetSaveFile(bytes, out save, path) || save is null)
         {
             save = null;

@@ -1,18 +1,24 @@
 import { api } from '../api/client';
 import type { Catalog, Journey, LeagueRegion, Names, Trainer } from '../api/types';
 import { useLoad } from '../api/useLoad';
+import { portraitOf } from '../components/looks';
+import { MonSprite } from '../components/Mon';
 import { regionStyle, shortDate } from '../components/region';
+import { Sprite } from '../components/Sprite';
 
 function LeagueCard({
   entry,
   catalog,
   names,
   trainer,
+  holder,
 }: {
   entry: LeagueRegion;
   catalog: Catalog;
   names: Names | undefined;
   trainer: Trainer;
+  /** The trainer of this player who holds the title, if one does. */
+  holder: Trainer | undefined;
 }) {
   const region = catalog.regions.find((r) => r.id === entry.region)!;
   const page = trainer.passport.find((p) => p.region === entry.region);
@@ -52,7 +58,13 @@ function LeagueCard({
       <div className="lbody">
         <div className="ltop">
           <div className="champ">
-            <div className="portrait">{champion.championName.slice(0, 1)}</div>
+            <div className="portrait">
+              {holder?.appearance?.character ? (
+                <Sprite set={portraitOf(catalog, holder.appearance.character, holder.appearance)} size={64} />
+              ) : (
+                champion.championName.slice(0, 1)
+              )}
+            </div>
             <div>
               <span className="crown">Champion</span>
               <h4>{champion.championName}</h4>
@@ -68,7 +80,7 @@ function LeagueCard({
               const name = names?.species[mon.species] ?? mon.nickname ?? `#${mon.species}`;
               return (
                 <div key={index} className="mon">
-                  <span className="dot">{name.slice(0, 2)}</span>
+                  <MonSprite species={mon.species} size={48} fallback={name} />
                   <span>
                     <b>{name}</b>
                     <small>Lv. {mon.level}</small>
@@ -152,7 +164,14 @@ export function League({
       </section>
       <div className="lgrid">
         {ordered.map((entry) => (
-          <LeagueCard key={entry.region} entry={entry} catalog={catalog} names={names} trainer={trainer} />
+          <LeagueCard
+            key={entry.region}
+            entry={entry}
+            catalog={catalog}
+            names={names}
+            trainer={trainer}
+            holder={journey.trainers.find((t) => t.id === entry.holderTrainerId)}
+          />
         ))}
       </div>
     </>

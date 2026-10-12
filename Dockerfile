@@ -17,8 +17,21 @@ COPY ./PKVault.Core ./PKVault.Core
 
 RUN dotnet build "PKVault.Core/PKVault.Core.csproj"
 
+# connect builder
+FROM core-builder AS connect-builder
+
+WORKDIR /src
+
+COPY ["PKConnect.Core/PKConnect.Core.csproj", "PKConnect.Core/"]
+
+RUN dotnet restore "PKConnect.Core/PKConnect.Core.csproj"
+
+COPY ./PKConnect.Core ./PKConnect.Core
+
+RUN dotnet build "PKConnect.Core/PKConnect.Core.csproj"
+
 # backend builder
-FROM core-builder AS backend-builder
+FROM connect-builder AS backend-builder
 
 WORKDIR /src
 
@@ -45,63 +58,44 @@ RUN dotnet build "PKVault.Core.Tests/PKVault.Core.Tests.csproj"
 # tests
 RUN dotnet test --project "./PKVault.Core.Tests/PKVault.Core.Tests.csproj" --no-restore --no-build
 
+# connect test
+FROM connect-builder AS connect-test
+
+COPY ["PKConnect.Core.Tests/PKConnect.Core.Tests.csproj", "PKConnect.Core.Tests/"]
+
+RUN dotnet restore "PKConnect.Core.Tests/PKConnect.Core.Tests.csproj"
+
+COPY ./global.json ./global.json
+COPY ./PKConnect.Core.Tests ./PKConnect.Core.Tests
+
+RUN dotnet build "PKConnect.Core.Tests/PKConnect.Core.Tests.csproj"
+
+# tests
+RUN dotnet test --project "./PKConnect.Core.Tests/PKConnect.Core.Tests.csproj" --no-restore --no-build
+
 # backend publish
 FROM backend-builder AS backend-publish
 
 RUN dotnet publish "PKVault.Backend/PKVault.Backend.csproj" -c Release -o /app/publish
 
-# frontend builder
-FROM node:22-alpine AS frontend-builder
+# ui builder
+FROM node:22-alpine AS ui-builder
 
 WORKDIR /app
 
-# pinned version required
-# https://github.com/npm/cli/issues/9151
-RUN npm i -g npm@11.10.0
-
-COPY frontend/package.json frontend/package-lock.json ./
+COPY connect-ui/package.json connect-ui/package-lock.json ./
 
 RUN npm ci
 
-COPY frontend .
+COPY connect-ui .
 
-RUN npm run gen:routes
+# ui publish (type check + build)
+FROM ui-builder AS ui-publish
 
-COPY PKVault.Core/swagger.json .
-
-# generate SDK
-ARG VITE_OPENAPI_PATH=swagger.json
-ENV VITE_OPENAPI_PATH=$VITE_OPENAPI_PATH
-
-RUN npm run gen:sdk:basic
-
-RUN npm run gen:css:dts
-
-COPY ./docs/functional ./_docs
-
-ENV DOCS_PATH=./_docs
-
-RUN npm run gen:docs
-
-# frontend check
-FROM frontend-builder AS frontend-check
-
-RUN npm run c:type
-
-RUN npm run test
-
-RUN npm run c:lint
-
-RUN npm run c:translate
-
-# frontend publish
-FROM frontend-builder AS frontend-publish
-
-# build
 RUN npm run build
 
 # desktop builder
-FROM core-builder AS desktop-builder
+FROM connect-builder AS desktop-builder
 
 WORKDIR /src
 
@@ -110,7 +104,7 @@ COPY ["PKVault.Desktop/PKVault.Desktop.csproj", "PKVault.Desktop/"]
 RUN dotnet restore "PKVault.Desktop/PKVault.Desktop.csproj"
 
 COPY --exclude=publishers ./PKVault.Desktop ./PKVault.Desktop
-COPY --from=frontend-publish /app/dist ./PKVault.Desktop/Resources/wwwroot
+COPY --from=ui-publish /app/dist ./PKVault.Desktop/Resources/wwwroot
 
 RUN dotnet build "PKVault.Desktop/PKVault.Desktop.csproj"
 
@@ -254,7 +248,7 @@ WORKDIR /src
 # COPY ["PKVault.Mobile/PKVault.Mobile.csproj", "PKVault.Mobile/"]
 
 COPY ./PKVault.Mobile ./PKVault.Mobile
-COPY --from=frontend-publish /app/dist ./PKVault.Mobile/Resources/Raw/wwwroot
+COPY --from=ui-publish /app/dist ./PKVault.Mobile/Resources/Raw/wwwroot
 
 # mobile publish android
 FROM mobile-builder AS mobile-publish-android
@@ -339,7 +333,7 @@ RUN mkdir -p /var/log/supervisord /var/log/nginx /var/run/nginx \
 ENV PKVAULT_PATH=/pkvault
 
 COPY --from=backend-publish /app/publish /app/backend
-COPY --from=frontend-publish /app/dist /app/frontend
+COPY --from=ui-publish /app/dist /app/frontend
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -359,7 +353,7 @@ COPY Scripts/Scripts.csproj Scripts/
 
 RUN dotnet restore "Scripts/Scripts.csproj"
 
-COPY frontend/public/imgs/sheets frontend/public/imgs/sheets
+COPY connect-ui/public/imgs/sheets connect-ui/public/imgs/sheets
 COPY Scripts Scripts
 
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt-get install -y nodejs

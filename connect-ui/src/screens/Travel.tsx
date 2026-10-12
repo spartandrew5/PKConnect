@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { api } from '../api/client';
 import type { BoardingResult, Catalog, Names, Trainer } from '../api/types';
 import { useLoad } from '../api/useLoad';
+import { MonSprite } from '../components/Mon';
 import { listOf, PORTS, regionStyle } from '../components/region';
 
 export function Travel({
@@ -129,7 +130,7 @@ export function Travel({
             const lost = mon.movesLost.map((move) => names?.moves[move] ?? `move #${move}`);
             return (
               <div key={index} className="row">
-                <span className="dot">{mon.nickname.slice(0, 2)}</span>
+                <MonSprite species={mon.species} size={48} fallback={mon.nickname} />
                 <div className="grow">
                   <b>{mon.nickname}</b>
                   {lost.length > 0 && (
@@ -160,7 +161,7 @@ export function Travel({
           <div className="rows">
             {staying.map((mon, index) => (
               <div key={index} className="row">
-                <span className="dot">{mon.nickname.slice(0, 2)}</span>
+                <MonSprite species={mon.species} size={48} fallback={mon.nickname} />
                 <div className="grow">
                   <b>{mon.nickname}</b>
                 </div>

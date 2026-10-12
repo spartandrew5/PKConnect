@@ -25,17 +25,17 @@ jobs:
       - name: Core - Test
         run: docker build . --target core-test
 
+      - name: Connect - Build
+        run: docker build . --target connect-builder
+
+      - name: Connect - Test
+        run: docker build . --target connect-test
+
       - name: Backend - Build
         run: docker build . --target backend-builder
 
-      - name: Frontend - Prepare
-        run: docker build . --target frontend-builder
-
-      - name: Frontend - Checks
-        run: docker build . --target frontend-check
-
-      - name: Frontend - Build
-        run: docker build . --target frontend-publish
+      - name: UI - Build
+        run: docker build . --target ui-publish
 
       - name: Desktop - Build
         run: docker build . --target desktop-builder

@@ -10,6 +10,8 @@
     
     <PublishTrimmed>true</PublishTrimmed>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <!-- Connect reads its data files (manifests, pools, profiles) with plain JSON reflection -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 
     <!-- can be used for lib trimmed debug -->
     <!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
@@ -54,5 +56,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PKVault.Core\PKVault.Core.csproj" />
+    <ProjectReference Include="..\PKConnect.Core\PKConnect.Core.csproj" />
   </ItemGroup>
 </Project>

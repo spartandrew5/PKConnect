@@ -1,4 +1,5 @@
 import type { Catalog, Trainer } from '../api/types';
+import { MonSprite } from '../components/Mon';
 
 export function Roster({
   trainers,
@@ -76,9 +77,7 @@ export function Roster({
                 <span className="minidots">
                   {trainer.party.length > 0 ? (
                     trainer.party.map((mon, index) => (
-                      <span key={index} className="dot">
-                        {mon.nickname.slice(0, 2)}
-                      </span>
+                      <MonSprite key={index} species={mon.species} size={32} fallback={mon.nickname} />
                     ))
                   ) : (
                     <span className="line">No Pokémon yet</span>

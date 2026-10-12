@@ -69,7 +69,7 @@ jobs:
 
       - name: Generate frontend sources
         run: |
-          flatpak-node-generator npm frontend/package-lock.json -o frontend-npm-sources.json
+          flatpak-node-generator npm connect-ui/package-lock.json -o frontend-npm-sources.json
 
           cat frontend-npm-sources.json > json2
 

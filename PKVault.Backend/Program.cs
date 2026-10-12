@@ -3,6 +3,8 @@ using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using PKVault.Core;
 using Serilog;
@@ -65,8 +67,29 @@ public class Program
 
         var app = builder.Build();
 
+        // The built UI, when it sits beside the program (wwwroot): one process then serves the whole app.
+        var webRoot = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        var webFiles = Directory.Exists(webRoot) ? new PhysicalFileProvider(webRoot) : null;
+        var contentTypes = new FileExtensionContentTypeProvider();
+
         app.Map("{*path}", async (HttpContext context) =>
         {
+            if (webFiles is not null
+                && HttpMethods.IsGet(context.Request.Method)
+                && !context.Request.Path.StartsWithSegments("/api"))
+            {
+                var filePath = context.Request.Path.Value is null or "/" ? "/index.html" : context.Request.Path.Value;
+                var file = webFiles.GetFileInfo(filePath);
+                if (file.Exists && !file.IsDirectory)
+                {
+                    context.Response.ContentType = contentTypes.TryGetContentType(filePath, out var contentType)
+                        ? contentType
+                        : MediaTypeNames.Application.Octet;
+                    await context.Response.SendFileAsync(file);
+                    return;
+                }
+            }
+
             using var scope = app.Services.CreateScope();
             var coreRouter = scope.ServiceProvider.GetRequiredService<CoreRouter>();
 
