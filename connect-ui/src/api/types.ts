@@ -184,6 +184,51 @@ export interface League {
   regions: LeagueRegion[];
 }
 
+export interface DexEntry {
+  /** Its number in the Pokédex shown. */
+  number: number;
+  /** Its National Dex number. */
+  species: number;
+  seen: boolean;
+  caught: boolean;
+}
+
+export interface TrainerDex {
+  scope: 'regional' | 'national';
+  region?: RegionId;
+  gameId?: string;
+  seen: number;
+  caught: number;
+  entries: DexEntry[];
+}
+
+// PKVault's own storage routes; only what the PC screen reads of them.
+
+export interface StorageBox {
+  id: string;
+  /** 0 a box, -1 the party; the rest (daycare, item pockets) isn't shown. */
+  type: number;
+  name: string;
+  slotCount: number;
+  order: number;
+}
+
+/** A Pokémon in a save (party or box) or in main storage. */
+export interface StoredMon {
+  id: string;
+  species: number;
+  level: number;
+  nickname: string;
+  /** A number in a save, a string in main storage. */
+  boxId: number | string;
+  boxSlot: number;
+  isEgg: boolean;
+  isShiny: boolean;
+  /** Main storage keeps one Pokémon as several variants in one slot; this is the one to show. */
+  isMain?: boolean;
+  attachedSaveId?: number;
+}
+
 export interface TravelMon {
   species: number;
   nickname: string;

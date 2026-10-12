@@ -27,6 +27,16 @@ public class JourneyController(
         return await journeyService.GetTrainers();
     }
 
+    /// <summary>
+    /// The active trainer's Pokédex: "regional" for the region they are in, in its own order, or
+    /// "national" for every species across all their saves and storage.
+    /// </summary>
+    [HttpGet("dex")]
+    public async Task<TrainerDexDTO> GetDex(string scope = "regional")
+    {
+        return await journeyService.GetDex(scope);
+    }
+
     /// <summary>Each region's champion, and who held the title before.</summary>
     [HttpGet("league")]
     public async Task<LeagueDTO> GetLeague()

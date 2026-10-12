@@ -8,6 +8,9 @@ import type {
   Names,
   PlaySettings,
   SpeciesSprite,
+  StorageBox,
+  StoredMon,
+  TrainerDex,
   PlayStatus,
   TrainerProfiles,
   TravelPreview,
@@ -62,7 +65,19 @@ export const api = {
   journey: () => request<Journey>('GET', 'journey'),
   league: () => request<League>('GET', 'journey/league'),
   journal: (trainerId: string) => request<JournalEntry[]>('GET', `journey/journal/${encodeURIComponent(trainerId)}`),
+  dex: (scope: 'regional' | 'national') => request<TrainerDex>('GET', `journey/dex?scope=${scope}`),
   travelPreview: () => request<TravelPreview>('GET', 'journey/travel'),
+
+  // PKVault's own storage. A move is only asked for here; it is written by saveStorage.
+  saveBoxes: (saveId: number) => request<StorageBox[]>('GET', `storage/box?saveId=${saveId}`),
+  mainBoxes: () => request<StorageBox[]>('GET', 'storage/box'),
+  saveMons: (saveId: number) => request<StoredMon[]>('GET', `storage/save/${saveId}/pkm`),
+  mainMons: () => request<StoredMon[]>('GET', 'storage/main/pkm-version'),
+  moveMon: (move: { pkmIds: string[]; sourceSaveId: number | null; targetSaveId: number | null; targetBoxId: string; targetBoxSlots: number[]; attached: boolean }) =>
+    request<unknown>('PUT', 'storage/move/pkm', move),
+  pendingChanges: () => request<unknown[]>('GET', 'storage/action'),
+  saveStorage: () => request<unknown>('POST', 'storage/action/save'),
+  undoStorage: () => request<unknown>('DELETE', 'storage/action?actionIndexToRemoveFrom=0'),
   /** Takes the active trainer and their party to another game. Writes saves. */
   board: (gameId: string) => request<BoardingResult>('POST', `journey/travel/${encodeURIComponent(gameId)}`),
   /** Makes a trainer the one the app is about. */

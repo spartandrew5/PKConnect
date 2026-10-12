@@ -252,6 +252,16 @@ footer button{border:0;background:none;color:var(--muted);text-decoration:underl
 .locbox .locwhere{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
 .locbox .locwhere b{font-family:var(--display);font-weight:700;font-size:15px}
 .locbox .locwhere small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+/* Pokédex cells and PC slots with a picture in them. */
+.dx{align-items:flex-start;min-height:120px}
+.dxsprite{align-self:center;margin:-4px 0 -2px}
+.dxsprite.shade{filter:grayscale(1) opacity(.55)}
+.slot{overflow:hidden;gap:0}
+.slot .monsprite{margin:-6px 0 -8px}
+.slot.wide{padding:6px 4px 8px}
+.slot .slotname{font-size:12px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+.slot:disabled{cursor:progress}
+.note.pending{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--warn)}
 /* The party: each member's picture in the middle of its tile, name and level underneath. */
 .tcard .party{grid-template-columns:repeat(6,minmax(0,1fr))}
 .pmon{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--sunk);border-radius:10px;padding:8px 6px 10px;min-width:0;text-align:center;overflow:hidden}

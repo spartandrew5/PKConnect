@@ -12,6 +12,7 @@ public interface IJourneyService
     Task<JourneyDTO> GetTrainers();
     Task<LeagueDTO> GetLeague();
     Task<TravelPreviewDTO> GetTravelPreview();
+    Task<TrainerDexDTO> GetDex(string scope);
 }
 
 /// <summary>
@@ -22,9 +23,72 @@ public interface IJourneyService
 public class JourneyService(
     ITrainerProfilesService profilesService,
     IChampionsService championsService,
-    ISavesLoadersService savesLoadersService
+    ISavesLoadersService savesLoadersService,
+    DexService dexService,
+    StaticDataService staticDataService
 ) : IJourneyService
 {
+    // The regional Pokédex of each game, by the name PKVault's species data lists it under.
+    private static readonly Dictionary<string, string> RegionalDex = new()
+    {
+        ["yellow"] = "kanto", ["firered"] = "kanto", ["leafgreen"] = "kanto",
+        ["fireredexpansion"] = "kanto", ["leafgreenexpansion"] = "kanto",
+        ["crystal"] = "original-johto", ["heartgold"] = "updated-johto", ["soulsilver"] = "updated-johto",
+        ["emerald"] = "hoenn", ["emeraldexpansion"] = "hoenn",
+        ["platinum"] = "extended-sinnoh",
+        ["black"] = "original-unova", ["white"] = "original-unova",
+        ["black2"] = "updated-unova", ["white2"] = "updated-unova",
+    };
+
+    /// <summary>The newest species a trainer can meet in any game there is to travel to.</summary>
+    private const int NationalCount = 649;
+
+    public async Task<TrainerDexDTO> GetDex(string scope)
+    {
+        var national = string.Equals(scope, "national", StringComparison.OrdinalIgnoreCase);
+        var store = await profilesService.GetProfiles();
+        var profile = store.Profiles.Find(p => p.Id == store.ActiveProfileId)
+            ?? throw new InvalidOperationException("No active trainer");
+
+        var saves = SavesOf(profile, isActive: true);
+        var current = CurrentSave(profile, saves);
+        var gameId = current is null ? profile.PendingGameVersion : ConnectCatalog.GameIdFor(current.Save.GetSave());
+        var region = ConnectRegions.ForGameId(gameId);
+
+        // Which species, under which number.
+        List<(int Number, ushort Species)> wanted;
+        if (national || gameId is null || !RegionalDex.TryGetValue(gameId, out var dexName))
+        {
+            national = true;
+            wanted = [.. Enumerable.Range(1, NationalCount).Select(n => (n, (ushort)n))];
+        }
+        else
+        {
+            var species = await staticDataService.GetStaticSpecies();
+            wanted = [.. species
+                .Where(entry => entry.Value.PokedexIndexes.ContainsKey(dexName))
+                .Select(entry => (entry.Value.PokedexIndexes[dexName], entry.Key))
+                .OrderBy(entry => entry.Item1)];
+        }
+
+        // What is known of them: in the save the trainer is in, or - for the National one -
+        // anywhere at all, storage included.
+        var known = national
+            ? await dexService.GetDex([.. wanted.Select(w => w.Species)])
+            : current is null
+                ? []
+                : await dexService.GetDex([current.Id], [.. wanted.Select(w => w.Species)]);
+
+        var entries = wanted.Select(w =>
+        {
+            var forms = known.TryGetValue(w.Species, out var bySave) ? bySave.Values.SelectMany(item => item.Forms).ToList() : [];
+            var caught = forms.Any(form => form.IsCaught || form.IsOwned);
+            return new DexEntryDTO(w.Number, w.Species, caught || forms.Any(form => form.IsSeen), caught);
+        }).ToList();
+
+        return new(national ? "national" : "regional", region, gameId, entries.Count(e => e.Seen), entries.Count(e => e.Caught), entries);
+    }
+
     private sealed record TrainerSave(uint Id, SaveWrapper Save, string Path, DateTime WrittenAt);
 
     public async Task<JourneyDTO> GetTrainers()

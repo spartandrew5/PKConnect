@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using PKConnect.Core.regions;
 using PKVault.Core;
@@ -5,7 +6,7 @@ using PKVault.Core;
 namespace PKConnect.Core.status;
 
 [Route("api/[controller]")]
-public class ConnectController(StaticDataService staticDataService)
+public class ConnectController(IServiceProvider services)
 {
     /// <summary>
     /// Each species' picture on PKVault's sprite sheets, by National Dex number (index 0 is unused).
@@ -13,7 +14,8 @@ public class ConnectController(StaticDataService staticDataService)
     [HttpGet("species-sprites")]
     public async Task<List<SpeciesSpriteDTO?>> GetSpeciesSprites()
     {
-        var sheets = (await staticDataService.GetStaticSpritesheets()).Species;
+        // Asked for here, not in the constructor: the status route must answer without PKVault's data services.
+        var sheets = (await services.GetRequiredService<StaticDataService>().GetStaticSpritesheets()).Species;
         List<SpeciesSpriteDTO?> sprites = [null];
         for (var species = 1; sheets.TryGetValue($"sprites/pokemon/{species}.png", out var sprite); species++)
             sprites.Add(new(sprite.SheetName, sprite.X, sprite.Y, sprite.Width, sprite.Height));

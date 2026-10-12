@@ -3,6 +3,8 @@ import { api, ApiError } from './api/client';
 import type { BoardingResult, Catalog, Journey, Names, PlayStatus, Trainer } from './api/types';
 import { PORTS } from './components/region';
 import { Appearance } from './screens/Appearance';
+import { Dex } from './screens/Dex';
+import { PC } from './screens/PC';
 import { Journal } from './screens/Journal';
 import { League } from './screens/League';
 import { NewTrainer } from './screens/NewTrainer';
@@ -11,7 +13,7 @@ import { Settings } from './screens/Settings';
 import { TrainerCard } from './screens/TrainerCard';
 import { Travel } from './screens/Travel';
 
-const BUILT: readonly string[] = ['card', 'travel', 'journal', 'league'];
+const BUILT: readonly string[] = ['card', 'dex', 'pc', 'travel', 'journal', 'league'];
 
 const TABS = [
   ['card', 'Trainer card'],
@@ -227,6 +229,10 @@ export function App() {
           />
         )}
 
+        {catalog && trainer && screen === 'main' && tab === 'dex' && <Dex trainer={trainer} catalog={catalog} names={names} />}
+        {catalog && trainer && screen === 'main' && tab === 'pc' && (
+          <PC trainer={trainer} catalog={catalog} names={names} onSaved={() => void load().catch((e) => setError(messageOf(e)))} />
+        )}
         {catalog && trainer && screen === 'main' && tab === 'journal' && <Journal trainer={trainer} catalog={catalog} />}
         {catalog && journey && trainer && screen === 'main' && tab === 'league' && (
           <League trainer={trainer} journey={journey} catalog={catalog} names={names} />

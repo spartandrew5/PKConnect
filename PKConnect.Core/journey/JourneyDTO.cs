@@ -51,6 +51,18 @@ public record LeagueRegionDTO(string Region, ChampionTeamDTO Champion, bool IsOr
 
 public record LeagueDTO(List<LeagueRegionDTO> Regions);
 
+/// <summary>One entry of a Pokédex.</summary>
+/// <param name="Number">Its number in the Pokédex shown: the region's own order, or the National one.</param>
+/// <param name="Species">Its National Dex number.</param>
+public record DexEntryDTO(int Number, int Species, bool Seen, bool Caught);
+
+/// <summary>
+/// The active trainer's Pokédex.
+/// </summary>
+/// <param name="Scope">"regional": the Pokédex of the region they are in, as their save there has it.
+/// "national": every species, counting all their saves and what they keep in storage.</param>
+public record TrainerDexDTO(string Scope, string? Region, string? GameId, int Seen, int Caught, List<DexEntryDTO> Entries);
+
 /// <summary>What happens to one party member on a trip.</summary>
 /// <param name="CanTravel">Its species exists in the destination's game.</param>
 /// <param name="MovesLost">The moves it knows that don't exist there.</param>

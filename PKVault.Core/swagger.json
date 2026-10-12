@@ -575,6 +575,37 @@
         }
       }
     },
+    "/api/journey/dex": {
+      "get": {
+        "tags": [
+          "Journey"
+        ],
+        "operationId": "Journey_GetDex",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "regional"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerDexDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/journey/journal/{profileId}": {
       "get": {
         "tags": [
@@ -6275,6 +6306,67 @@
           },
           "overworld": {
             "type": "string"
+          }
+        }
+      },
+      "TrainerDexDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scope",
+          "seen",
+          "caught",
+          "entries"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "gameId": {
+            "type": "string"
+          },
+          "seen": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "caught": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DexEntryDTO"
+            }
+          }
+        }
+      },
+      "DexEntryDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "number",
+          "species",
+          "seen",
+          "caught"
+        ],
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "species": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "seen": {
+            "type": "boolean"
+          },
+          "caught": {
+            "type": "boolean"
           }
         }
       },
