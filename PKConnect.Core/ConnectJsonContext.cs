@@ -22,6 +22,7 @@ namespace PKConnect.Core;
 [JsonSerializable(typeof(PlayStatusDTO))]
 [JsonSerializable(typeof(PlaySettingsDTO))]
 [JsonSerializable(typeof(NamesDTO))]
+[JsonSerializable(typeof(List<SpeciesSpriteDTO?>))]
 [JsonSerializable(typeof(JourneyDTO))]
 [JsonSerializable(typeof(LeagueDTO))]
 [JsonSerializable(typeof(TravelPreviewDTO))]

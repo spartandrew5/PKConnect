@@ -21,6 +21,20 @@ export interface Game {
   note?: string;
 }
 
+export type SpriteKind = 'front' | 'back' | 'overworld';
+
+/** One sprite set of a character: its battle front, back or overworld sheet, as drawn for one game. */
+export interface SpriteSet {
+  /** "<character>/gen3/front/emerald" */
+  id: string;
+  generation: number;
+  kind: SpriteKind;
+  variant: string;
+  title: string;
+  /** The part of the set's image to show: x, y, width, height. */
+  frame?: [number, number, number, number];
+}
+
 /** A character a trainer can look like. */
 export interface Character {
   id: string;
@@ -28,6 +42,13 @@ export interface Character {
   order: number;
   /** The generations it has sprites for; elsewhere the game's own protagonist is kept. */
   generations: string[];
+  sets: SpriteSet[];
+}
+
+/** The sets chosen for one generation, by id. The back follows the front. */
+export interface SpriteChoice {
+  front?: string;
+  overworld?: string;
 }
 
 export interface Catalog {
@@ -91,7 +112,8 @@ export interface TrainerSave {
 
 export interface Appearance {
   character?: string;
-  styles?: Record<string, string>;
+  /** The sets picked for a generation, by its number ("3"). Left out = the character's first set. */
+  sprites?: Record<string, SpriteChoice>;
 }
 
 export interface Trainer {
@@ -109,6 +131,15 @@ export interface Trainer {
   passport: PassportRegion[];
   saves: TrainerSave[];
   appearance?: Appearance;
+}
+
+/** Where a species' picture is: one of the sheets under /imgs/sheets, and the rectangle on it. */
+export interface SpeciesSprite {
+  sheet: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 /** English names by id: species[25] is "Pikachu". */

@@ -1,5 +1,6 @@
 using PKConnect.Core.champions;
 using PKConnect.Core.formats;
+using PKConnect.Core.graphics;
 using PKConnect.Core.nds;
 using PKConnect.Core.patching;
 using PKConnect.Core.regions;
@@ -31,7 +32,38 @@ public static class LaunchPatchService
 
     public sealed record Summary(
         bool IsVisiting, bool BasePatchApplied, int EditsApplied,
-        int TeamsGenerated, int TeamsSkipped, int ChampionApplied, int ChampionSkipped, List<string> Warnings);
+        int TeamsGenerated, int TeamsSkipped, int ChampionApplied, int ChampionSkipped, List<string> Warnings,
+        int GraphicsApplied = 0, int GraphicsSkipped = 0);
+
+    /// <summary>
+    /// The sprites of the character the trainer looks like, for this game. A character without
+    /// sprites of the game's generation changes nothing - the game's own protagonist is kept -
+    /// and that isn't worth a warning.
+    /// </summary>
+    private static (List<(int Offset, byte[] Data)> Edits, int Applied, int Skipped) PlayerSprites(
+        string gameId, byte[] rom, PlayerGraphicsRequest? look, List<string> warnings,
+        IReadOnlyList<(int Start, int End)>? reserved = null, string? romPath = null)
+    {
+        if (look is null)
+            return ([], 0, 0);
+
+        var (edits, results) = PlayerGraphicsPatchService.BuildPlayerGraphicsEdits(gameId, rom, look, reserved, romPath);
+        return Count(edits, results, warnings);
+    }
+
+    private static (List<(int Offset, byte[] Data)> Edits, int Applied, int Skipped) Count(
+        List<(int Offset, byte[] Data)> edits, List<PlayerGraphicsSlotResult> results, List<string> warnings)
+    {
+        // "*" speaks of the whole set rather than one sprite: the character has none for this generation.
+        // A pose the character's set doesn't have keeps the game's own: expected of a set drawn for
+        // another game of the generation, and nothing to tell the player.
+        var slots = results.Where(r => r.Slot != "*" && !(r.Reason?.Contains("not provided", StringComparison.OrdinalIgnoreCase) ?? false)).ToList();
+        warnings.AddRange(slots.Where(r => !r.Applied).Select(r => $"[graphics:{r.Slot}] {r.Reason}"));
+        return (edits, slots.Count(r => r.Applied), slots.Count(r => !r.Applied));
+    }
+
+    private static List<(int Start, int End)> Ranges(IEnumerable<(int Offset, byte[] Data)> edits) =>
+        [.. edits.Where(e => e.Data.Length > 0).Select(e => (e.Offset, e.Offset + e.Data.Length))];
 
     public static bool IsSupportedGame(string gameId) =>
         BasePatchService.IsSupportedGame(gameId)
@@ -45,22 +77,26 @@ public static class LaunchPatchService
     /// Throws <see cref="ArgumentException"/> for a game Connect doesn't patch, and
     /// <see cref="InvalidOperationException"/> (with a message for the player) when the ROM isn't
     /// the revision a patch was made for. <paramref name="romPath"/> is only needed for an
-    /// expansion build, whose .elf is looked for beside the ROM.
+    /// expansion build, whose .elf is looked for beside the ROM. <paramref name="character"/> is
+    /// the character the trainer looks like in this game (a folder of the sprite sets), if any.
     /// </summary>
     public static LaunchPatch Build(
         string gameId, byte[] vanillaRom, double? averageLevel, string? homeRegion,
-        ChampionTeamDTO? champion = null, int? randomSeed = null, string? romPath = null)
+        ChampionTeamDTO? champion = null, int? randomSeed = null, string? romPath = null, string? character = null,
+        Dictionary<string, GenSpriteSelection>? spriteSets = null)
     {
+        // The sets picked per generation only mean something with the character they belong to.
+        var look = string.IsNullOrWhiteSpace(character) ? null : new PlayerGraphicsRequest(character, null, spriteSets);
         if (!IsSupportedGame(gameId))
             throw new ArgumentException($"Unsupported game for launch patching: {gameId}");
 
         var isVisiting = ConnectRegions.IsVisiting(gameId, homeRegion);
         if (Gen4ConnectPatchService.IsConnectGame(gameId))
-            return BuildGen4(gameId, vanillaRom, isVisiting, averageLevel, champion, randomSeed);
+            return BuildGen4(gameId, vanillaRom, isVisiting, averageLevel, champion, randomSeed, look);
         if (Gen5ConnectPatchService.IsConnectGame(gameId))
-            return BuildGen5(gameId, vanillaRom, isVisiting, averageLevel, champion, randomSeed);
+            return BuildGen5(gameId, vanillaRom, isVisiting, averageLevel, champion, randomSeed, look);
         if (ExpansionSaveDetector.IsExpansionGameId(gameId))
-            return BuildExpansion(gameId, vanillaRom, romPath, isVisiting, averageLevel, champion, randomSeed);
+            return BuildExpansion(gameId, vanillaRom, romPath, isVisiting, averageLevel, champion, randomSeed, look);
 
         var workRom = (byte[])vanillaRom.Clone();
         var edits = new List<(int Offset, byte[] Data)>();
@@ -133,16 +169,22 @@ public static class LaunchPatchService
             }
         }
 
+        // Last, on what the ROM now is, and never over what the steps before wrote.
+        var sprites = PlayerSprites(gameId, workRom, look, warnings, Ranges(edits));
+        Commit(sprites.Edits);
+
         var (bytes, extension) = BasePatchService.OutputFormat(gameId) == PatchStorageFormat.Bps
             ? (BpsPatchService.Encode(vanillaRom, workRom), ".bps")
             : (IpsPatchService.BuildIps(edits, workRom), ".ips");
 
         return new(bytes, extension, new(
-            isVisiting, isVisiting, edits.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings));
+            isVisiting, isVisiting, edits.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings,
+            sprites.Applied, sprites.Skipped));
     }
 
     private static LaunchPatch BuildGen4(
-        string gameId, byte[] vanillaRom, bool isVisiting, double? averageLevel, ChampionTeamDTO? champion, int? randomSeed)
+        string gameId, byte[] vanillaRom, bool isVisiting, double? averageLevel, ChampionTeamDTO? champion, int? randomSeed,
+        PlayerGraphicsRequest? look)
     {
         var basePatch = Gen4ConnectPatchService.Resolve(gameId, vanillaRom)
             ?? throw new InvalidOperationException(
@@ -171,36 +213,54 @@ public static class LaunchPatchService
             warnings.AddRange(champResults.Where(r => !r.Applied).Select(r => $"[champion:{r.Zone}] {r.Reason}"));
         }
 
+        var sprites = PlayerSprites(gameId, basePatch.Patched, look, warnings);
+        edits.AddRange(sprites.Edits);
+
         // Every edit is a same-size write on the patched image, so they are folded into the base
         // patch rather than diffing two 128MB ROMs.
         var bytes = BpsPatchService.OverlayEdits(vanillaRom, basePatch.Patch, basePatch.Patched, edits);
         return new(bytes, ".bps", new(
-            isVisiting, true, edits.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings));
+            isVisiting, true, edits.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings,
+            sprites.Applied, sprites.Skipped));
     }
 
     private static LaunchPatch BuildGen5(
-        string gameId, byte[] vanillaRom, bool isVisiting, double? averageLevel, ChampionTeamDTO? champion, int? randomSeed)
+        string gameId, byte[] vanillaRom, bool isVisiting, double? averageLevel, ChampionTeamDTO? champion, int? randomSeed,
+        PlayerGraphicsRequest? look)
     {
+        var warnings = new List<string>();
+
+        // The sprites first: they move files, and the one placer of this patch starts after them.
+        var sprites = (Edits: new List<(int Offset, byte[] Data)>(), Applied: 0, Skipped: 0);
+        if (look is not null)
+        {
+            var (spriteEdits, spriteResults) = PlayerGraphicsPatchService.BuildGen5GraphicsEdits(gameId, vanillaRom, look, null);
+            sprites = Count(spriteEdits, spriteResults, warnings);
+        }
+        var placer = new NdsFilePlacer(vanillaRom);
+        placer.Reserve(sprites.Edits);
+
         var bonus = ChampionBattleConfigLoader.Load().ChampionLevelBonus;
         var connect = Gen5ConnectPatchService.Build(
-            gameId, vanillaRom, new NdsFilePlacer(vanillaRom), isVisiting, averageLevel, champion, bonus, randomSeed);
+            gameId, vanillaRom, placer, isVisiting, averageLevel, champion, bonus, randomSeed);
 
-        var warnings = new List<string>();
         warnings.AddRange(connect.Gyms.Where(r => !r.Applied).Select(r => $"[gym:{r.Zone}] {r.Reason}"));
         warnings.AddRange(connect.Champion.Where(r => !r.Applied).Select(r => $"[champion:{r.Zone}] {r.Reason}"));
         warnings.AddRange(connect.Warnings);
 
         // Built from the edit list: the generic encoder would have to match across the whole ROM.
-        var bytes = BpsPatchService.EncodeSparse(vanillaRom, connect.Edits);
+        List<(int Offset, byte[] Data)> all = [.. sprites.Edits, .. connect.Edits];
+        var bytes = BpsPatchService.EncodeSparse(vanillaRom, all);
         var teams = connect.Gyms.Count(r => r.Applied);
         var champs = connect.Champion.Count(r => r.Applied);
         return new(bytes, ".bps", new(
-            isVisiting, false, connect.Edits.Count, teams, connect.Gyms.Count - teams, champs, connect.Champion.Count - champs, warnings));
+            isVisiting, false, all.Count, teams, connect.Gyms.Count - teams, champs, connect.Champion.Count - champs, warnings,
+            sprites.Applied, sprites.Skipped));
     }
 
     private static LaunchPatch BuildExpansion(
         string gameId, byte[] vanillaRom, string? romPath, bool isVisiting, double? averageLevel,
-        ChampionTeamDTO? champion, int? randomSeed)
+        ChampionTeamDTO? champion, int? randomSeed, PlayerGraphicsRequest? look)
     {
         if (romPath is null || ExpansionBuild.FindSymbols(gameId, romPath, vanillaRom) is not { } elf)
             throw new InvalidOperationException(ExpansionBuild.MissingSymbolsMessage);
@@ -210,6 +270,7 @@ public static class LaunchPatchService
 
         var workRom = (byte[])vanillaRom.Clone();
         var warnings = new List<string>();
+        var reserved = new List<(int Start, int End)>();
         int teamsGenerated = 0, teamsSkipped = 0, championApplied = 0, championSkipped = 0;
 
         // A build with the Connect port decides home or visiting when it runs, from the save; a
@@ -219,6 +280,7 @@ public static class LaunchPatchService
         {
             var (gymEdits, gymResults) = ExpansionConnectPatchService.BuildGymEdits(gameId, vanillaRom, connectInfo, averageLevel.Value, randomSeed);
             IpsPatchService.ApplyInPlace(workRom, gymEdits);
+            reserved.AddRange(Ranges(gymEdits));
             teamsGenerated = gymResults.Count(r => r.Applied);
             teamsSkipped = gymResults.Count - teamsGenerated;
             warnings.AddRange(gymResults.Where(r => !r.Applied).Select(r => $"[gym:{r.Gym}] {r.Reason}"));
@@ -230,10 +292,14 @@ public static class LaunchPatchService
             var (champEdits, champResults) = ExpansionChampionPatchService.BuildChampionEdits(
                 gameId, vanillaRom, elf, averageLevel, champion, allocator);
             IpsPatchService.ApplyInPlace(workRom, champEdits);
+            reserved.AddRange(Ranges(champEdits));
             championApplied = champResults.Count(r => r.Applied);
             championSkipped = champResults.Count - championApplied;
             warnings.AddRange(champResults.Where(r => !r.Applied).Select(r => $"[champion:trainer {r.TrainerId}] {r.Reason}"));
         }
+
+        var sprites = PlayerSprites(gameId, vanillaRom, look, warnings, reserved, romPath);
+        IpsPatchService.ApplyInPlace(workRom, sprites.Edits);
 
         // The sparse encoder needs edits that don't overlap; the difference of the two images is
         // exactly that. A .bps because the build fills the ROM past what an .ips can address.
@@ -249,7 +315,8 @@ public static class LaunchPatchService
         }
 
         return new(BpsPatchService.EncodeSparse(vanillaRom, diff), ".bps", new(
-            isVisiting, false, diff.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings));
+            isVisiting, false, diff.Count, teamsGenerated, teamsSkipped, championApplied, championSkipped, warnings,
+            sprites.Applied, sprites.Skipped));
     }
 
     /// <summary>
@@ -257,12 +324,13 @@ public static class LaunchPatchService
     /// earlier version may have left there (the emulator would load whichever it finds).
     /// </summary>
     public static PatchResultDTO WriteFor(
-        string gameId, string romPath, double? averageLevel, string? homeRegion, ChampionTeamDTO? champion = null)
+        string gameId, string romPath, double? averageLevel, string? homeRegion, ChampionTeamDTO? champion = null,
+        string? character = null, Dictionary<string, GenSpriteSelection>? spriteSets = null)
     {
         if (!File.Exists(romPath))
             throw new ArgumentException($"ROM not found: {romPath}");
 
-        var patch = Build(gameId, File.ReadAllBytes(romPath), averageLevel, homeRegion, champion, romPath: romPath);
+        var patch = Build(gameId, File.ReadAllBytes(romPath), averageLevel, homeRegion, champion, romPath: romPath, character: character, spriteSets: spriteSets);
         var patchPath = Path.ChangeExtension(romPath, patch.Extension);
         var stale = Path.ChangeExtension(romPath, patch.Extension == ".ips" ? ".bps" : ".ips");
         if (File.Exists(stale))
@@ -283,6 +351,8 @@ public static class LaunchPatchService
             TeamsSkipped: s.TeamsSkipped,
             ChampionApplied: s.ChampionApplied,
             ChampionSkipped: s.ChampionSkipped,
+            GraphicsApplied: s.GraphicsApplied,
+            GraphicsSkipped: s.GraphicsSkipped,
             BasePatchApplied: s.BasePatchApplied,
             HomeRegionLaunch: !s.IsVisiting);
     }

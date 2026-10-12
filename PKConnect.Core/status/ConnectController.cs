@@ -5,8 +5,21 @@ using PKVault.Core;
 namespace PKConnect.Core.status;
 
 [Route("api/[controller]")]
-public class ConnectController
+public class ConnectController(StaticDataService staticDataService)
 {
+    /// <summary>
+    /// Each species' picture on PKVault's sprite sheets, by National Dex number (index 0 is unused).
+    /// </summary>
+    [HttpGet("species-sprites")]
+    public async Task<List<SpeciesSpriteDTO?>> GetSpeciesSprites()
+    {
+        var sheets = (await staticDataService.GetStaticSpritesheets()).Species;
+        List<SpeciesSpriteDTO?> sprites = [null];
+        for (var species = 1; sheets.TryGetValue($"sprites/pokemon/{species}.png", out var sprite); species++)
+            sprites.Add(new(sprite.SheetName, sprite.X, sprite.Y, sprite.Width, sprite.Height));
+        return sprites;
+    }
+
     [HttpGet()]
     public ConnectStatusDTO GetStatus()
     {
@@ -14,16 +27,17 @@ public class ConnectController
         return new(Version: version, PKVaultVersion: SettingsService.GetBuildInfo().Version);
     }
 
-    /// <summary>The picture a character is known by, as a PNG.</summary>
-    [HttpGet("characters/{characterId}/portrait")]
-    public CoreFileResponse GetCharacterPortrait(string characterId)
+    /// <summary>The image a sprite set is shown by (see the catalog's characters), as a PNG.</summary>
+    /// <param name="set">The set's id, e.g. "brendan/gen3/front/emerald".</param>
+    [HttpGet("sprite")]
+    public CoreFileResponse GetSpritePreview(string set)
     {
-        var path = ConnectCharacters.PortraitPath(characterId)
-            ?? throw new KeyNotFoundException($"No such character: {characterId}");
+        var path = ConnectCharacters.PreviewPath(set)
+            ?? throw new KeyNotFoundException($"No such sprite set: {set}");
         return new(
             StatusCode: 200,
             ContentType: "image/png",
-            File: new(new MemoryStream(File.ReadAllBytes(path)), "image/png", $"{characterId}.png"),
+            File: new(new MemoryStream(File.ReadAllBytes(path)), "image/png", "sprite.png"),
             Header: new() { ["Cache-Control"] = "max-age=3600" });
     }
 

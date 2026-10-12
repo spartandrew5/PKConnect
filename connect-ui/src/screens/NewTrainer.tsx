@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { api } from '../api/client';
 import type { Catalog, RegionId } from '../api/types';
-import { Portrait } from '../components/Portrait';
+import { portraitOf } from '../components/looks';
+import { Sprite } from '../components/Sprite';
 import { regionStyle } from '../components/region';
 
 const COMING = ['Kalos', 'Alola', 'Galar', 'Paldea'];
@@ -175,7 +176,7 @@ export function NewTrainer({
               character === c.id,
               () => setCharacter(character === c.id ? undefined : c.id),
               <>
-                <Portrait className="sprite" character={c.id} />
+                <Sprite set={portraitOf(catalog, c.id, undefined, game?.generation)} size={44} />
                 <b>{c.name}</b>
               </>,
               'look',

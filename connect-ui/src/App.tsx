@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from './api/client';
 import type { BoardingResult, Catalog, Journey, Names, PlayStatus, Trainer } from './api/types';
 import { PORTS } from './components/region';
+import { Appearance } from './screens/Appearance';
 import { Journal } from './screens/Journal';
 import { League } from './screens/League';
 import { NewTrainer } from './screens/NewTrainer';
@@ -41,9 +42,10 @@ export function App() {
     setTabState(next);
     history.replaceState(null, '', `#${next}`);
   }, []);
-  const [screen, setScreen] = useState<'main' | 'roster' | 'new' | 'settings'>(() =>
-    location.hash === '#roster' ? 'roster' : location.hash === '#new' ? 'new' : location.hash === '#settings' ? 'settings' : 'main',
-  );
+  const [screen, setScreen] = useState<'main' | 'roster' | 'new' | 'settings' | 'look'>(() => {
+    const hash = location.hash.slice(1);
+    return hash === 'roster' || hash === 'new' || hash === 'settings' || hash === 'look' ? hash : 'main';
+  });
   const [play, setPlay] = useState<PlayStatus>();
 
   useEffect(() => {
@@ -207,7 +209,22 @@ export function App() {
         {catalog && screen === 'settings' && <Settings catalog={catalog} onDone={() => setScreen('main')} />}
 
         {catalog && trainer && screen === 'main' && tab === 'card' && (
-          <TrainerCard trainer={trainer} catalog={catalog} playing={running && play?.trainerId === trainer.id} onPlay={startGame} />
+          <TrainerCard
+            trainer={trainer}
+            catalog={catalog}
+            playing={running && play?.trainerId === trainer.id}
+            onPlay={startGame}
+            onLook={() => setScreen('look')}
+          />
+        )}
+
+        {catalog && trainer && screen === 'look' && (
+          <Appearance
+            trainer={trainer}
+            catalog={catalog}
+            onChanged={() => void load().catch((e) => setError(messageOf(e)))}
+            onDone={() => setScreen('main')}
+          />
         )}
 
         {catalog && trainer && screen === 'main' && tab === 'journal' && <Journal trainer={trainer} catalog={catalog} />}

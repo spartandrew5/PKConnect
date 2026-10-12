@@ -40,8 +40,14 @@ public record TrainerProfileDTO(
 /// A trainer's look. Cosmetic only.
 /// </summary>
 /// <param name="Character">The character they appear as in every game (a sprite set's id, e.g. "hilda").</param>
-/// <param name="Styles">A different sprite set for one generation: "gen3" -> "brendan".</param>
-public record TrainerAppearanceDTO(string? Character, Dictionary<string, string>? Styles = null);
+/// <param name="Sprites">
+/// The sprite sets picked for a generation, by its number ("3"). A generation left out, or a kind
+/// left empty, takes the character's first set.
+/// </param>
+public record TrainerAppearanceDTO(string? Character, Dictionary<string, SpriteChoiceDTO>? Sprites = null);
+
+/// <summary>The sets chosen for one generation, by id (see the catalog). The back follows the front.</summary>
+public record SpriteChoiceDTO(string? Front = null, string? Overworld = null);
 
 public record RegionBadgesDTO(
     Dictionary<string, bool[]> Regions,

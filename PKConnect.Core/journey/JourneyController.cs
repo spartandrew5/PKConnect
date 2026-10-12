@@ -55,7 +55,7 @@ public class JourneyController(
     [HttpPut("appearance/{profileId}")]
     public async Task<JourneyDTO> SetAppearance(string profileId, TrainerAppearanceDTO appearance)
     {
-        await profilesService.SetAppearance(profileId, string.IsNullOrWhiteSpace(appearance.Character) && appearance.Styles is not { Count: > 0 } ? null : appearance);
+        await profilesService.SetAppearance(profileId, string.IsNullOrWhiteSpace(appearance.Character) ? null : appearance);
         return await journeyService.GetTrainers();
     }
 }

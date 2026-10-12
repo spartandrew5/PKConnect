@@ -301,7 +301,8 @@ public static class BasePatchService
             format,
             romSize,
             rom.GetProperty("sha1").GetString()!,
-            rom.TryGetProperty("vanillaSha1", out var vanilla) ? vanilla.GetString() : null,
+            // Yellow's manifest calls it baseSha1.
+            rom.TryGetProperty("vanillaSha1", out var vanilla) || rom.TryGetProperty("baseSha1", out vanilla) ? vanilla.GetString() : null,
             gyms,
             championSlots,
             root.Clone());

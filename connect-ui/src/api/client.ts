@@ -7,6 +7,7 @@ import type {
   League,
   Names,
   PlaySettings,
+  SpeciesSprite,
   PlayStatus,
   TrainerProfiles,
   TravelPreview,
@@ -56,6 +57,8 @@ async function request<T>(method: string, path: string, body?: FormData | object
 export const api = {
   catalog: () => request<Catalog>('GET', 'connect/catalog'),
   names: () => request<Names>('GET', 'connect/names'),
+  /** Each species' picture, by National Dex number. */
+  speciesSprites: () => request<(SpeciesSprite | null)[]>('GET', 'connect/species-sprites'),
   journey: () => request<Journey>('GET', 'journey'),
   league: () => request<League>('GET', 'journey/league'),
   journal: (trainerId: string) => request<JournalEntry[]>('GET', `journey/journal/${encodeURIComponent(trainerId)}`),
@@ -91,5 +94,5 @@ export const api = {
   playStatus: () => request<PlayStatus>('GET', 'play'),
   playSettings: () => request<PlaySettings>('GET', 'play/settings'),
   setPlaySettings: (settings: PlaySettings) => request<PlaySettings>('PUT', 'play/settings', settings),
-  portraitUrl: (characterId: string) => `/api/connect/characters/${encodeURIComponent(characterId)}/portrait`,
+  spriteUrl: (setId: string) => `/api/connect/sprite?set=${encodeURIComponent(setId)}`,
 };

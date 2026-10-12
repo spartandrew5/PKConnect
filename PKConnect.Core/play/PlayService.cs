@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using PKConnect.Core.champions;
+using PKConnect.Core.graphics;
 using PKConnect.Core.journey;
 using PKConnect.Core.launch;
 using PKConnect.Core.profiles;
@@ -146,7 +147,11 @@ public class PlayService(
         var champions = await championsService.GetChampions();
         var champion = champions.Regions.TryGetValue(game.Region, out var current) ? current : null;
         double? averageLevel = trainer.Party.Count > 0 ? trainer.Party.Average(mon => mon.Level) : null;
-        LaunchPatchService.WriteFor(game.Id, romPath, averageLevel, trainer.HomeRegion, champion);
+        // How the trainer looks: their character, in the sets picked for each generation.
+        var sprites = trainer.Appearance?.Sprites?.ToDictionary(
+            entry => entry.Key,
+            entry => new GenSpriteSelection(entry.Value.Front, null, entry.Value.Overworld));
+        LaunchPatchService.WriteFor(game.Id, romPath, averageLevel, trainer.HomeRegion, champion, trainer.Appearance?.Character, sprites);
 
         // The emulator keeps the save beside the ROM, under the ROM's name.
         var runtimeSave = Path.ChangeExtension(romPath, ".sav");

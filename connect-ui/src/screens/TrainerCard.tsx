@@ -1,6 +1,7 @@
 import type { Catalog, PassportRegion, Region, Trainer } from '../api/types';
 import { Mon } from '../components/Mon';
-import { Portrait } from '../components/Portrait';
+import { portraitOf } from '../components/looks';
+import { Sprite } from '../components/Sprite';
 
 function badgeIcon(region: Region, badge: string): string {
   return `/badge-icons/${region.id}-${badge.toLowerCase()}.png`;
@@ -67,13 +68,6 @@ export function TrainerCard({
         </div>
         <div className="tcard-body">
           <div className="who">
-            <button type="button" className="portrait" onClick={onLook} disabled={!onLook} aria-label="Change appearance">
-              {trainer.appearance?.character ? (
-                <Portrait character={trainer.appearance.character} />
-              ) : (
-                trainer.trainerName.slice(0, 1)
-              )}
-            </button>
             <div className="who-text">
               <h1>{trainer.trainerName}</h1>
               <p className="muted">
@@ -82,15 +76,48 @@ export function TrainerCard({
                   ? ` · appears as ${catalog.characters.find((c) => c.id === trainer.appearance?.character)?.name ?? trainer.appearance.character}`
                   : ''}
               </p>
-              {region && (
-                <p className="here">
-                  Now in {region.name}
-                  {game ? ` · ${game.name}` : ''}
-                </p>
-              )}
+              {/* Where the trainer is and the way back in, as one stack of equal pieces. */}
+              <div className="whoactions">
+                {region && (
+                  <div className="locbox">
+                    <span className="pin" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </span>
+                    <span className="loclabel">Region</span>
+                    <span className="locwhere">
+                      <b>{region.name}</b>
+                      {game && <small>{game.name}</small>}
+                    </span>
+                  </div>
+                )}
+                <button type="button" className="btn go" disabled={!game || playing} onClick={onPlay}>
+                  {!game ? 'No game yet' : playing ? `Playing ${game.name}…` : trainer.saves.length === 0 ? `Start ${game.name}` : `Continue in ${game.name}`}
+                </button>
+              </div>
+              {/* Beside the sprite, so its frame runs the full height of this column. */}
+              <div className="facts">
+                <span>
+                  <b>{badges}</b> badges
+                </span>
+                <span>
+                  <b>{titles}</b> titles held
+                </span>
+                <span>
+                  <b>{trainer.hoursPlayed}</b> hours on the road
+                </span>
+              </div>
             </div>
-            <button type="button" className="btn go" disabled={!game || playing} onClick={onPlay}>
-              {!game ? 'No game yet' : playing ? `Playing ${game.name}…` : trainer.saves.length === 0 ? `Start ${game.name}` : `Continue in ${game.name}`}
+            {/* The trainer themselves, on the right like on the games' own cards. */}
+            <button type="button" className="portrait" onClick={onLook} disabled={!onLook} aria-label="Change appearance">
+              {trainer.appearance?.character ? (
+                <Sprite set={portraitOf(catalog, trainer.appearance.character, trainer.appearance, game?.generation)} size={64} />
+              ) : (
+                trainer.trainerName.slice(0, 1)
+              )}
+              {onLook && <span>Change</span>}
             </button>
           </div>
 
@@ -106,18 +133,6 @@ export function TrainerCard({
               {trainer.saves.length === 0 && " Save in the game before closing it: that first save becomes this trainer."}
             </div>
           )}
-
-          <div className="facts">
-            <span>
-              <b>{badges}</b> badges
-            </span>
-            <span>
-              <b>{titles}</b> titles held
-            </span>
-            <span>
-              <b>{trainer.hoursPlayed}</b> hours on the road
-            </span>
-          </div>
         </div>
       </section>
 

@@ -22,6 +22,9 @@ public record GameDTO(
 
 public record CatalogDTO(List<RegionDTO> Regions, List<GameDTO> Games, List<CharacterDTO> Characters);
 
+/// <summary>Where a species' picture is: a sprite sheet (an image the UI ships) and the rectangle on it.</summary>
+public record SpeciesSpriteDTO(string Sheet, int X, int Y, int Width, int Height);
+
 /// <summary>English names by id: <c>Species[25]</c> is "Pikachu", <c>Moves[85]</c> is "Thunderbolt".</summary>
 public record NamesDTO(string[] Species, string[] Moves);
 

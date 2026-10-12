@@ -11,6 +11,9 @@ public record PatchResultDTO(
     // Champion battles given the region's current champion, and those that couldn't be.
     int ChampionApplied = 0,
     int ChampionSkipped = 0,
+    // Sprites of the trainer's chosen character written into the game, and those that couldn't be.
+    int GraphicsApplied = 0,
+    int GraphicsSkipped = 0,
     // The Connect base patch was layered in (a visiting launch).
     bool BasePatchApplied = false,
     // The game is in the trainer's home region: its own story, with the current champion at the end.
