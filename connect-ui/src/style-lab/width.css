@@ -1,0 +1,32 @@
+/* Width trials. Work with every style. */
+:root[data-width="wide"] .app{max-width:1280px}
+:root[data-width="full"] .app{max-width:none}
+
+/* Wide for Pokedex + PC: only the screens with grids to fill spread out, easing between tabs. */
+:root[data-width="tabs"] .app{transition:max-width .45s var(--ease)}
+:root[data-width="tabs"] .app:is([data-view="dex"],[data-view="pc"]){max-width:1280px}
+
+/* Fixed frame: the top bar and tabs stay at the normal width on every screen, so nothing you click
+   moves. The Pokedex and the PC spread out wider beneath them; the other screens keep the normal column. */
+:root[data-width="frame"] .app{max-width:1400px}
+/* The title, trainer button and tabs stay exactly where the normal width puts them, on every screen. */
+:root[data-width="frame"] .app > .top{width:100%;max-width:860px;margin-inline:auto}
+/* The tabs start where the normal column starts; styles that draw them as a compact bar keep it compact. */
+:root[data-width="frame"] .app > .tabs{align-self:flex-start;margin-left:calc((100% - min(100%, 860px)) / 2);width:min(100%, 860px)}
+:root[data-width="frame"]:is([data-style="classic"],[data-style="soft"],[data-style="home"]) .app > .tabs{width:fit-content}
+:root[data-width="frame"] .app:not([data-view="dex"]):not([data-view="pc"]) > .view{width:100%;max-width:860px;margin-inline:auto}
+
+/* Every wide setting: the Pokedex in rows of six, so each square is bigger and its picture with it. */
+:root:is([data-width="wide"],[data-width="tabs"],[data-width="frame"]) .dexgrid{grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+:root:is([data-width="wide"],[data-width="tabs"],[data-width="frame"]) .dxt .monsprite{transform:scale(1.45)}
+:root:is([data-width="wide"],[data-width="tabs"],[data-width="frame"]) .dxt.seen .monsprite{transform:scale(1.2)}
+
+/* The PC's boxes as big as the room allows: the two windows share the width evenly, and a slot's
+   picture grows with the slot instead of keeping one size. */
+:root[data-width] .pc{gap:20px}
+:root[data-width] .win-body{padding:14px}
+:root[data-width] .win-body .box{gap:10px}
+:root[data-width] .win-body .slot{container-type:inline-size}
+:root[data-width] .win-body .slot .monsprite{width:74cqi !important;height:74cqi !important;margin:-4cqi 0 -6cqi}
+:root[data-width] .win-body .slot .monsprite.game img{width:100%;height:100%}
+:root[data-width] .win-body .slot small{font-size:clamp(10px,9cqi,13px)}

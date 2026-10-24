@@ -51,6 +51,18 @@ function prepare(url: string, frame: SpriteSet['frame']): Promise<string | undef
           if (p + sw < sw * sh) stack.push(p + sw);
           if (p - sw >= 0) stack.push(p - sw);
         }
+
+        // Pockets of backdrop the sprite closes in (between an arm and the body, say) can't be
+        // reached from the edges, so they go too - but only when the backdrop is a vivid key
+        // colour no sprite would use, and only on a near-exact match. A white, black or grey
+        // backdrop is also a real colour in Game Boy sprites, so those pockets stay.
+        const isKeyColour = Math.max(r!, g!, b!) - Math.min(r!, g!, b!) >= 64;
+        if (isKeyColour) {
+          for (let p = 0; p < sw * sh; p++) {
+            const i = p * 4;
+            if (!seen[p] && px[i + 3]! > 0 && Math.abs(px[i]! - r!) + Math.abs(px[i + 1]! - g!) + Math.abs(px[i + 2]! - b!) <= 12) px[i + 3] = 0;
+          }
+        }
         context.putImageData(pixels, 0, 0);
       }
 

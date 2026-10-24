@@ -1,0 +1,76 @@
+/* Pokémon HOME: mint-green backdrop, white panels framed in a strong colour, pastel name pills,
+   round slots, rounded type. Each region keeps its colour for the frames. Light only. */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap');
+
+:root[data-style="home"]{
+  --bg:#DDF4EA; --card:#FFFFFF; --sunk:#EEF8F3; --fg:#3E4A48; --muted:#7C8B88; --line:#CFE6DE;
+  --ok:#2BAE8E; --warn:#E8962A; --teal:#25B3A8; --orange:#F28C28;
+  --kanto:#F07F6E; --johto:#E2A93A; --hoenn:#25B3A8; --sinnoh:#7D8BE0; --unova:#3FA6DE;
+  --on-region:#FFFFFF;
+  --display:"M PLUS Rounded 1c",system-ui,sans-serif;
+  --body:"M PLUS Rounded 1c",system-ui,sans-serif;
+  --pixel:"M PLUS Rounded 1c",system-ui,sans-serif;
+  color-scheme:light;
+
+  .rg{--pale:color-mix(in srgb,var(--region) 22%,#fff);--deep:color-mix(in srgb,var(--region) 80%,#123)}
+
+  body{background:linear-gradient(160deg,#E9F8F1 0%,#D2F0E4 45%,#BFE9DB 100%) fixed;font-weight:500}
+  h2,.who-text h1,.page h3,.tmini h3,.lband h3,.champ h4,.route .place,.partyhead h2,.dextitle h2,.mdname h2{font-weight:800;letter-spacing:0;text-transform:none}
+  .eyebrow,.tag,.kind,.locbox .loclabel{letter-spacing:.06em;font-weight:700}
+  .px{font-weight:700;letter-spacing:.02em}
+
+  /* The bar along the top: white, with the orange of the HOME logo. */
+  .top{background:#fff;border-radius:22px;padding:8px 10px 8px 18px;box-shadow:0 4px 14px rgba(40,110,90,.12)}
+  .brand{color:var(--orange);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  .brand span{color:var(--orange)}
+  .switch,.top .btn{border:2px solid var(--line);background:#fff;border-radius:999px}
+  .switch .av{background:var(--orange)}
+
+  /* Tabs: rounded keys, the current one in HOME's teal with a darker rim. */
+  .tabs{border:0;gap:6px;background:rgba(255,255,255,.7);border-radius:18px;padding:5px;width:fit-content;max-width:100%;box-shadow:0 2px 8px rgba(40,110,90,.08)}
+  .tabs button{border:2px solid transparent;margin:0;border-radius:12px;padding:6px 14px;font-weight:700;color:var(--muted)}
+  .tabs button[aria-selected="true"]{background:var(--teal);color:#fff;border-color:#178C83;box-shadow:0 3px 0 #178C83}
+
+  /* Panels: white, framed in the region's colour. */
+  .panel,.tcard,.ticket,.win,.tmini,.lcard,.dexwin{background:#fff;border:4px solid var(--region);border-radius:26px;box-shadow:0 6px 18px rgba(40,110,90,.12)}
+  .panel{border-color:var(--line)}
+  .gencard{border:3px solid var(--line);border-radius:20px}
+  .tcard-band,.lband,.tmini-band,.win-bar,.dexbar,.mdhead{background:var(--region);color:#fff}
+  .ticket-stub{background:var(--pale);border-left:3px dashed var(--region);border-radius:0 22px 22px 0}
+
+  /* Names in pastel pills, as on HOME's box titles. */
+  .boxname,.locbox,.dexchips span,.partycount{background:var(--pale);color:var(--fg);border:0}
+  .boxnav{background:#fff !important;color:var(--fg) !important;border-bottom:2px solid var(--line)}
+  .boxnav button{background:var(--fg);color:#fff;width:34px;height:34px;border-radius:10px;font-weight:800}
+  .boxstatus{background:#fff;border-bottom:0}
+  .win-vault{border-color:var(--teal)}
+  .win-vault .win-bar{background:var(--teal);color:#fff}
+
+  /* Slots are soft circles; a Pokémon sits on its own. */
+  .win-body,.dexscroll{background:#F5FBF8}
+  .win-body .slot,.win-body .slot.empty{border-radius:50%;border:0;background:color-mix(in srgb,var(--region) 10%,#EAF6F1);box-shadow:none}
+  .win-body .slot:not(:disabled):not(.empty):hover{background:color-mix(in srgb,var(--region) 22%,#fff);box-shadow:0 0 0 3px var(--region)}
+  .slot.sel{outline:3px solid var(--orange);outline-offset:2px}
+  .win-party{background:var(--pale);border:4px solid var(--region);color:var(--fg)}
+  .win-party .slot.wide{border-radius:22px;box-shadow:0 3px 10px rgba(40,110,90,.12)}
+  .win-party .slot.wide.empty{background:rgba(255,255,255,.5);border-color:color-mix(in srgb,var(--region) 50%,#fff)}
+
+  .pmon,.mon,.dxt,.opt,.tile,.note,.tallyc,.combo,.mdfact{border-radius:20px}
+  .pmon{background:#fff;box-shadow:0 3px 10px rgba(40,110,90,.12)}
+  .tcard .party{background:var(--pale);border-radius:22px;padding:12px}
+  .dxt{background:#fff}
+  .dxt.unk{background:#EAF5F0}
+  .portrait,.tcard .portrait{border-radius:22px;background:var(--pale)}
+  .case{background:#F5FBF8;border-radius:22px;padding:12px 8px}
+
+  .btn,select,.field input,.chips button{border-radius:999px;border:2px solid var(--line);background:#fff;font-weight:700}
+  .btn.go{background:var(--region);border-color:var(--deep);color:#fff;box-shadow:0 3px 0 var(--deep)}
+  .btn.go:hover{background:var(--region);filter:brightness(1.06)}
+  .btn.go:active{box-shadow:none;transform:translateY(3px)}
+  .whoactions > *{border-radius:999px}
+  .seal,.pill,.lchip,.tag.here{border-radius:999px}
+  .bar{border-radius:999px;background:#E3F1EB}
+  .md{border:4px solid var(--region);border-radius:26px}
+  .mdmoves span{border-radius:14px;background:#F5FBF8}
+  .toast{background:var(--teal);color:#fff;border-radius:999px}
+}

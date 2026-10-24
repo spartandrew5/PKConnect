@@ -5646,7 +5646,10 @@
         "additionalProperties": false,
         "required": [
           "species",
-          "moves"
+          "moves",
+          "abilities",
+          "items",
+          "natures"
         ],
         "properties": {
           "species": {
@@ -5656,6 +5659,24 @@
             }
           },
           "moves": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "abilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "natures": {
             "type": "array",
             "items": {
               "type": "string"
@@ -7278,7 +7299,8 @@
           "saveWritten",
           "badgesChanged",
           "connectStateChanged",
-          "regionBadges"
+          "regionBadges",
+          "pokedexAdded"
         ],
         "properties": {
           "saveWritten": {
@@ -7301,6 +7323,10 @@
                 "type": "boolean"
               }
             }
+          },
+          "pokedexAdded": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

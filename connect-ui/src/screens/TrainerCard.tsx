@@ -1,4 +1,10 @@
-import type { Catalog, PassportRegion, Region, Trainer } from '../api/types';
+import { useState } from 'react';
+import { api } from '../api/client';
+import type { Catalog, Names, PassportRegion, Region, Trainer } from '../api/types';
+import { useLoad } from '../api/useLoad';
+import { MonDetails } from '../components/MonDetails';
+import { Pokeball } from '../components/Pokeball';
+import { BookMarked, Clock, Crown, IdCard, Medal, Play } from 'lucide-react';
 import { Mon } from '../components/Mon';
 import { portraitOf } from '../components/looks';
 import { Sprite } from '../components/Sprite';
@@ -41,17 +47,26 @@ function PassportPage({ region, page, here }: { region: Region; page: PassportRe
 export function TrainerCard({
   trainer,
   catalog,
+  names,
   playing,
   onPlay,
   onLook,
 }: {
   trainer: Trainer;
   catalog: Catalog;
+  names: Names | undefined;
   /** The trainer's game is running right now. */
   playing: boolean;
   onPlay: () => void;
   onLook?: () => void;
 }) {
+  // The party in full, for the details window: the card itself only carries names and levels.
+  const saveId = trainer.currentSaveId;
+  const { data: stored } = useLoad(() => (saveId === undefined ? Promise.resolve([]) : api.saveMons(saveId)), [saveId, trainer.party.length]);
+  const [open, setOpen] = useState<number>();
+  const detailed = (index: number) => stored?.find((mon) => String(mon.boxId) === '-1' && mon.boxSlot === index);
+  const shown = open === undefined ? undefined : detailed(open);
+
   const game = catalog.games.find((g) => g.id === trainer.currentGameId);
   const region = catalog.regions.find((r) => r.id === trainer.currentRegion);
   const home = catalog.regions.find((r) => r.id === trainer.homeRegion);
@@ -61,10 +76,17 @@ export function TrainerCard({
 
   return (
     <>
+      {shown && <MonDetails mon={shown} names={names} onClose={() => setOpen(undefined)} />}
       <section className="tcard">
         <div className="tcard-band">
-          <span className="px">TRAINER CARD</span>
-          <span className="px">ID No. {id}</span>
+          <span className="px ilabel">
+            <Pokeball className="ico" size={16} />
+            TRAINER CARD
+          </span>
+          <span className="px ilabel">
+            <IdCard className="ico" size={16} aria-hidden="true" />
+            ID No. {id}
+          </span>
         </div>
         <div className="tcard-body">
           <div className="who">
@@ -94,19 +116,23 @@ export function TrainerCard({
                   </div>
                 )}
                 <button type="button" className="btn go" disabled={!game || playing} onClick={onPlay}>
+                  {game && !playing && <Play className="ico" size={16} aria-hidden="true" />}
                   {!game ? 'No game yet' : playing ? `Playing ${game.name}…` : trainer.saves.length === 0 ? `Start ${game.name}` : `Continue in ${game.name}`}
                 </button>
               </div>
               {/* Beside the sprite, so its frame runs the full height of this column. */}
               <div className="facts">
                 <span>
-                  <b>{badges}</b> badges
+                  <Medal className="ico" size={16} aria-hidden="true" />
+              <b>{badges}</b> badges
                 </span>
                 <span>
-                  <b>{titles}</b> titles held
+                  <Crown className="ico" size={16} aria-hidden="true" />
+              <b>{titles}</b> titles held
                 </span>
                 <span>
-                  <b>{trainer.hoursPlayed}</b> hours on the road
+                  <Clock className="ico" size={16} aria-hidden="true" />
+              <b>{trainer.hoursPlayed}</b> hours on the road
                 </span>
               </div>
             </div>
@@ -124,7 +150,7 @@ export function TrainerCard({
           {trainer.party.length > 0 ? (
             <div className="party">
               {trainer.party.map((mon, index) => (
-                <Mon key={index} mon={mon} />
+                <Mon key={index} mon={mon} onOpen={detailed(index) ? () => setOpen(index) : undefined} />
               ))}
             </div>
           ) : (
@@ -138,7 +164,10 @@ export function TrainerCard({
 
       <section className="panel">
         <div>
-          <p className="eyebrow">Passport</p>
+          <p className="eyebrow ilabel">
+            <BookMarked className="ico" size={14} aria-hidden="true" />
+            Passport
+          </p>
         </div>
         <div className="pages">
           {catalog.regions.map((r) => (

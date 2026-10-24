@@ -1,0 +1,42 @@
+/* Soft: rounded, borderless cards on a wash of the region's colour. Follows light and dark. */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root[data-style="soft"]{
+  --display:"Plus Jakarta Sans",system-ui,sans-serif;
+  --body:"Plus Jakarta Sans",system-ui,sans-serif;
+  --lift:0 1px 2px rgba(20,30,50,.06),0 14px 34px -14px rgba(20,30,50,.22);
+
+  .app::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--region) 20%,var(--bg)),var(--bg) 460px)}
+  h2,.who-text h1,.page h3,.tmini h3,.lband h3,.champ h4,.route .place{font-weight:800;letter-spacing:-.01em}
+
+  .panel,.tcard,.ticket,.win,.tmini,.lcard{border:0;border-radius:22px;box-shadow:var(--lift)}
+  .panel{padding:22px}
+  .gencard{border-radius:18px}
+  .tcard-band,.lband,.tmini-band{background:linear-gradient(100deg,var(--region),color-mix(in srgb,var(--region) 72%,#fff));padding-block:11px}
+  .tcard-body{padding:22px}
+  .ticket-stub{border-radius:0 22px 22px 0}
+  .tmini.active{box-shadow:0 0 0 2px var(--region),var(--lift)}
+  .tmini.new{box-shadow:none;border:2px dashed var(--line)}
+  .lcard.feat{box-shadow:0 0 0 2px var(--region),var(--lift)}
+
+  .tabs{border:0;background:color-mix(in srgb,var(--card) 60%,transparent);border-radius:999px;padding:4px;width:fit-content;max-width:100%}
+  .tabs button{border:0;margin:0;border-radius:999px;padding:7px 16px;font-weight:600}
+  .tabs button[aria-selected="true"]{background:var(--region);color:var(--on-region)}
+
+  .btn,.switch,select,.field input{border-radius:999px}
+  .btn{padding:9px 18px;font-weight:600}
+  .btn.go{box-shadow:0 8px 18px -8px var(--region)}
+  .whoactions > *{border-radius:999px}
+  .locbox{border:0;padding-right:16px}
+
+  .pmon,.mon,.note,.tallyc,.combo{border-radius:16px}
+  .slot,.dx,.opt,.tile{border-radius:14px}
+  .slot,.dx{border-color:transparent}
+  .slot.empty{border:1px dashed var(--line)}
+  .dx{background:var(--sunk)}
+  .dx.caught{background:var(--region-soft)}
+  .portrait,.tcard .portrait{border-radius:20px}
+  .bar{height:10px}
+  .seal{border-radius:999px;transform:none;padding:1px 10px;font-family:var(--body);font-weight:700;font-size:11px}
+}

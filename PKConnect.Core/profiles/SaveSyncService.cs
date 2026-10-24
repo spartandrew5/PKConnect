@@ -13,12 +13,14 @@ namespace PKConnect.Core.profiles;
 /// <param name="ConnectStateChanged">The home region or conquered regions in the save were updated.</param>
 /// <param name="CrownedRegion">The region the trainer just became champion of, if any.</param>
 /// <param name="RegionBadges">The trainer's badges, by region, after the sync.</param>
+/// <param name="PokedexAdded">How many Pokédex entries the save gained from the trainer's other saves.</param>
 public record SaveSyncResultDTO(
     bool SaveWritten,
     bool BadgesChanged,
     bool ConnectStateChanged,
     string? CrownedRegion,
-    Dictionary<string, bool[]> RegionBadges
+    Dictionary<string, bool[]> RegionBadges,
+    int PokedexAdded = 0
 );
 
 public interface ISaveSyncService
@@ -36,9 +38,11 @@ public interface ISaveSyncService
 /// conquered follow them everywhere, and beating a League makes them its champion. This is where
 /// a save and its trainer are reconciled:
 ///  1. gym badges, against the trainer's ledger (see <see cref="RegionBadges.Reconcile"/>);
-///  2. the title, when the save's Hall of Fame has a team it didn't have before
+///  2. the Pokédex, which gains what the trainer's other saves have seen and caught
+///     (see <see cref="PokedexSync"/>);
+///  3. the title, when the save's Hall of Fame has a team it didn't have before
 ///     (see <see cref="ChampionCrowning"/>);
-///  3. the Connect state the game reads from the save (see <see cref="ConnectSaveState"/>).
+///  4. the Connect state the game reads from the save (see <see cref="ConnectSaveState"/>).
 ///
 /// It works on the file, not on the copy the session holds: the game may just have written it.
 /// The session's saves are read again afterwards, unless there are actions waiting to be saved -
@@ -84,7 +88,16 @@ public class SaveSyncService(
                 canWrite && reconciled.Snapshot.Count > 0 ? new() { [saveKey] = reconciled.Snapshot } : null));
         }
 
-        // 2. The title.
+        // 2. The Pokédex: what the trainer saw and caught in their other saves, they have seen and caught here.
+        var known = PokedexSync.Known.Nothing();
+        foreach (var (otherId, other) in savesLoadersService.GetSaveById())
+        {
+            if (otherId != saveId)
+                known.Add(PokedexSync.Read(other.GetSave()));
+        }
+        var pokedexAdded = PokedexSync.Apply(save, known);
+
+        // 3. The title.
         string? crownedRegion = null;
         if (afterPlay)
         {
@@ -98,11 +111,11 @@ public class SaveSyncService(
             }
         }
 
-        // 3. What the game reads about its player.
+        // 4. What the game reads about its player.
         var stateChanged = ConnectSaveState.Apply(save, profile.HomeRegion, profile.ConqueredRegions ?? []);
 
         var written = false;
-        if (canWrite && (badgesChanged || stateChanged))
+        if (canWrite && (badgesChanged || stateChanged || pokedexAdded > 0))
         {
             await fileIOService.WriteBytes(path, save.Write().ToArray());
             written = true;
@@ -111,7 +124,7 @@ public class SaveSyncService(
         if (canWrite && (written || afterPlay))
             await savesLoadersService.Setup(new DataUpdateFlags());
 
-        return new(written, badgesChanged, stateChanged, crownedRegion, badges.Regions);
+        return new(written, badgesChanged, stateChanged, crownedRegion, badges.Regions, pokedexAdded);
     }
 
     // A region the trainer had no badges recorded for is being read for the first time (a save

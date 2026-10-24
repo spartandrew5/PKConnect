@@ -49,6 +49,12 @@ public class RegionBadgesTests
     [InlineData("emeraldexpansion", "hoenn")]
     [InlineData("crystal", "johto")]
     [InlineData("crystal", "kanto")]
+    [InlineData("platinum", "sinnoh")]
+    [InlineData("heartgold", "johto")]
+    [InlineData("heartgold", "kanto")]
+    [InlineData("soulsilver", "kanto")]
+    [InlineData("black", "unova")]
+    [InlineData("white2", "unova")]
     public void Badges_SurviveBeingWrittenToTheFile(string game, string region)
     {
         var save = BaseSave(game);
@@ -174,19 +180,44 @@ public class RegionBadgesTests
     }
 
     [Fact]
-    public void ADsGamesBadges_AreCountedButNeverWritten()
+    public void ADsGame_TakesTheTrainersBadges_AndKeepsItsRegionsApart()
     {
         var ledger = new Dictionary<string, bool[]> { ["kanto"] = Badges(0, 1), ["johto"] = Badges(3) };
         var heartGold = BaseSave("heartgold");
-        var before = RegionBadges.Read(heartGold, "johto")!;
 
         var result = RegionBadges.Reconcile(heartGold, ledger, null);
 
-        Assert.False(result.SaveChanged);
-        Assert.False(RegionBadges.CanWrite(heartGold, "johto"));
-        Assert.Equal(before, RegionBadges.Read(heartGold, "johto"));
-        // What the save has is added to what the trainer had.
-        if (result.Ledger.TryGetValue("johto", out var johto))
-            Assert.True(johto[3]);
+        Assert.True(result.SaveChanged);
+        var written = Reload(heartGold);
+        Assert.Equal(Badges(3), RegionBadges.Read(written, "johto"));
+        Assert.Equal(Badges(0, 1), RegionBadges.Read(written, "kanto"));
+        // The games count them from the trainer's record.
+        Assert.Equal(0b1000, ((SAV4HGSS)written).Badges);
+        Assert.Equal(0b11, ((SAV4HGSS)written).Badges16);
+    }
+
+    [Theory]
+    [InlineData("platinum", "sinnoh", 1360 + 787)]
+    [InlineData("heartgold", "johto", 0x88A)]
+    [InlineData("heartgold", "kanto", 0x892)]
+    [InlineData("soulsilver", "kanto", 0x892)]
+    public void InAConnectBuild_ABadgeFromElsewhere_BringsTheLeadersPrizeWithIt(string game, string region, int firstPrizeFlag)
+    {
+        var save = BaseSave(game);
+        var flags = (IEventFlagArray)save;
+        // A badge the save earned itself, its prize still waiting.
+        RegionBadges.Apply(save, region, Badges(0));
+        flags.SetEventFlag(firstPrizeFlag, false);
+
+        RegionBadges.Apply(save, region, Badges(0, 2));
+
+        var written = (IEventFlagArray)Reload(save);
+        Assert.False(written.GetEventFlag(firstPrizeFlag));     // earned here: left as the game had it
+        Assert.True(written.GetEventFlag(firstPrizeFlag + 2));  // arrived: nothing left to hand over
+        Assert.False(written.GetEventFlag(firstPrizeFlag + 1)); // no badge, no prize
+
+        // A badge taken away takes its prize away too, so it can be earned properly.
+        RegionBadges.Apply(save, region, Badges(0));
+        Assert.False(((IEventFlagArray)Reload(save)).GetEventFlag(firstPrizeFlag + 2));
     }
 }

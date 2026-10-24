@@ -1,0 +1,81 @@
+/* PKForge: after github.com/sofianeelhor/PKForge - a DS-era storage screen on a dark pixel grid.
+   Navy panels with cobalt rims, a black title bar, tool-button controls, a thin pixel face.
+   Colours are its default theme's; the type is a stand-in for its own pixel font. Dark only. */
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
+
+:root[data-style="pkforge"]{
+  --void:#14121D; --deep:#171B32; --deck:#1B2447; --grid:#2B4E95; --blue:#2789CD; --cyan:#42BFE8;
+  --well:#041F46; --well-edge:#08376E; --frame-edge:#23569F; --tool:#25539A; --tool-edge:#4C7CC4;
+  --chip-top:#144682; --chip-bottom:#08285A; --band:#02112B;
+
+  --bg:var(--deck); --card:#1B2346; --sunk:var(--deep); --fg:#F4F8FF; --muted:#A8BADC; --line:var(--grid);
+  --ok:#6FD98F; --warn:#F0C24A;
+  --kanto:#D2553F; --johto:#B6A136; --hoenn:#3BA77F; --sinnoh:#7C78DA; --unova:#2789CD;
+  --on-region:#FFFFFF;
+  --display:"Jersey 15","Courier New",monospace;
+  --body:"Jersey 15","Courier New",monospace;
+  --pixel:"Jersey 15","Courier New",monospace;
+  color-scheme:dark;
+
+  /* The pixel face is small for its size; this brings its lowercase up to the old one's. */
+  body{font-size-adjust:.56;letter-spacing:.01em;
+    background-image:linear-gradient(color-mix(in srgb,var(--grid) 38%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--grid) 38%,transparent) 1px,transparent 1px);
+    background-size:22px 22px}
+  h2,.who-text h1,.page h3,.tmini h3,.lband h3,.champ h4,.route .place,.brand,b,.btn,.tabs button,.switch{font-weight:400}
+  .eyebrow,.tag,.kind,.locbox .loclabel,.combo figcaption,button.portrait span{letter-spacing:.06em;color:var(--muted);font-weight:400}
+
+  /* The black title bar. */
+  .top{background:var(--void);border:2px solid var(--frame-edge);border-radius:6px;padding:8px 12px;box-shadow:0 0 0 2px var(--void)}
+  .brand span{color:var(--cyan)}
+
+  /* Device panels: cobalt rim inside a dark outline. */
+  .panel,.tcard,.ticket,.win,.tmini,.lcard{background:var(--card);border:2px solid var(--frame-edge);border-radius:6px;box-shadow:0 0 0 2px var(--void)}
+  .gencard{border:2px solid var(--well-edge);border-radius:4px;background:var(--deep)}
+  /* Header strips, lit from the top like the box banners. */
+  .tcard-band,.lband,.tmini-band,.win-game .win-bar{
+    background:linear-gradient(180deg,color-mix(in srgb,var(--region) 70%,#fff) 0 2px,var(--region) 2px,color-mix(in srgb,var(--region) 62%,#000));
+    border-bottom:2px solid var(--void);text-shadow:1px 1px 0 rgba(0,0,0,.45)}
+  .win-bar{background:var(--band);border-bottom:2px solid var(--void)}
+  .win-vault .win-bar{background:linear-gradient(180deg,#738AB8,#255396);color:#fff}
+  .ticket-stub{border-radius:0 4px 4px 0;border-left:2px dashed var(--frame-edge);background:var(--deep)}
+  .tmini:hover{border-color:var(--cyan)}
+  .tmini.active,.lcard.feat{border-color:var(--cyan);box-shadow:0 0 0 2px var(--void)}
+  .tmini.new{background:transparent;border-style:dashed;box-shadow:none}
+  .page,.row,.stylerow,details,.lstatus{border-top-color:color-mix(in srgb,var(--grid) 60%,transparent)}
+
+  /* Tool buttons. */
+  .tabs{border:0;gap:6px}
+  .tabs button,.btn,.switch,select,.chips button{
+    background:linear-gradient(180deg,var(--chip-top),var(--chip-bottom));border:2px solid var(--tool-edge);border-radius:4px;color:var(--fg);margin:0;box-shadow:0 0 0 1px var(--void)}
+  .tabs button{padding:5px 14px;color:var(--muted)}
+  .tabs button:hover,.btn:hover,.switch:hover,.chips button:hover{background:var(--tool)}
+  .tabs button[aria-selected="true"],.chips button[aria-pressed="true"]{background:var(--tool);border-color:var(--cyan);color:#fff;box-shadow:inset 3px 0 0 #6FD98F,0 0 0 1px var(--void)}
+  .btn.go{background:var(--blue);border-color:var(--cyan);color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+  .btn.go:hover{background:var(--blue)}
+  .field input{background:var(--well);border:2px solid var(--well-edge);border-radius:4px}
+  .whoactions > *{border-radius:4px}
+  .switch .av,.locbox .pin{border-radius:3px;background:var(--cyan);color:var(--void)}
+
+  /* Wells: where Pokemon and things sit. */
+  .pmon,.mon,.slot,.dx,.opt,.tile,.note,.tallyc,.combo,.locbox,.case{background:var(--well);border:2px solid var(--well-edge);border-radius:4px}
+  .case{padding:10px 6px}
+  .slot.empty{background:transparent;border-style:dashed}
+  .slot.sel,.opt.on,.tile.on{border-color:#E8604C;outline:0;background:var(--chip-bottom)}
+  .slot:hover,.opt:hover,.tile:hover{border-color:var(--cyan)}
+  .dx.unk{background:var(--deep);border-color:transparent}
+  .dx.caught{border-color:var(--cyan);background:var(--chip-bottom)}
+  .dx.caught small,.tag.here,.crown,.pill.you{color:var(--cyan)}
+  .portrait,.tcard .portrait{border:2px solid var(--well-edge);border-radius:4px;color:var(--cyan);
+    background:linear-gradient(color-mix(in srgb,var(--grid) 30%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--grid) 30%,transparent) 1px,transparent 1px),var(--well);background-size:11px 11px,11px 11px,auto}
+  button.portrait:hover{background-color:var(--chip-bottom)}
+
+  .page h3,summary .reg{color:color-mix(in srgb,var(--region) 55%,#fff)}
+  .page.none h3{color:var(--muted)}
+  .bar{height:10px;border-radius:2px;background:var(--void);border:1px solid var(--well-edge)}
+  .seal,.pill,.lchip{border-radius:3px}
+  .seal{transform:none;background:var(--region);color:#fff;border-color:var(--void);text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+  .lchip.cur{border-color:var(--cyan);color:var(--cyan);background:var(--chip-bottom)}
+  .toast{background:var(--void);color:var(--fg);border:2px solid var(--frame-edge);border-radius:6px}
+  .bdg img{filter:grayscale(1) brightness(.6) opacity(.5)}
+  .monsprite > span,.spritebox img{image-rendering:pixelated}
+}

@@ -71,13 +71,9 @@ public class JourneyService(
                 .OrderBy(entry => entry.Item1)];
         }
 
-        // What is known of them: in the save the trainer is in, or - for the National one -
-        // anywhere at all, storage included.
-        var known = national
-            ? await dexService.GetDex([.. wanted.Select(w => w.Species)])
-            : current is null
-                ? []
-                : await dexService.GetDex([current.Id], [.. wanted.Select(w => w.Species)]);
+        // What the trainer knows of them, in any of their saves and in storage: the regional
+        // Pokédex is the region's list, not one save's memory.
+        var known = await dexService.GetDex([.. wanted.Select(w => w.Species)]);
 
         var entries = wanted.Select(w =>
         {

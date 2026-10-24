@@ -14,15 +14,20 @@ namespace PKConnect.Core.profiles;
 ///  - GBA games: a "badge get" flag and a separate "leader defeated" story flag. Both are kept in
 ///    step; the engine's own rematch flag for the trainer never is, so a region a trainer
 ///    travels to still plays as a run of gym battles.
-///  - DS games: read only. Their flags haven't been worked out, so their badges are shown and
-///    counted but never written from another save.
+///  - Generation 4 games: the badge bits on the trainer's record. They are all there is to it:
+///    a gym leader's own script asks "does the player have my badge?" and nothing else, as do
+///    the trainer card, HM use, obedience and the League gate. The Connect builds add one flag
+///    per gym, "this visitor has had the leader's prize"; a badge that arrives from another save
+///    brings that flag with it, so the leader has nothing left to hand over.
+///  - Generation 5 games: the badge bits. These games have no decompilation to read the gym
+///    scripts from, so whether a leader looks at anything else is not known.
 /// </summary>
 public static class RegionBadges
 {
     public const int Count = 8;
 
-    /// <summary>Where one region's badges are in one kind of save. Flags are null for a read-only layout.</summary>
-    private sealed record Layout(string Region, int[]? BadgeFlags, int[]? StoryFlags, int BitBase);
+    /// <summary>Where one region's badges are in one kind of save. Without flags, the badge bits are all there is.</summary>
+    private sealed record Layout(string Region, int[]? BadgeFlags, int[]? StoryFlags, int BitBase, int[]? PrizeFlags = null);
 
     private static int[] Run(int first) => [.. Enumerable.Range(first, Count)];
 
@@ -35,9 +40,11 @@ public static class RegionBadges
     private static readonly Layout FireRedLeafGreen = new("kanto", Run(2080), Run(1200), 0);
     private static readonly Layout Emerald = new("hoenn", Run(2151), Run(1264), 0);
 
-    private static readonly Layout Sinnoh = new("sinnoh", null, null, 0);
-    private static readonly Layout HgssJohto = new("johto", null, null, 0);
-    private static readonly Layout HgssKanto = new("kanto", null, null, 8);
+    // pokeplatinum, Connect build: FLAG_OFFSET_TRAINER_DEFEATED (1360) + TRAINER_CONNECT_PRIZE_GYM_1 (787)...
+    private static readonly Layout Sinnoh = new("sinnoh", null, null, 0, Run(1360 + 787));
+    // pokeheartgold, Connect build: FLAG_CONNECT_PRIZE_JOHTO_1 (0x88A)... and FLAG_CONNECT_PRIZE_KANTO_1 (0x892)...
+    private static readonly Layout HgssJohto = new("johto", null, null, 0, Run(0x88A));
+    private static readonly Layout HgssKanto = new("kanto", null, null, 8, Run(0x892));
     private static readonly Layout Unova = new("unova", null, null, 0);
 
     private static bool IsExpansionFrlg(SaveFile save) =>
@@ -62,7 +69,7 @@ public static class RegionBadges
 
     /// <summary>Whether a region's badges can be written into this save from elsewhere.</summary>
     public static bool CanWrite(SaveFile save, string region) =>
-        LayoutsFor(save).FirstOrDefault(layout => layout.Region == region) is { BadgeFlags: not null };
+        LayoutsFor(save).Any(layout => layout.Region == region);
 
     /// <summary>The region's eight badges as the save has them; null when the save's game doesn't cover the region.</summary>
     public static bool[]? Read(SaveFile save, string region)
@@ -84,8 +91,10 @@ public static class RegionBadges
     /// </summary>
     public static bool Apply(SaveFile save, string region, IReadOnlyList<bool> target)
     {
-        if (LayoutsFor(save).FirstOrDefault(l => l.Region == region) is not { BadgeFlags: { } badgeFlags } layout
-            || save is not IEventFlagArray flags)
+        if (LayoutsFor(save).FirstOrDefault(l => l.Region == region) is not { } layout)
+            return false;
+        var flags = save as IEventFlagArray;
+        if (layout.BadgeFlags is not null && flags is null)
             return false;
 
         var changed = false;
@@ -94,16 +103,21 @@ public static class RegionBadges
         for (var i = 0; i < Count; i++)
         {
             var value = i < target.Count && target[i];
-            changed |= SetFlag(flags, badgeFlags[i], value);
+            if (layout.BadgeFlags is { } badgeFlags)
+                changed |= SetFlag(flags!, badgeFlags[i], value);
             if (layout.StoryFlags is { } storyFlags)
-                changed |= SetFlag(flags, storyFlags[i], value);
+                changed |= SetFlag(flags!, storyFlags[i], value);
 
             var bit = 1 << (layout.BitBase + i);
+            // The prize goes with a badge that is put in or taken out here; one earned in this
+            // save keeps whatever the game recorded (the prize may still be waiting on bag space).
+            if (layout.PrizeFlags is { } prizeFlags && flags is not null && ((bits & bit) != 0) != value)
+                SetFlag(flags, prizeFlags[i], value);
             newBits = value ? newBits | bit : newBits & ~bit;
         }
 
-        // The Game Boy games keep the bits apart from the flags; the GBA games read them from the flags.
-        if (save is SAV1 or SAV2 && newBits != bits)
+        // The Game Boy and DS games keep the bits apart from the flags; the GBA games read them from the flags.
+        if (save is not SAV3 && newBits != bits)
         {
             SetBits(save, newBits);
             changed = true;
@@ -135,6 +149,12 @@ public static class RegionBadges
         {
             case SAV1 sav1: sav1.Badges = (byte)bits; break;
             case SAV2 sav2: sav2.Badges = (ushort)bits; break;
+            case SAV4HGSS hgss:
+                hgss.Badges = (byte)bits;
+                hgss.Badges16 = (bits >> 8) & 0xFF;
+                break;
+            case SAV4 sav4: sav4.Badges = (byte)bits; break;
+            case SAV5 sav5: sav5.Misc.Badges = bits & 0xFF; break;
         }
     }
 
@@ -151,7 +171,6 @@ public static class RegionBadges
     ///  - otherwise a badge the save has gained since its last snapshot is progress made in the
     ///    game and joins the ledger, and then the save is made to match the ledger exactly - which
     ///    is also how a badge taken away elsewhere goes away here.
-    /// A region the save can't be written for only ever adds its badges to the ledger.
     /// </summary>
     public static Reconciliation Reconcile(
         SaveFile save,
@@ -172,9 +191,7 @@ public static class RegionBadges
             snapshot?.TryGetValue(region, out snap);
 
             bool[] target;
-            if (!CanWrite(save, region))
-                target = Merge(ledgerRegion, own);
-            else if (ledgerRegion is null)
+            if (ledgerRegion is null)
                 target = own;
             else if (snap is null)
                 target = Normalize(ledgerRegion);
@@ -195,6 +212,4 @@ public static class RegionBadges
     private static bool At(bool[] slots, int index) => index < slots.Length && slots[index];
 
     private static bool[] Normalize(bool[] slots) => [.. Enumerable.Range(0, Count).Select(i => At(slots, i))];
-
-    private static bool[] Merge(bool[]? a, bool[] b) => [.. Enumerable.Range(0, Count).Select(i => (a is not null && At(a, i)) || At(b, i))];
 }

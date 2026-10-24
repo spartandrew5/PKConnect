@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
+import { BookOpen, IdCard, Monitor, NotebookPen, Settings as SettingsIcon, Ship, Trophy } from 'lucide-react';
+import { SpriteGame } from './components/gameSprites';
 import { api, ApiError } from './api/client';
 import type { BoardingResult, Catalog, Journey, Names, PlayStatus, Trainer } from './api/types';
-import { PORTS } from './components/region';
+import { gameStyle, PORTS } from './components/region';
 import { Appearance } from './screens/Appearance';
 import { Dex } from './screens/Dex';
 import { PC } from './screens/PC';
@@ -24,6 +26,8 @@ const TABS = [
   ['league', 'League'],
 ] as const;
 type Tab = (typeof TABS)[number][0];
+
+const TAB_ICONS: Record<Tab, typeof Trophy> = { card: IdCard, dex: BookOpen, pc: Monitor, travel: Ship, journal: NotebookPen, league: Trophy };
 
 function messageOf(error: unknown): string {
   return error instanceof ApiError || error instanceof Error ? error.message : String(error);
@@ -146,9 +150,14 @@ export function App() {
 
   const trainer = journey?.trainers.find((t) => t.isActive);
   const tint = trainer?.currentRegion ?? trainer?.homeRegion ?? 'sinnoh';
+  // Pokémon are drawn the way the game the trainer is in draws them.
+  const spriteGame = catalog?.games.find((g) => g.id === trainer?.currentGameId);
+  // The app wears the colour of the game the trainer is in (an expansion build, the game it is built as);
+  // the region's colour stands in before there is a game.
+  const appTint = gameStyle(trainer?.currentGameId, tint);
 
   return (
-    <div className="app rg" style={{ '--region': `var(--${tint})` } as React.CSSProperties}>
+    <div className="app rg" data-view={screen === 'main' ? tab : screen} style={appTint}>
       <div className="top">
         <div className="brand">
           Pokémon <span>Connect</span>
@@ -166,6 +175,7 @@ export function App() {
           </button>
         )}
         <button type="button" className="btn" onClick={() => setScreen(screen === 'settings' ? 'main' : 'settings')}>
+          <SettingsIcon className="ico" size={16} aria-hidden="true" />
           Settings
         </button>
       </div>
@@ -174,13 +184,19 @@ export function App() {
         <div className="tabs" role="tablist">
           {TABS.map(([id, label]) => (
             <button key={id} type="button" role="tab" aria-selected={id === tab} onClick={() => setTab(id)}>
+              {(() => {
+                const TabIcon = TAB_ICONS[id];
+                return <TabIcon className="ico" size={16} aria-hidden="true" />;
+              })()}
               {label}
             </button>
           ))}
         </div>
       )}
 
-      <main className="view">
+      <SpriteGame.Provider value={spriteGame}>
+      {/* Keyed, so each tab and screen fades in as it's opened. */}
+      <main className="view" key={screen === 'main' ? tab : screen}>
         {error && <div className="error">{error}</div>}
         {!error && (!catalog || !journey) && <div className="note">Loading…</div>}
 
@@ -214,6 +230,7 @@ export function App() {
           <TrainerCard
             trainer={trainer}
             catalog={catalog}
+            names={names}
             playing={running && play?.trainerId === trainer.id}
             onPlay={startGame}
             onLook={() => setScreen('look')}
@@ -249,6 +266,7 @@ export function App() {
           </section>
         )}
       </main>
+      </SpriteGame.Provider>
       {toast && (
         <div className="toast" role="status">
           {toast}

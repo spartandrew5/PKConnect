@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { api } from '../api/client';
 import type { Catalog, Journey, LeagueRegion, Names, Trainer } from '../api/types';
 import { useLoad } from '../api/useLoad';
@@ -5,7 +6,47 @@ import { portraitOf } from '../components/looks';
 import { MonSprite } from '../components/Mon';
 import { regionStyle, shortDate } from '../components/region';
 import { Sprite } from '../components/Sprite';
+import { Trophy } from 'lucide-react';
 
+// A region's own champion, as the games draw them: each in the style of the game the trainer meets
+// them in (Pokémon Showdown's trainer sprite collection). Anyone else shows their initial.
+const SHOWDOWN_TRAINERS = 'https://play.pokemonshowdown.com/sprites/trainers';
+const CHAMPION_SPRITES: Record<string, string> = {
+  blue: 'blue-gen3',
+  red: 'red',
+  lance: 'lance',
+  steven: 'steven-gen3',
+  wallace: 'wallace-gen3',
+  cynthia: 'cynthia-gen4',
+  alder: 'alder',
+  iris: 'iris',
+};
+
+// A player champion is pictured in the generation of the game they won the title in, so Kanto's
+// champion from FireRed looks like a FireRed trainer and Johto's from HeartGold like a HeartGold one.
+const GENERATION_OF_VERSION: Record<string, number> = {
+  RD: 1, GN: 1, BU: 1, YW: 1,
+  GD: 2, SI: 2, C: 2,
+  R: 3, S: 3, E: 3, FR: 3, LG: 3,
+  D: 4, P: 4, Pt: 4, HG: 4, SS: 4,
+  B: 5, W: 5, B2: 5, W2: 5,
+};
+// Without that, the region's own Connect game's generation.
+const GENERATION_OF_REGION: Record<string, number> = { kanto: 3, johto: 4, hoenn: 3, sinnoh: 4, unova: 5 };
+
+function championGeneration(gameVersion: string | undefined, region: string): number | undefined {
+  return (gameVersion && GENERATION_OF_VERSION[gameVersion]) || GENERATION_OF_REGION[region];
+}
+function ChampionPicture({ name }: { name: string }) {
+  const [missing, setMissing] = useState(false);
+  const file = CHAMPION_SPRITES[name.trim().toLowerCase()];
+  if (!file || missing) return <>{name.slice(0, 1)}</>;
+  return (
+    <span className="spritebox champsprite">
+      <img src={`${SHOWDOWN_TRAINERS}/${file}.png`} alt="" onError={() => setMissing(true)} />
+    </span>
+  );
+}
 function LeagueCard({
   entry,
   catalog,
@@ -60,9 +101,9 @@ function LeagueCard({
           <div className="champ">
             <div className="portrait">
               {holder?.appearance?.character ? (
-                <Sprite set={portraitOf(catalog, holder.appearance.character, holder.appearance)} size={64} />
+                <Sprite set={portraitOf(catalog, holder.appearance.character, holder.appearance, championGeneration(champion.gameVersion, region.id))} size={64} />
               ) : (
-                champion.championName.slice(0, 1)
+                <ChampionPicture name={champion.championName} />
               )}
             </div>
             <div>
@@ -80,7 +121,7 @@ function LeagueCard({
               const name = names?.species[mon.species] ?? mon.nickname ?? `#${mon.species}`;
               return (
                 <div key={index} className="mon">
-                  <MonSprite species={mon.species} size={48} fallback={name} />
+                  <MonSprite species={mon.species} size={48} fallback={name} icon />
                   <span>
                     <b>{name}</b>
                     <small>Lv. {mon.level}</small>
@@ -143,7 +184,10 @@ export function League({
       <section className="panel">
         <div className="dexhead">
           <div>
-            <p className="eyebrow">League</p>
+            <p className="eyebrow ilabel">
+            <Trophy className="ico" size={14} aria-hidden="true" />
+            League
+          </p>
             <h2>Hall of champions</h2>
           </div>
           <div className="tally">

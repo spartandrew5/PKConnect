@@ -6,6 +6,17 @@ export function regionStyle(region: RegionId | undefined): CSSProperties | undef
   return region ? ({ '--region': `var(--${region})` } as CSSProperties) : undefined;
 }
 
+/**
+ * The colours of the game a trainer is in (an expansion build wears the game it is built as), with
+ * the region's colour standing in before there is a game.
+ */
+export function gameStyle(gameId: string | undefined, region: RegionId | undefined): CSSProperties | undefined {
+  const game = gameId?.replace(/expansion$/, '');
+  if (!game) return regionStyle(region);
+  const fallback = region ? `var(--${region})` : 'var(--region)';
+  return { '--region': `var(--g-${game}, ${fallback})`, '--on-region': `var(--g-${game}-on, #fff)` } as CSSProperties;
+}
+
 /** How a trainer gets to each region: where the ship comes in, and its name. */
 export const PORTS: Record<RegionId, { port: string; vessel: string }> = {
   kanto: { port: 'Vermilion City', vessel: 'S.S. Anne' },

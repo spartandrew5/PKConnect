@@ -3,6 +3,7 @@ import { api } from '../api/client';
 import type { Catalog, JournalEntry, Trainer } from '../api/types';
 import { useLoad } from '../api/useLoad';
 import { regionStyle, shortDate } from '../components/region';
+import { NotebookPen } from 'lucide-react';
 
 const KINDS: [JournalEntry['type'] | 'all', string][] = [
   ['all', 'Everything'],
@@ -19,7 +20,10 @@ export function Journal({ trainer, catalog }: { trainer: Trainer; catalog: Catal
   return (
     <section className="panel">
       <div>
-        <p className="eyebrow">Journal</p>
+        <p className="eyebrow ilabel">
+          <NotebookPen className="ico" size={14} aria-hidden="true" />
+          Journal
+        </p>
         <h2>{trainer.trainerName}'s journey so far</h2>
       </div>
       <div className="chips">

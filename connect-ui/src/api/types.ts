@@ -146,6 +146,9 @@ export interface SpeciesSprite {
 export interface Names {
   species: string[];
   moves: string[];
+  abilities: string[];
+  items: string[];
+  natures: string[];
 }
 
 export interface JournalEntry {
@@ -227,6 +230,32 @@ export interface StoredMon {
   /** Main storage keeps one Pokémon as several variants in one slot; this is the one to show. */
   isMain?: boolean;
   attachedSaveId?: number;
+
+  // What the details window shows. Stats, IVs and EVs run HP, Attack, Defense, Sp. Atk, Sp. Def, Speed.
+  form?: number;
+  /** 0 male, 1 female, 2 neither. */
+  gender?: number;
+  /** Type numbers, counted from 1 (Normal). */
+  types?: number[];
+  stats?: number[];
+  iVs?: number[];
+  eVs?: number[];
+  baseStats?: number[];
+  nature?: number;
+  ability?: number;
+  heldItem?: number;
+  moves?: number[];
+  exp?: number;
+  expToLevelUp?: number;
+  levelUpPercent?: number;
+  friendship?: number;
+  generation?: number;
+  tid?: number;
+  originTrainerName?: string;
+  originMetLocation?: string;
+  originMetLevel?: number;
+  originMetDate?: string;
+  isNicknamed?: boolean;
 }
 
 export interface TravelMon {

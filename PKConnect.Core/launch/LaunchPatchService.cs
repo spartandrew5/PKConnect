@@ -258,6 +258,11 @@ public static class LaunchPatchService
             }
         }
 
+        // What the build always shows, whoever plays: Professor Oak in Red's place at Mt. Silver.
+        var (fixedEdits, fixedResults) = PlayerGraphicsPatchService.BuildConnectFixedGraphicsEdits(gameId, basePatch.Patched);
+        edits.AddRange(fixedEdits);
+        warnings.AddRange(fixedResults.Where(r => !r.Applied && IsWorthTelling(r.Reason)).Select(r => $"[connect-graphics:{r.Slot}] {r.Reason}"));
+
         var sprites = PlayerSprites(gameId, basePatch.Patched, look, warnings);
         edits.AddRange(sprites.Edits);
 

@@ -76,9 +76,8 @@ public class PlayerSpritesLaunchTests
     }
 
     [Theory]
-    [InlineData("platinum", "brendan")]   // Brendan has no Gen 4 sprites
-    [InlineData("emerald", "hilda")]
-    [InlineData("white", "red")]
+    [InlineData("yellow", "nate")]   // Nate has no Game Boy sprites
+    [InlineData("white", "brendan")]
     [InlineData("emerald", "nobody")]
     public void ACharacterWithoutSpritesForTheGame_ChangesNothing_AndIsNoWarning(string gameId, string character)
     {

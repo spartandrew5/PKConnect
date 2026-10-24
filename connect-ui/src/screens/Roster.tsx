@@ -1,5 +1,7 @@
 import type { Catalog, Trainer } from '../api/types';
 import { MonSprite } from '../components/Mon';
+import { gameStyle } from '../components/region';
+import { SpriteGame } from '../components/gameSprites';
 
 export function Roster({
   trainers,
@@ -46,7 +48,7 @@ export function Roster({
               key={trainer.id}
               type="button"
               className={`tmini rg${trainer.isActive ? ' active' : ''}`}
-              style={tint ? ({ '--region': `var(--${tint})` } as React.CSSProperties) : undefined}
+              style={gameStyle(trainer.currentGameId, tint)}
               disabled={busy}
               onClick={() => onPick(trainer)}
             >
@@ -74,15 +76,18 @@ export function Roster({
                 <span className="line">
                   {badges} badges · {titles} titles
                 </span>
+                {/* Each trainer's party as their own game draws it. */}
+                <SpriteGame.Provider value={game}>
                 <span className="minidots">
                   {trainer.party.length > 0 ? (
                     trainer.party.map((mon, index) => (
-                      <MonSprite key={index} species={mon.species} size={32} fallback={mon.nickname} />
+                      <MonSprite key={index} species={mon.species} size={34} fallback={mon.nickname} shiny={mon.isShiny} icon />
                     ))
                   ) : (
                     <span className="line">No Pokémon yet</span>
                   )}
                 </span>
+                </SpriteGame.Provider>
               </span>
             </button>
           );

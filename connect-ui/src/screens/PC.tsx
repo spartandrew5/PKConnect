@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { Catalog, Names, StorageBox, StoredMon, Trainer } from '../api/types';
 import { MonSprite } from '../components/Mon';
+import { MonDetails } from '../components/MonDetails';
+import { Backpack, Globe, Monitor, Save, Undo2 } from 'lucide-react';
 
 type Where = 'party' | 'game' | 'vault';
 
@@ -43,6 +45,7 @@ export function PC({
   const [storage, setStorage] = useState<Storage>();
   const [problem, setProblem] = useState<string>();
   const [picked, setPicked] = useState<Slot>();
+  const [open, setOpen] = useState<Slot>();
   const [box, setBox] = useState<{ game: number; vault: number }>({ game: 0, vault: 0 });
   const [busy, setBusy] = useState(false);
 
@@ -110,8 +113,9 @@ export function PC({
   const click = (at: Slot) => {
     if (busy) return;
     const here = monAt(at);
+    // With nothing in hand, a Pokémon is looked at first; it is picked up from its details.
     if (!picked) {
-      if (here) setPicked(at);
+      if (here) setOpen(at);
       return;
     }
     const from = picked;
@@ -149,7 +153,7 @@ export function PC({
       >
         {mon && (
           <>
-            <MonSprite species={mon.isEgg ? 0 : mon.species} size={48} fallback={nameOf(mon)} />
+            <MonSprite species={mon.isEgg ? 0 : mon.species} size={wide ? 96 : 48} fallback={nameOf(mon)} />
             {wide && <span className="slotname">{nameOf(mon)}</span>}
             <small>Lv. {mon.level}</small>
           </>
@@ -158,17 +162,34 @@ export function PC({
     );
   };
 
+  // The strip under a window's title: round arrows either side of the box's name.
   const nav = (which: 'game' | 'vault', boxes: StorageBox[], current: StorageBox | undefined) => (
-    <>
+    <div className="boxnav">
       <button type="button" aria-label="Previous box" disabled={boxes.length < 2} onClick={() => setBox({ ...box, [which]: (box[which] - 1 + boxes.length) % boxes.length })}>
         ‹
       </button>
-      <span>{current?.name ?? 'No boxes'}</span>
+      <span className="boxname">{current?.name ?? 'No boxes'}</span>
       <button type="button" aria-label="Next box" disabled={boxes.length < 2} onClick={() => setBox({ ...box, [which]: (box[which] + 1) % boxes.length })}>
         ›
       </button>
-    </>
+    </div>
   );
+
+  // And under that: how full the box is, and which one of how many it is.
+  const status = (where: 'game' | 'vault', boxes: StorageBox[], current: StorageBox | undefined) => {
+    const held = current ? (where === 'vault' ? storage.vaultMons : storage.gameMons).filter((mon) => String(mon.boxId) === current.id).length : 0;
+    return (
+      <div className="boxstatus">
+        <span className="boxcount">
+          <i aria-hidden="true" />
+          {held} Pokémon
+        </span>
+        <span className="px">
+          {current ? `Box ${boxes.indexOf(current) + 1} of ${boxes.length} · ${held}/${current.slotCount}` : '—'}
+        </span>
+      </div>
+    );
+  };
 
   const grid = (where: 'game' | 'vault', current: StorageBox | undefined) =>
     current ? (
@@ -178,9 +199,30 @@ export function PC({
     );
 
   const pickedMon = picked && monAt(picked);
+  const openMon = open && monAt(open);
 
   return (
     <>
+      {open && openMon && (
+        <MonDetails
+          mon={openMon}
+          names={names}
+          onClose={() => setOpen(undefined)}
+          actions={
+            <button
+              type="button"
+              className="btn go"
+              disabled={busy}
+              onClick={() => {
+                setPicked(open);
+                setOpen(undefined);
+              }}
+            >
+              Move
+            </button>
+          }
+        />
+      )}
       {storage.pending > 0 ? (
         <div className="note pending">
           <span>
@@ -191,9 +233,11 @@ export function PC({
           </span>
           <span className="actions">
             <button type="button" className="btn" disabled={busy} onClick={() => act(() => api.undoStorage())}>
+              <Undo2 className="ico" size={16} aria-hidden="true" />
               Undo all
             </button>
             <button type="button" className="btn go" disabled={busy} onClick={() => act(() => api.saveStorage(), onSaved)}>
+              {!busy && <Save className="ico" size={16} aria-hidden="true" />}
               {busy ? 'Working…' : 'Save changes'}
             </button>
           </span>
@@ -205,7 +249,7 @@ export function PC({
               <b>{nameOf(pickedMon)}</b> Lv. {pickedMon.level} picked up. Choose a slot to move or swap it, or pick it again to put it down.
             </>
           ) : (
-            'Pick a Pokémon, then pick a slot in any window to move it.'
+            'Click a Pokémon to see its details. To move it, choose Move there, then pick a slot in any window.'
           )}
         </div>
       )}
@@ -213,29 +257,40 @@ export function PC({
 
       <div className="pc">
         <section className="win win-party">
-          <div className="win-bar">
-            <span>Travelling party</span>
-            <span className="sub muted">Goes with {trainer.trainerName} on the next trip</span>
-            <span>{party.length} of 6</span>
+          <div className="partyhead">
+            <div>
+              <h2 className="ilabel">
+                <Backpack className="ico" size={20} aria-hidden="true" />
+                Travelling party
+              </h2>
+              <p>Goes with {trainer.trainerName} on the next trip</p>
+            </div>
+            <span className="partycount px">{party.length} / 6</span>
           </div>
-          <div className="win-body">
-            <div className="partyrow">{Array.from({ length: 6 }, (_, slot) => cell({ where: 'party', boxId: PARTY_BOX, slot }, true))}</div>
-          </div>
+          <div className="partyrow">{Array.from({ length: 6 }, (_, slot) => cell({ where: 'party', boxId: PARTY_BOX, slot }, true))}</div>
         </section>
         <section className="win win-game">
           <div className="win-bar">
-            <span>{region?.name ?? 'Game'} PC</span>
+            <span className="ilabel">
+              <Monitor className="ico" size={16} aria-hidden="true" />
+              {region?.name ?? 'Game'} PC
+            </span>
             <span className="sub">{game?.name}</span>
-            {nav('game', storage.gameBoxes, gameBox)}
           </div>
+          {nav('game', storage.gameBoxes, gameBox)}
+          {status('game', storage.gameBoxes, gameBox)}
           <div className="win-body">{grid('game', gameBox)}</div>
         </section>
         <section className="win win-vault">
           <div className="win-bar">
-            <span>National storage</span>
+            <span className="ilabel">
+              <Globe className="ico" size={16} aria-hidden="true" />
+              National storage
+            </span>
             <span className="sub">Shared by every game</span>
-            {nav('vault', storage.vaultBoxes, vaultBox)}
           </div>
+          {nav('vault', storage.vaultBoxes, vaultBox)}
+          {status('vault', storage.vaultBoxes, vaultBox)}
           <div className="win-body">{grid('vault', vaultBox)}</div>
         </section>
       </div>

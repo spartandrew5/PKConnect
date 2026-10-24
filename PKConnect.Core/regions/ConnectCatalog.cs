@@ -26,7 +26,7 @@ public record CatalogDTO(List<RegionDTO> Regions, List<GameDTO> Games, List<Char
 public record SpeciesSpriteDTO(string Sheet, int X, int Y, int Width, int Height);
 
 /// <summary>English names by id: <c>Species[25]</c> is "Pikachu", <c>Moves[85]</c> is "Thunderbolt".</summary>
-public record NamesDTO(string[] Species, string[] Moves);
+public record NamesDTO(string[] Species, string[] Moves, string[] Abilities, string[] Items, string[] Natures);
 
 /// <summary>
 /// The regions and games Connect knows, in the order they are shown. The one place that says
@@ -84,7 +84,7 @@ public static class ConnectCatalog
     public static NamesDTO Names()
     {
         var strings = GameInfo.GetStrings("en");
-        return new([.. strings.Species], [.. strings.Move]);
+        return new([.. strings.Species], [.. strings.Move], [.. strings.Ability], [.. strings.Item], [.. strings.Natures]);
     }
 
     public static CatalogDTO Get() => new([.. Regions], [.. Games.Select(ToDTO)], ConnectCharacters.All());

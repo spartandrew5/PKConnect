@@ -67,8 +67,8 @@ public class ChampionLookLaunchTests
     }
 
     [Theory]
-    [InlineData("platinum", "brendan")]   // no Gen 4 sprites
-    [InlineData("emerald", "hilda")]
+    [InlineData("white", "brendan")]   // no Gen 5 sprites
+    [InlineData("yellow", "nate")]   // no Game Boy sprites
     public void AHolderWithoutSpritesForTheGame_LeavesTheGamesOwnChampion(string gameId, string character)
     {
         var plain = Build(gameId, "kanto", null);
